@@ -1,0 +1,5 @@
+D:\azure\prj\tutorials\RogueLike\SlashIt\bin\Debug\SlashIt.exe
+D:\azure\prj\tutorials\RogueLike\SlashIt\bin\Debug\SlashIt.pdb
+D:\azure\prj\tutorials\RogueLike\SlashIt\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\azure\prj\tutorials\RogueLike\SlashIt\obj\x86\Debug\SlashIt.exe
+D:\azure\prj\tutorials\RogueLike\SlashIt\obj\x86\Debug\SlashIt.pdb
