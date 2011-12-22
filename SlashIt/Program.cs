@@ -25,14 +25,14 @@ namespace SlashIt
         {
             while (!quit)
             {
-                HandleInput();
-
-
                 game.WriteConsole();
+                HandleInput();
             }
 
             Console.WriteLine("Game over!");
         }
+
+
 
 
         
@@ -84,6 +84,8 @@ namespace SlashIt
     {
         public Character character;
 
+        private Map map;
+
         public void InitConsole()
         {
 
@@ -95,15 +97,22 @@ namespace SlashIt
             Console.CursorVisible = false;
 
             character = new Character();
-            character.SetPosition(40, 12);  //TODO Const
+            character.SetPosition(22, 4);  //TODO Const
+
+            map = new Map();
+
             this.WriteConsole();
 
             Status.Message = "Height: " + Console.WindowHeight + " Width: " + Console.WindowWidth;
         }
 
+
+        //TODO eventually optimize how and when things are drawn.  don't necessrily need to redraw all the time.
         public void WriteConsole()
         {
             Console.Clear();
+
+            this.GenerateMap();  //TODO only do this when really needed
 
             Console.SetCursorPosition(character.Left, character.Top);
             Console.Write("@");
@@ -112,7 +121,38 @@ namespace SlashIt
 
             //TODO add console bounds check
         }
-        
+
+
+        internal void GenerateMap()
+        {
+            int mapStartLeft = 20;
+            int mapStartTop = 3;
+
+            Console.SetCursorPosition(mapStartLeft, mapStartTop);
+
+            for (int i = 0; i <= this.map.map.GetUpperBound(0); i++)
+            {
+                for (int j = 0; j <= this.map.map.GetUpperBound(1); j++)
+                {
+                    switch (this.map.map[i,j])
+                    {
+                        case (1):
+                            Console.Write("#");
+                            break;
+                        case (0):
+                            Console.Write(" ");
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+
+                Console.SetCursorPosition(mapStartLeft, ++mapStartTop);
+
+            }
+
+        }
     }
 
 
@@ -181,6 +221,39 @@ namespace SlashIt
         {
             this.Top++;
         }
+
+    }
+
+
+    public class Map
+    {
+        public int[,] map = new int[10, 10] 
+            { { 1,1,1,1,1,1,1,1,1,1 }, 
+              { 1,0,0,0,0,0,0,0,1,1 }, 
+              { 1,1,1,1,1,1,1,0,1,1 }, 
+              { 1,1,1,1,1,1,1,0,1,1 }, 
+              { 1,1,0,0,0,0,0,0,1,1 }, 
+              { 1,1,1,1,1,0,1,1,1,1 }, 
+              { 1,1,1,1,1,0,1,1,1,1 }, 
+              { 1,1,1,1,1,0,1,1,1,1 }, 
+              { 1,1,0,0,0,0,0,0,0,1 }, 
+              { 1,1,1,1,1,1,1,1,1,1 }, 
+            };
+
+
+
+
+
+
+        //Console.Write("###########################"); Console.SetCursorPosition(mapStartLeft, mapStartTop + 1);
+        //Console.Write("#               +       ###"); Console.SetCursorPosition(mapStartLeft, mapStartTop + 2);
+        //Console.Write("############### ###########"); Console.SetCursorPosition(mapStartLeft, mapStartTop + 3);
+        //Console.Write("############### #####    ##"); Console.SetCursorPosition(mapStartLeft, mapStartTop + 4);
+        //Console.Write("########        ##### #####"); Console.SetCursorPosition(mapStartLeft, mapStartTop + 5);
+        //Console.Write("######## ############ #####"); Console.SetCursorPosition(mapStartLeft, mapStartTop + 6);
+        //Console.Write("########              #####"); Console.SetCursorPosition(mapStartLeft, mapStartTop + 7);
+        //Console.Write("###########################");
+            
 
     }
 }
