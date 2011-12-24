@@ -53,10 +53,13 @@ namespace SlashIt
 
         private static void HandleInput()
         {
+
             var keyInfo = Console.ReadKey(true);
-          //  Status.Message = "Key: " + keyInfo.Key;
+            //  Status.Message = "Key: " + keyInfo.Key;
 
+            Status.ClearInfo();
 
+//TODO -- Look at a command pattern or maybe a factory.
             switch (keyInfo.Key)
             {
                 case ConsoleKey.A:
@@ -203,6 +206,7 @@ namespace SlashIt
                 case ConsoleKey.K:
                     break;
                 case ConsoleKey.L:
+                    game.DoLook();
                     break;
                 case ConsoleKey.LaunchApp1:
                     break;
@@ -365,7 +369,7 @@ namespace SlashIt
 
         private Map map;
         public const short MapStartLeft = 20;
-        public const short MapStartTop = 3;
+        public const short MapStartTop = 1;
 
         public void InitConsole()
         {
@@ -378,7 +382,7 @@ namespace SlashIt
             Console.CursorVisible = false;
 
             character = new Character();
-            character.SetPosition(22, 4);  //TODO Const
+            character.SetPosition(22, 2);  //TODO Const
 
             map = new Map();
 
@@ -407,7 +411,7 @@ namespace SlashIt
 
             Status.Message = "Map Left: " + character.LeftMapPosition + " :MapTop: " + character.TopMapPosition;
 
-            Status.WriteToStatusLine();
+            Status.WriteToStatus();
 
             //TODO add console bounds check
         }
@@ -445,7 +449,7 @@ namespace SlashIt
 
         }
 
-        internal void CheckBounds()
+        public void CheckBounds()
         {
             //TODO -- Improve this
             if (map.map[character.TopMapPosition, character.LeftMapPosition] != 0)
@@ -453,36 +457,59 @@ namespace SlashIt
                 character.DisallowMove();
             }
         }
+
+        //TODO -- Refactor!!!!!!!!!!
+        public void DoLook()
+        {
+            if (map.map[character.TopMapPosition, character.LeftMapPosition] == 0)
+            {
+                Status.Info = "You see empty floor";
+            }
+        }
     }
 
 
     public class Status
     {
-        //TODO: maybe change this to be inited on porg start so that it can very more easily 
+        //TODO: maybe change this to be inited on prog start so that it can vary more easily 
         private static string clearLine = "                                                                               ";
 
         private const int MessagePositionDefaultLeft = 0;
         private const int MessagePositionDefaultTop = 24;
 
+        private const int InfoPositionDefaultLeft = 0;
+        private const int InfoPositionDefaultTop = 0;
+
         public static string Message { get; set; }
+        public static string Info { get; set; }
 
         public static int MessagePositionLeft { get; set; }
         public static int MessagePositionTop { get; set; }
+
+        public static int InfoPositionLeft { get; set; }
+        public static int InfoPositionTop { get; set; }
 
         public Status()
         {
             MessagePositionLeft = Status.MessagePositionDefaultLeft;
             MessagePositionTop = Status.MessagePositionDefaultTop;
+
+            InfoPositionLeft = Status.InfoPositionDefaultLeft;
+            InfoPositionTop = Status.InfoPositionDefaultTop;
         }
 
-        public static void WriteToStatusLine()
+        public static void WriteToStatus()
         {
             var originalCursonPositionLeft = Console.CursorLeft;
             var originalCursonPositionTop = Console.CursorTop;
+
+            Console.SetCursorPosition(InfoPositionDefaultLeft, InfoPositionDefaultTop);
+            Console.Write(clearLine);
+            Console.SetCursorPosition(InfoPositionDefaultLeft, InfoPositionDefaultTop);
+            Console.Write(Info);
             
             Console.SetCursorPosition(MessagePositionDefaultLeft, MessagePositionDefaultTop);
             Console.Write(clearLine);
-
             Console.SetCursorPosition(MessagePositionDefaultLeft, MessagePositionDefaultTop);
             Console.Write(Message);
 
@@ -493,9 +520,21 @@ namespace SlashIt
         public static void WriteToStatusLine(string status)
         {
             Message = status;
-            WriteToStatusLine();
+            WriteToStatus();
         }
 
+
+        public static void ClearInfo()
+        {
+            var originalCursonPositionLeft = Console.CursorLeft;
+            var originalCursonPositionTop = Console.CursorTop;
+
+            Console.SetCursorPosition(InfoPositionDefaultLeft, InfoPositionDefaultTop);
+            Console.Write(clearLine);
+            Info = "";
+
+            Console.SetCursorPosition(originalCursonPositionLeft, originalCursonPositionTop);
+        }
     }
 
     public class Character
