@@ -31,32 +31,13 @@ namespace SlashIt
             this.SetPositionBeforeMove();
         }
 
-        //public void MoveRight()
-        //{
-
-        //}
-
-        //public void MoveLeft()
-        //{
-
-        //}
-
-        //public void MoveUp()
-        //{
-        //    this.Top--;
-        //}
-
-        //public void MoveDown()
-        //{
-        //}
-
         public void SetPositionBeforeMove()
         {
             this.LeftBeforeMove = this.Left;
             this.TopBeforeMove = this.Top;
         }
 
-        public void Move(ConsoleKey consoleKey)
+        public void Move(ConsoleKey consoleKey, Map map)
         {
             switch (consoleKey)
             {
@@ -79,6 +60,38 @@ namespace SlashIt
                 default:
                     break;
             }
+        }
+
+        //TODO look at moving to this style of move throughout
+        public Location Move(ConsoleKey consoleKey)
+        {
+            var mapLocation = new Location();
+            mapLocation.Top = TopMapPosition;
+            mapLocation.Left = LeftMapPosition;
+
+            switch (consoleKey)
+            {
+                case ConsoleKey.UpArrow:
+                    mapLocation.Top--;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    mapLocation.Top++;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    mapLocation.Left--;
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    mapLocation.Left++;
+                    break;
+
+                default:
+                    break;
+            }
+
+            return mapLocation;
         }
     }
 }

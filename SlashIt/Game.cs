@@ -10,7 +10,7 @@ namespace SlashIt
     {
         public Character character;
 
-        private Map map;
+        public Map Map { get; set; }
         public const short MapStartLeft = 20;
         public const short MapStartTop = 1;
 
@@ -27,7 +27,7 @@ namespace SlashIt
             character = new Character();
             character.SetPosition(22, 2);  //TODO Const
 
-            map = new Map();
+            Map = new Map();
 
             this.WriteConsole();
 
@@ -40,7 +40,7 @@ namespace SlashIt
         public void WriteConsole()
         {
 
-            if (map.MapOutdated)
+            if (Map.MapOutdated)
             {
                 Console.Clear();
                 this.GenerateMap();  //TODO only do this when really needed
@@ -67,17 +67,29 @@ namespace SlashIt
 
             Console.SetCursorPosition(mapStartLeft, mapStartTop);
 
-            for (int i = 0; i <= this.map.map.GetUpperBound(0); i++)
+            for (int i = 0; i <= this.Map.GetUpperBound(0); i++)
             {
-                for (int j = 0; j <= this.map.map.GetUpperBound(1); j++)
+                for (int j = 0; j <= this.Map.GetUpperBound(1); j++)
                 {
-                    switch (this.map.map[i, j])
+                    //TODO -- move this stuff to enum and or definig class soon!!!!!!!!!!!!
+
+                    switch (this.Map[i, j])
                     {
+                        case (0):
+                            //Hallway
+                            Console.Write(" ");
+                            break;
                         case (1):
+                            //Wall
                             Console.Write("#");
                             break;
-                        case (0):
-                            Console.Write(" ");
+                        case (2):
+                            //Closed Door
+                            Console.Write("+");
+                            break;
+                        case (3):
+                            //Open Door
+                            Console.Write("`");
                             break;
                         default:
                             break;
@@ -88,14 +100,14 @@ namespace SlashIt
 
             }
 
-            map.MapOutdated = false;
+            Map.MapOutdated = false;
 
         }
 
         public void CheckBounds()
         {
             //TODO -- Improve this
-            if (map.map[character.TopMapPosition, character.LeftMapPosition] != 0)
+            if (Map[character.TopMapPosition, character.LeftMapPosition] != 0 && Map[character.TopMapPosition, character.LeftMapPosition] != 3)
             {
                 character.DisallowMove();
             }
@@ -104,10 +116,65 @@ namespace SlashIt
         //TODO -- Refactor!!!!!!!!!!
         public void DoLook()
         {
-            if (map.map[character.TopMapPosition, character.LeftMapPosition] == 0)
+
+                           // TODO change access to matrix to method calls throughout
+            switch (Map[character.TopMapPosition, character.LeftMapPosition])
             {
-                Status.Info = "You see empty floor";
+                case (0):
+                    Status.Info = "You see empty floor";
+                    break;
+                case (2):
+                    Status.Info = "A big wooden door";
+                    break;
+                case (3):
+                    Status.Info = "An open door";
+                    break;
+                default:
+                    break;
             }
         }
+
+
+        //TODO WORKING HERE -- do more testing on open
+        // -- currently open door is not redrawn at the proper time
+        // -- Need a way to get out of DoOpen when deciding not to open a door
+        // -- Implement Close door
+
+
+
+        public void DoOpen()
+        {
+            Status.ClearInfo();
+            Status.Info = "Open which direction?";
+            Status.WriteToStatus();
+
+            var keyInfo = Console.ReadKey(true);
+
+            //TODO -- Taking key input exists in more than one place now, REFACTOR
+
+            var mapLocation = character.Move(keyInfo.Key);
+
+            switch (Map[mapLocation.Top, mapLocation.Left])
+            {
+                case (2):
+                    //Replace closed door with open door in map matrix
+                    Map[mapLocation.Top, mapLocation.Left] = 3;
+                    Map.MapOutdated = true;
+                    break;
+                default:
+                    Status.ClearInfo();
+                    Status.Info = "That can't be opened.  Press any key to continue";
+                    Console.ReadKey(true);
+                    DoOpen();
+                    break;
+            }
+        }
+
+    }
+
+    public class Location
+    {
+        public int Top { get; set; }
+        public int Left { get; set; }
     }
 }

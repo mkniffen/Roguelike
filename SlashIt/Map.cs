@@ -14,17 +14,29 @@ namespace SlashIt
             MapOutdated = true;
         }
 
+        //TODO not sure about this syntax.  Gonna give it a try for now...
+        public int this[int top, int left]
+        {
+            get { return this.map[top,left]; }
+            set { this.map[top, left] = value; }
+        }
+
         public bool MapOutdated { get; set; }
 
-        public int[,] map = new int[10, 10] 
+        public int GetUpperBound(int dimension)
+        {
+            return map.GetUpperBound(dimension);
+        }
+
+        private int[,] map = new int[10, 10] 
             { { 1,1,1,1,1,1,1,1,1,1 }, 
               { 1,0,0,0,0,0,0,0,1,1 }, 
-              { 1,1,1,1,1,1,1,0,1,1 }, 
+              { 1,1,1,1,1,1,1,2,1,1 }, 
               { 1,1,1,1,1,1,1,0,1,1 }, 
               { 1,1,0,0,0,0,0,0,1,1 }, 
               { 1,1,1,1,1,0,1,1,1,1 }, 
               { 1,1,1,1,1,0,1,1,1,1 }, 
-              { 1,1,1,1,1,0,1,1,1,1 }, 
+              { 1,1,1,1,1,2,1,1,1,1 }, 
               { 1,1,0,0,0,0,0,0,0,1 }, 
               { 1,1,1,1,1,1,1,1,1,1 }, 
             };

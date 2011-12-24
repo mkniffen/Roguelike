@@ -57,6 +57,25 @@ namespace SlashIt
 //TODO -- Look at a command pattern or maybe a factory.
             switch (keyInfo.Key)
             {
+                case ConsoleKey.C:
+                    break;
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.LeftArrow:
+                case ConsoleKey.RightArrow:
+                case ConsoleKey.UpArrow:
+                    game.character.Move(keyInfo.Key, game.Map);
+                    break;
+                case ConsoleKey.L:
+                    game.DoLook();
+                    break;
+                case ConsoleKey.O:
+                    game.DoOpen();
+                    break;
+                case ConsoleKey.Q:
+                    quit = true;
+                    break;
+
+                // Not used
                 case ConsoleKey.A:
                     break;
                 case ConsoleKey.Add:
@@ -82,8 +101,6 @@ namespace SlashIt
                 case ConsoleKey.BrowserSearch:
                     break;
                 case ConsoleKey.BrowserStop:
-                    break;
-                case ConsoleKey.C:
                     break;
                 case ConsoleKey.Clear:
                     break;
@@ -116,9 +133,6 @@ namespace SlashIt
                 case ConsoleKey.Delete:
                     break;
                 case ConsoleKey.Divide:
-                    break;
-                case ConsoleKey.DownArrow:
-                    game.character.Move(ConsoleKey.DownArrow);
                     break;
                 case ConsoleKey.E:
                     break;
@@ -200,9 +214,6 @@ namespace SlashIt
                     break;
                 case ConsoleKey.K:
                     break;
-                case ConsoleKey.L:
-                    game.DoLook();
-                    break;
                 case ConsoleKey.LaunchApp1:
                     break;
                 case ConsoleKey.LaunchApp2:
@@ -210,9 +221,6 @@ namespace SlashIt
                 case ConsoleKey.LaunchMail:
                     break;
                 case ConsoleKey.LaunchMediaSelect:
-                    break;
-                case ConsoleKey.LeftArrow:
-                    game.character.Move(ConsoleKey.LeftArrow);
                     break;
                 case ConsoleKey.LeftWindows:
                     break;
@@ -251,8 +259,6 @@ namespace SlashIt
                 case ConsoleKey.NumPad8:
                     break;
                 case ConsoleKey.NumPad9:
-                    break;
-                case ConsoleKey.O:
                     break;
                 case ConsoleKey.Oem1:
                     break;
@@ -302,13 +308,7 @@ namespace SlashIt
                     break;
                 case ConsoleKey.Process:
                     break;
-                case ConsoleKey.Q: 
-                    quit = true;
-                    break;
                 case ConsoleKey.R:
-                    break;
-                case ConsoleKey.RightArrow:
-                    game.character.Move(ConsoleKey.RightArrow);
                     break;
                 case ConsoleKey.RightWindows:
                     break;
@@ -329,9 +329,6 @@ namespace SlashIt
                 case ConsoleKey.Tab:
                     break;
                 case ConsoleKey.U:
-                    break;
-                case ConsoleKey.UpArrow:
-                    game.character.Move(ConsoleKey.UpArrow);
                     break;
                 case ConsoleKey.V:
                     break;
