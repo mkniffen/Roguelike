@@ -81,7 +81,7 @@ namespace SlashIt
 
 
     public class Game
-    {
+    { 
         public Character character;
 
         private Map map;
@@ -107,15 +107,22 @@ namespace SlashIt
         }
 
 
-        //TODO eventually optimize how and when things are drawn.  don't necessrily need to redraw all the time.
+        //TODO eventually optimize how and when things are drawn.  don't necessarily need to redraw all the time.
+        //TODO maybe have use a second array that tracks what should be drawn on the grid.
         public void WriteConsole()
         {
-            Console.Clear();
 
-            this.GenerateMap();  //TODO only do this when really needed
+            if (map.MapOutdated)
+            {
+                Console.Clear();
+                this.GenerateMap();  //TODO only do this when really needed
+            }
 
+            Console.SetCursorPosition(character.LeftBeforeMove, character.TopBeforeMove);
+            Console.Write(" ");
             Console.SetCursorPosition(character.Left, character.Top);
             Console.Write("@");
+            character.SetPositionBeforeMove();
 
             Status.WriteToStatusLine();
 
@@ -152,12 +159,17 @@ namespace SlashIt
 
             }
 
+            map.MapOutdated = false;
+
         }
     }
 
 
     public class Status
     {
+        //TODO: maybe change this to be inited on porg start so that it can very more easiyl 
+        private static string clearLine = "                                                                               ";
+
         private const int MessagePositionDefaultLeft = 0;
         private const int MessagePositionDefaultTop = 24;
 
@@ -178,6 +190,9 @@ namespace SlashIt
             var originalCursonPositionTop = Console.CursorTop;
             
             Console.SetCursorPosition(MessagePositionDefaultLeft, MessagePositionDefaultTop);
+            Console.Write(clearLine);
+
+            Console.SetCursorPosition(MessagePositionDefaultLeft, MessagePositionDefaultTop);
             Console.Write(Message);
 
             Console.SetCursorPosition(originalCursonPositionLeft, originalCursonPositionTop);
@@ -189,6 +204,7 @@ namespace SlashIt
             Message = status;
             WriteToStatusLine();
         }
+
     }
 
     public class Character
@@ -196,37 +212,59 @@ namespace SlashIt
         public int Left { get; set; }
         public int Top { get; set; }
 
+        public int LeftBeforeMove { get; set; }
+        public int TopBeforeMove { get; set; }
+
         public void SetPosition(int left, int top)
         {
             this.Left = left;
             this.Top = top;
+
+            this.SetPositionBeforeMove();
         }
 
         public void MoveRight()
         {
+            //this.LeftBeforeMove = this.Left;
             this.Left++;
         }
 
         public void MoveLeft()
         {
+            //this.LeftBeforeMove = this.Left;
             this.Left--;
         }
 
         public void MoveUp()
         {
+            //this.TopBeforeMove = this.Top;
             this.Top--;
         }
 
         public void MoveDown()
         {
+            //this.TopBeforeMove = this.Top;
             this.Top++;
         }
 
+        public void SetPositionBeforeMove()
+        {
+            this.LeftBeforeMove = this.Left;
+            this.TopBeforeMove = this.Top;
+        }
     }
 
 
     public class Map
     {
+
+        public Map()
+        {
+            MapOutdated = true;
+        }
+
+        public bool MapOutdated { get; set; }
+
         public int[,] map = new int[10, 10] 
             { { 1,1,1,1,1,1,1,1,1,1 }, 
               { 1,0,0,0,0,0,0,0,1,1 }, 
