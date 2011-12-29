@@ -69,7 +69,7 @@ namespace SlashIt
                     game.DoLook();
                     break;
                 case ConsoleKey.O:
-                    game.DoOpen();
+                    game.DoOpenClose();
                     break;
                 case ConsoleKey.Q:
                     quit = true;

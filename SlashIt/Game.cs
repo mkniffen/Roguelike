@@ -134,15 +134,11 @@ namespace SlashIt
         }
 
 
-        //TODO WORKING HERE -- do more testing on open
-        // -- Implement Close door
 
-
-
-        public void DoOpen()
+        public void DoOpenClose()
         {
             Status.ClearInfo();
-            Status.Info = "Open which direction?";
+            Status.Info = "Which direction?";
             Status.WriteToStatus();
 
             var keyInfo = Console.ReadKey(true);
@@ -163,13 +159,20 @@ namespace SlashIt
                     //Replace closed door with open door in map matrix
                     Map[mapLocation.Top, mapLocation.Left] = 3;
                     Map.MapOutdated = true;
+                    Status.ClearInfo();
+                    break;
+                case (3):
+                    //Replace open door with closed door in map matrix
+                    Map[mapLocation.Top, mapLocation.Left] = 2;
+                    Map.MapOutdated = true;
+                    Status.ClearInfo();
                     break;
                 default:
-                    Status.Info = "That can't be opened.  Press any key to continue.";
+                    Status.Info = "That can't be opened or closed.  Press any key to continue.";
                     Status.WriteToStatus();
 
                     Console.ReadKey(true);
-                    DoOpen();
+                    DoOpenClose();
                     break;
             }
         }
