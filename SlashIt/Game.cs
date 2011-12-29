@@ -47,7 +47,7 @@ namespace SlashIt
             }
 
             Console.SetCursorPosition(character.LeftBeforeMove, character.TopBeforeMove);
-            Console.Write(" ");
+            Console.Write(CellCharacter(character.LeftMapPositionBeforeMove, character.TopMapPositionBeforeMove));
             Console.SetCursorPosition(character.Left, character.Top);
             Console.Write("@");
             character.SetPositionBeforeMove();
@@ -55,8 +55,6 @@ namespace SlashIt
             Status.Message = "Map Left: " + character.LeftMapPosition + " :MapTop: " + character.TopMapPosition;
 
             Status.WriteToStatus();
-
-            //TODO add console bounds check
         }
 
 
@@ -67,33 +65,11 @@ namespace SlashIt
 
             Console.SetCursorPosition(mapStartLeft, mapStartTop);
 
-            for (int i = 0; i <= this.Map.GetUpperBound(0); i++)
+            for (int top = 0; top <= this.Map.GetUpperBound(0); top++)
             {
-                for (int j = 0; j <= this.Map.GetUpperBound(1); j++)
+                for (int left = 0; left <= this.Map.GetUpperBound(1); left++)
                 {
-                    //TODO -- move this stuff to enum and or definig class soon!!!!!!!!!!!!
-
-                    switch (this.Map[i, j])
-                    {
-                        case (0):
-                            //Hallway
-                            Console.Write(" ");
-                            break;
-                        case (1):
-                            //Wall
-                            Console.Write("#");
-                            break;
-                        case (2):
-                            //Closed Door
-                            Console.Write("+");
-                            break;
-                        case (3):
-                            //Open Door
-                            Console.Write("`");
-                            break;
-                        default:
-                            break;
-                    }
+                    Console.Write(CellCharacter(left, top));
                 }
 
                 Console.SetCursorPosition(mapStartLeft, ++mapStartTop);
@@ -102,6 +78,29 @@ namespace SlashIt
 
             Map.MapOutdated = false;
 
+        }
+
+        private string CellCharacter(int left, int top)
+        {
+           //TODO -- move this stuff to enum and or definig class soon!!!!!!!!!!!!
+
+                    switch (this.Map[top, left])
+                    {
+                        case (0):
+                            //Hallway
+                            return " ";
+                        case (1):
+                            //Wall
+                            return "#";
+                        case (2):
+                            //Closed Door
+                            return "+";
+                        case (3):
+                            //Open Door
+                            return "`";
+                        default:
+                            return " ";
+                    }
         }
 
         public void CheckBounds()
@@ -136,8 +135,6 @@ namespace SlashIt
 
 
         //TODO WORKING HERE -- do more testing on open
-        // -- currently open door is not redrawn at the proper time
-        // -- Need a way to get out of DoOpen when deciding not to open a door
         // -- Implement Close door
 
 
@@ -152,6 +149,12 @@ namespace SlashIt
 
             //TODO -- Taking key input exists in more than one place now, REFACTOR
 
+            if (keyInfo.Key == ConsoleKey.Escape)
+            {
+                Status.ClearInfo();
+                return;
+            }
+
             var mapLocation = character.Move(keyInfo.Key);
 
             switch (Map[mapLocation.Top, mapLocation.Left])
@@ -162,8 +165,9 @@ namespace SlashIt
                     Map.MapOutdated = true;
                     break;
                 default:
-                    Status.ClearInfo();
-                    Status.Info = "That can't be opened.  Press any key to continue";
+                    Status.Info = "That can't be opened.  Press any key to continue.";
+                    Status.WriteToStatus();
+
                     Console.ReadKey(true);
                     DoOpen();
                     break;

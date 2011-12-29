@@ -75,7 +75,8 @@ namespace SlashIt
                     quit = true;
                     break;
 
-                // Not used
+                #region Unused Console Keys
+
                 case ConsoleKey.A:
                     break;
                 case ConsoleKey.Add:
@@ -348,6 +349,9 @@ namespace SlashIt
                     break;
                 case ConsoleKey.Zoom:
                     break;
+
+                #endregion
+
                 default:
                     break;
             };

@@ -53,7 +53,6 @@ namespace SlashIt
             Console.SetCursorPosition(originalCursonPositionLeft, originalCursonPositionTop);
         }
 
-
         public static void WriteToStatusLine(string status)
         {
             Message = status;

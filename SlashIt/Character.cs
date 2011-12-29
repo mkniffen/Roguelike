@@ -17,6 +17,9 @@ namespace SlashIt
         public int LeftMapPosition { get { return this.Left - Game.MapStartLeft; } }
         public int TopMapPosition { get { return this.Top - Game.MapStartTop; } }
 
+        public int LeftMapPositionBeforeMove { get { return this.LeftBeforeMove - Game.MapStartLeft; } }
+        public int TopMapPositionBeforeMove { get { return this.TopBeforeMove - Game.MapStartTop; } }
+
         public void DisallowMove()
         {
             this.Left = this.LeftBeforeMove;
