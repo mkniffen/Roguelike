@@ -115,15 +115,13 @@ namespace SlashIt
         //TODO -- Refactor!!!!!!!!!!
         public void DoLook()
         {
-
-                           // TODO change access to matrix to method calls throughout
             switch (Map[character.TopMapPosition, character.LeftMapPosition])
             {
                 case (0):
                     Status.Info = "You see empty floor";
                     break;
                 case (2):
-                    Status.Info = "A big wooden door";
+                    Status.Info = "A big wooden door.  It's closed.";
                     break;
                 case (3):
                     Status.Info = "An open door";
