@@ -13,7 +13,10 @@ namespace SlashIt
         public Map()
         {
             MapOutdated = true;
+            MapFile = @".\map.ser";
         }
+
+        public string MapFile { get; set; }
 
         //TODO not sure about this syntax.  Gonna give it a try for now...
         public int this[int top, int left]
@@ -22,10 +25,6 @@ namespace SlashIt
             set { this.map[top, left] = value; }
         }
 
-        //public void SetMap(int[,] newMap)
-        //{
-        //    map = newMap;
-        //}
 
         public bool MapOutdated { get; set; }
 
@@ -48,9 +47,33 @@ namespace SlashIt
             //};
 
 
-        public static void Load()
+
+        public Map Load()
         {
-            throw new NotImplementedException();
+
+
+            //TODO MWK -- Working here!!!!!!!!!   Change this so it reads the map on start and saves on quit.  have
+            //                                    it reading, but needs to be refactored and still need to redo the save
+
+
+            XmlSerializer serializer = new XmlSerializer(typeof(Map));
+
+            StreamReader sr = new StreamReader(MapFile);
+            var newMap = (Map)serializer.Deserialize(sr);
+            sr.Close();
+
+            return newMap;
+        }
+
+
+        public void Save()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Map));
+
+            TextWriter tw = new StreamWriter(MapFile);
+            serializer.Serialize(tw, this);
+            tw.Close();
+
         }
 
 
