@@ -39,11 +39,15 @@ namespace SlashIt
 
         public void Serialize()
         {
-
+            var theFile = @".\map.ser";
             XmlSerializer serializer = new XmlSerializer(typeof(Map));
-            TextWriter tw = new StreamWriter(@".\map.ser");
+            TextWriter tw = new StreamWriter(theFile);
             serializer.Serialize(tw, this.Map);
             tw.Close();
+
+            StreamReader sr = new StreamReader(theFile);
+            serializer.Deserialize(sr);
+            sr.Close();
         }
 
 
