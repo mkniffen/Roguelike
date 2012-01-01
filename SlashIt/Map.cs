@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace SlashIt
 {
@@ -40,6 +42,13 @@ namespace SlashIt
               { 1,1,0,0,0,0,0,0,0,1 }, 
               { 1,1,1,1,1,1,1,1,1,1 }, 
             };
+
+
+        public static void Load()
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

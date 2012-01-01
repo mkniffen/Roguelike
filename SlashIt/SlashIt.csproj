@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Character.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Location.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="game.map" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

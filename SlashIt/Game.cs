@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace SlashIt
 {
@@ -28,10 +30,20 @@ namespace SlashIt
             character.SetPosition(22, 2);  //TODO Const
 
             Map = new Map();
+            Serialize();
 
             this.WriteConsole();
 
             Status.Message = "Height: " + Console.WindowHeight + " Width: " + Console.WindowWidth;
+        }
+
+        public void Serialize()
+        {
+
+            XmlSerializer serializer = new XmlSerializer(typeof(Map));
+            TextWriter tw = new StreamWriter(@".\map.ser");
+            serializer.Serialize(tw, this.Map);
+            tw.Close();
         }
 
 
@@ -175,11 +187,5 @@ namespace SlashIt
             }
         }
 
-    }
-
-    public class Location
-    {
-        public int Top { get; set; }
-        public int Left { get; set; }
     }
 }
