@@ -30,24 +30,33 @@ namespace SlashIt
             character.SetPosition(22, 2);  //TODO Const
 
             Map = new Map();
-            Serialize();
+            Map = Serialize();
 
             this.WriteConsole();
 
             Status.Message = "Height: " + Console.WindowHeight + " Width: " + Console.WindowWidth;
         }
 
-        public void Serialize()
+        public Map Serialize()
         {
+
+
+            //TODO MWK -- Working here!!!!!!!!!   Change this so it reads the map on start and saves on quit.  have
+            //                                    it reading, but needs to be refactored and still need to redo the save
+
+
             var theFile = @".\map.ser";
             XmlSerializer serializer = new XmlSerializer(typeof(Map));
-            TextWriter tw = new StreamWriter(theFile);
-            serializer.Serialize(tw, this.Map);
-            tw.Close();
+
+            //TextWriter tw = new StreamWriter(theFile);
+            //serializer.Serialize(tw, this.Map);
+            //tw.Close();
 
             StreamReader sr = new StreamReader(theFile);
-            serializer.Deserialize(sr);
+            var newMap = (Map)serializer.Deserialize(sr);
             sr.Close();
+
+            return newMap;
         }
 
 

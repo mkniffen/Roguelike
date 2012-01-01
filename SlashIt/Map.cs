@@ -22,6 +22,11 @@ namespace SlashIt
             set { this.map[top, left] = value; }
         }
 
+        //public void SetMap(int[,] newMap)
+        //{
+        //    map = newMap;
+        //}
+
         public bool MapOutdated { get; set; }
 
         public int GetUpperBound(int dimension)
@@ -29,18 +34,18 @@ namespace SlashIt
             return map.GetUpperBound(dimension);
         }
 
-        private int[,] map = new int[10, 10] 
-            { { 1,1,1,1,1,1,1,1,1,1 }, 
-              { 1,0,0,0,0,0,0,0,1,1 }, 
-              { 1,1,1,1,1,1,1,2,1,1 }, 
-              { 1,1,1,1,1,1,1,0,1,1 }, 
-              { 1,1,0,0,0,0,0,0,1,1 }, 
-              { 1,1,1,1,1,0,1,1,1,1 }, 
-              { 1,1,1,1,1,0,1,1,1,1 }, 
-              { 1,1,1,1,1,2,1,1,1,1 }, 
-              { 1,1,0,0,0,0,0,0,0,1 }, 
-              { 1,1,1,1,1,1,1,1,1,1 }, 
-            };
+        private int[,] map = new int[10, 10];
+            //{ { 1,1,1,1,1,1,1,1,1,1 }, 
+            //  { 1,0,0,0,0,0,0,0,1,1 }, 
+            //  { 1,1,1,1,1,1,1,2,1,1 }, 
+            //  { 1,1,1,1,1,1,1,0,1,1 }, 
+            //  { 1,1,0,0,0,0,0,0,1,1 }, 
+            //  { 1,1,1,1,1,0,1,1,1,1 }, 
+            //  { 1,1,1,1,1,0,1,1,1,1 }, 
+            //  { 1,1,1,1,1,2,1,1,1,1 }, 
+            //  { 1,1,0,0,0,0,0,0,0,1 }, 
+            //  { 1,1,1,1,1,1,1,1,1,1 }, 
+            //};
 
 
         public static void Load()
@@ -57,7 +62,7 @@ namespace SlashIt
 
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            map = new int[10, 10];
+            //var map = new int[10, 10];
 
             reader.MoveToContent();
 
@@ -69,15 +74,17 @@ namespace SlashIt
                 var definitionList = reader.ReadElementString("Definition").Split(',');
                 int listPosition = 0;
 
-                for (int top = 0; top <= this.GetUpperBound(0); top++)
+                for (int top = 0; top <= map.GetUpperBound(0); top++)
                 {
-                    for (int left = 0; left <= this.GetUpperBound(1); left++)
+                    for (int left = 0; left <= map.GetUpperBound(1); left++)
                     {
                         map[top, left] = int.Parse(definitionList[listPosition]);
-                        
+                        listPosition++;
                     }
                 }
             }
+
+            //return map;
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)
