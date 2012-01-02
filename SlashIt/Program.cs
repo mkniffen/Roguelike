@@ -12,8 +12,6 @@ namespace SlashIt
 
         static void Main(string[] args)
         {
-            Console.CancelKeyPress += new ConsoleCancelEventHandler(Console_CancelKeyPress);
-
             game = new Game();
             game.InitConsole();
 
@@ -33,24 +31,11 @@ namespace SlashIt
             Console.WriteLine("Game over!");
         }
 
-        /// <summary>
-        /// Event handler for ^C key press
-        /// </summary>
-        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
-        {
-            // Unfortunately, due to a bug in .NET Framework v4.0.30319 you can't debug this 
-            // because Visual Studio 2010 gives a "No Source Available" error. 
-            // http://connect.microsoft.com/VisualStudio/feedback/details/524889/debugging-c-console-application-that-handles-console-cancelkeypress-is-broken-in-net-4-0
-
-            quit = true;
-            e.Cancel = true; // Set this to true to keep the process from quitting immediately
-        }
-
         private static void HandleInput()
         {
 
-            var keyInfo = Console.ReadKey(true);
-            //  Status.Message = "Key: " + keyInfo.Key;
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+          //    Status.Message = "Key: " + keyInfo.Key;
 
             Status.ClearInfo();
 
@@ -72,7 +57,10 @@ namespace SlashIt
                     game.DoOpenClose();
                     break;
                 case ConsoleKey.Q:
+                    game.Save();
                     quit = true;
+                    break;
+                case ConsoleKey.S:
                     break;
 
                 #region Unused Console Keys
@@ -312,8 +300,6 @@ namespace SlashIt
                 case ConsoleKey.R:
                     break;
                 case ConsoleKey.RightWindows:
-                    break;
-                case ConsoleKey.S:
                     break;
                 case ConsoleKey.Select:
                     break;

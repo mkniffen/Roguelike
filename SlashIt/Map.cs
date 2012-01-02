@@ -50,12 +50,6 @@ namespace SlashIt
 
         public Map Load()
         {
-
-
-            //TODO MWK -- Working here!!!!!!!!!   Change this so it reads the map on start and saves on quit.  have
-            //                                    it reading, but needs to be refactored and still need to redo the save
-
-
             XmlSerializer serializer = new XmlSerializer(typeof(Map));
 
             StreamReader sr = new StreamReader(MapFile);
@@ -73,9 +67,7 @@ namespace SlashIt
             TextWriter tw = new StreamWriter(MapFile);
             serializer.Serialize(tw, this);
             tw.Close();
-
         }
-
 
 
         public System.Xml.Schema.XmlSchema GetSchema()
@@ -83,10 +75,9 @@ namespace SlashIt
             return (null);
         }
 
+
         public void ReadXml(System.Xml.XmlReader reader)
         {
-            //var map = new int[10, 10];
-
             reader.MoveToContent();
 
             var isEmptyElement = reader.IsEmptyElement;
@@ -106,8 +97,6 @@ namespace SlashIt
                     }
                 }
             }
-
-            //return map;
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)

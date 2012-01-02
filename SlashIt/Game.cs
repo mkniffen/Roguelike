@@ -23,6 +23,7 @@ namespace SlashIt
 
         public void InitConsole()
         {
+            Console.TreatControlCAsInput = true;
 
             Console.Clear();
             Console.SetWindowSize(80, 25);
@@ -182,5 +183,36 @@ namespace SlashIt
             }
         }
 
+
+        public void Save()
+        {
+
+            //TODO WORKING HERE -- Add option to not quit
+
+            Status.ClearInfo();
+            Status.Info = "Would you like to save (Y or N)?";
+            Status.WriteToStatus();
+
+            var keyInfo = Console.ReadKey(true);
+
+            if (keyInfo.Key == ConsoleKey.Y)
+            {
+                Status.ClearInfo();
+                Status.Info = "Game Saved.";
+
+                Map.Save();
+                return;
+            }
+            else if (keyInfo.Key == ConsoleKey.N)
+            {
+                Status.ClearInfo();
+                Status.Info = "Quiting without save.";
+                return;
+            }
+            else
+            {
+                this.Save();
+            }
+        }
     }
 }
