@@ -48,7 +48,7 @@ namespace SlashIt
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.UpArrow:
-                    game.character.Move(keyInfo.Key, game.Map);
+                    game.Character.Move(keyInfo.Key, game.Map);
                     break;
                 case ConsoleKey.L:
                     game.DoLook();
@@ -57,8 +57,11 @@ namespace SlashIt
                     game.DoOpenClose();
                     break;
                 case ConsoleKey.Q:
-                    game.Save();
-                    quit = true;
+                    quit = game.Quit();
+                    if (quit)
+                    {
+                        game.Save();
+                    }
                     break;
                 case ConsoleKey.S:
                     break;

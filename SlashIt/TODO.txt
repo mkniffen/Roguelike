@@ -1,2 +1,4 @@
 ﻿TODO
 
+-- Come up with better strategy for handling key input.
+-- Commands (like save, quit, doOpen) should be refactored.  Maybe the command pattern?

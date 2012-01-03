@@ -13,10 +13,10 @@ namespace SlashIt
         public Map()
         {
             MapOutdated = true;
-            MapFile = @".\map.ser";
+            //MapFile = @".\game.sav";
         }
 
-        public string MapFile { get; set; }
+        //public string MapFile { get; set; }
 
         //TODO not sure about this syntax.  Gonna give it a try for now...
         public int this[int top, int left]
@@ -48,25 +48,18 @@ namespace SlashIt
 
 
 
-        public Map Load()
+        public Map Load(StreamReader saveFileStream)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Map));
-
-            StreamReader sr = new StreamReader(MapFile);
-            var newMap = (Map)serializer.Deserialize(sr);
-            sr.Close();
-
-            return newMap;
+            return (Map)serializer.Deserialize(saveFileStream);
         }
 
 
-        public void Save()
+        public void Save(TextWriter saveFileWriter)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Map));
 
-            TextWriter tw = new StreamWriter(MapFile);
-            serializer.Serialize(tw, this);
-            tw.Close();
+            serializer.Serialize(saveFileWriter, this);
         }
 
 

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace SlashIt
 {
@@ -95,6 +97,19 @@ namespace SlashIt
             }
 
             return mapLocation;
+        }
+
+        public void Save(TextWriter saveFileWriter)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Character));
+
+            serializer.Serialize(saveFileWriter, this);
+        }
+
+        public Character Load(StreamReader saveFileStream)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Character));
+            return (Character)serializer.Deserialize(saveFileStream);
         }
     }
 }

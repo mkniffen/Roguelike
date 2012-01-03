@@ -10,12 +10,14 @@ namespace SlashIt
 
     public class Game
     {
+        const string SaveFile = @".\game.sav";
+
         public Game()
         {
             Map = new Map();
         }
 
-        public Character character;
+        public Character Character { get; set; }
 
         public Map Map { get; set; }
         public const short MapStartLeft = 20;
@@ -32,10 +34,10 @@ namespace SlashIt
 
             Console.CursorVisible = false;
 
-            character = new Character();
-            character.SetPosition(22, 2);  //TODO Const
+            Character = new Character();
+            Character.SetPosition(22, 2);  //TODO Const
 
-            Map = Map.Load();
+            this.Load();
 
             this.WriteConsole();
 
@@ -54,13 +56,13 @@ namespace SlashIt
                 this.GenerateMap();  //TODO only do this when really needed
             }
 
-            Console.SetCursorPosition(character.LeftBeforeMove, character.TopBeforeMove);
-            Console.Write(CellCharacter(character.LeftMapPositionBeforeMove, character.TopMapPositionBeforeMove));
-            Console.SetCursorPosition(character.Left, character.Top);
+            Console.SetCursorPosition(Character.LeftBeforeMove, Character.TopBeforeMove);
+            Console.Write(CellCharacter(Character.LeftMapPositionBeforeMove, Character.TopMapPositionBeforeMove));
+            Console.SetCursorPosition(Character.Left, Character.Top);
             Console.Write("@");
-            character.SetPositionBeforeMove();
+            Character.SetPositionBeforeMove();
 
-            Status.Message = "Map Left: " + character.LeftMapPosition + " :MapTop: " + character.TopMapPosition;
+         //   Status.Message = "Map Left: " + character.LeftMapPosition + " :MapTop: " + character.TopMapPosition;
 
             Status.WriteToStatus();
         }
@@ -114,16 +116,16 @@ namespace SlashIt
         public void CheckBounds()
         {
             //TODO -- Improve this
-            if (Map[character.TopMapPosition, character.LeftMapPosition] != 0 && Map[character.TopMapPosition, character.LeftMapPosition] != 3)
+            if (Map[Character.TopMapPosition, Character.LeftMapPosition] != 0 && Map[Character.TopMapPosition, Character.LeftMapPosition] != 3)
             {
-                character.DisallowMove();
+                Character.DisallowMove();
             }
         }
 
         //TODO -- Refactor!!!!!!!!!!
         public void DoLook()
         {
-            switch (Map[character.TopMapPosition, character.LeftMapPosition])
+            switch (Map[Character.TopMapPosition, Character.LeftMapPosition])
             {
                 case (0):
                     Status.Info = "You see empty floor";
@@ -157,7 +159,7 @@ namespace SlashIt
                 return;
             }
 
-            var mapLocation = character.Move(keyInfo.Key);
+            var mapLocation = Character.Move(keyInfo.Key);
 
             switch (Map[mapLocation.Top, mapLocation.Left])
             {
@@ -183,35 +185,71 @@ namespace SlashIt
             }
         }
 
-
-        public void Save()
+        public bool Quit()
         {
-
-            //TODO WORKING HERE -- Add option to not quit
+            bool quit = true;
 
             Status.ClearInfo();
-            Status.Info = "Would you like to save (Y or N)?";
+            Status.Info = "Really quit (Y or N)?";
             Status.WriteToStatus();
 
             var keyInfo = Console.ReadKey(true);
 
             if (keyInfo.Key == ConsoleKey.Y)
             {
-                Status.ClearInfo();
-                Status.Info = "Game Saved.";
-
-                Map.Save();
-                return;
+                ;
             }
             else if (keyInfo.Key == ConsoleKey.N)
             {
                 Status.ClearInfo();
-                Status.Info = "Quiting without save.";
-                return;
+                Status.Info = "Returning to game.";
+                quit = false;
             }
             else
             {
-                this.Save();
+                this.Quit();
+            }
+
+            return quit;
+        }
+
+        private void Load()
+        {
+
+            using (StreamReader saveFileStream = new StreamReader(SaveFile))
+            {
+
+        //TODO -- Not sure if this is the best place to do this.  Should I move this to a higher level (Program)??
+                XmlSerializer serializer = new XmlSerializer(typeof(Game));
+                var game = (Game)serializer.Deserialize(saveFileStream);
+
+                this.Map = game.Map;
+                this.Character = game.Character;
+
+                //this.Map = this.Map.Load(saveFileStream);
+             //   this.Character = this.Character.Load(saveFileStream);
+
+                saveFileStream.Close();
+            }
+        }
+
+
+        public void Save()
+        {
+            Status.ClearInfo();
+            Status.Info = "Game Saved.";
+
+            using (TextWriter tw = new StreamWriter(SaveFile))
+            {
+                //TODO -- Move this up too (along with Load)???
+
+                XmlSerializer serializer = new XmlSerializer(typeof(Game));
+                serializer.Serialize(tw, this);
+
+
+                //Map.Save(tw);
+                //Character.Save(tw);
+                //tw.Close();
             }
         }
     }
