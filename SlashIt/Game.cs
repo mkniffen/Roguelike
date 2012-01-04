@@ -15,9 +15,12 @@ namespace SlashIt
         public Game()
         {
             Map = new Map();
+            NonPlayerCharacters = new List<NonPlayerCharacter>();
         }
 
         public Character Character { get; set; }
+
+        public List<NonPlayerCharacter> NonPlayerCharacters { get; set; }
 
         public Map Map { get; set; }
         public const short MapStartLeft = 20;
@@ -39,6 +42,13 @@ namespace SlashIt
 
             this.Load();
 
+            if (NonPlayerCharacters.Count < 1)
+            {
+                var newNPC = new NonPlayerCharacter();
+                Map[newNPC.Location.TopMapPosition, newNPC.Location.LeftMapPosition] = newNPC.UniqueId;
+                NonPlayerCharacters.Add(newNPC);
+            }
+
             this.WriteConsole();
 
             Status.Message = "Height: " + Console.WindowHeight + " Width: " + Console.WindowWidth;
@@ -49,7 +59,6 @@ namespace SlashIt
         //TODO maybe have use a second array that tracks what should be drawn on the grid.
         public void WriteConsole()
         {
-
             if (Map.MapOutdated)
             {
                 Console.Clear();
@@ -92,7 +101,10 @@ namespace SlashIt
 
         private string CellCharacter(int left, int top)
         {
-           //TODO -- move this stuff to enum and or definig class soon!!!!!!!!!!!!
+           //TODO -- Can stop using the switch.  Instead use linq on the id returned from the map matrix.  Just
+            //                                   make all map objects use the same base class (or interface) that has
+            //                                   a uniqueId that can be easily looked up.  Should be able to apply this technique
+            //                                   throughout.  Give it a try and see how you like it.
 
                     switch (this.Map[top, left])
                     {
@@ -108,6 +120,8 @@ namespace SlashIt
                         case (3):
                             //Open Door
                             return "`";
+                        case (111):
+                            return NonPlayerCharacters.Where(n => n.UniqueId == 111).Single().DisplayCharacter;
                         default:
                             return " ";
                     }
@@ -225,9 +239,7 @@ namespace SlashIt
 
                 this.Map = game.Map;
                 this.Character = game.Character;
-
-                //this.Map = this.Map.Load(saveFileStream);
-             //   this.Character = this.Character.Load(saveFileStream);
+                //this.NonPlayerCharacters = game.NonPlayerCharacters;
 
                 saveFileStream.Close();
             }
@@ -246,10 +258,7 @@ namespace SlashIt
                 XmlSerializer serializer = new XmlSerializer(typeof(Game));
                 serializer.Serialize(tw, this);
 
-
-                //Map.Save(tw);
-                //Character.Save(tw);
-                //tw.Close();
+                tw.Close();
             }
         }
     }

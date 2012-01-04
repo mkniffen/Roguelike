@@ -1,4 +1,11 @@
 ﻿TODO
 
+-- Change all locations to be relative to the map instead of relative to the console
 -- Come up with better strategy for handling key input.
 -- Commands (like save, quit, doOpen) should be refactored.  Maybe the command pattern?
+
+
+Longer Term
+
+-- Could use encryption with differing keys on the uniqueId's stored in the map matrix and on the NPC's theirselves
+   to make it hard to hack.  Give it a try!!

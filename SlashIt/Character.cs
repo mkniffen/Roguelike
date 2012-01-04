@@ -70,9 +70,7 @@ namespace SlashIt
         //TODO look at moving to this style of move throughout
         public Location Move(ConsoleKey consoleKey)
         {
-            var mapLocation = new Location();
-            mapLocation.Top = TopMapPosition;
-            mapLocation.Left = LeftMapPosition;
+            var mapLocation = new Location(LeftMapPosition, TopMapPosition);
 
             switch (consoleKey)
             {
