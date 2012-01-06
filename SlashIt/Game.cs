@@ -8,19 +8,20 @@ using System.IO;
 namespace SlashIt
 {
 
-    public class Game
+    public class Game// : IXmlSerializable
     {
         const string SaveFile = @".\game.sav";
 
         public Game()
         {
             Map = new Map();
-            NonPlayerCharacters = new List<NonPlayerCharacter>();
+            MapObjects = new List<IMapObject>();
         }
 
         public Character Character { get; set; }
 
-        public List<NonPlayerCharacter> NonPlayerCharacters { get; set; }
+        [XmlIgnore]
+        public List<IMapObject> MapObjects { get; set; }
 
         public Map Map { get; set; }
         public const short MapStartLeft = 20;
@@ -42,12 +43,14 @@ namespace SlashIt
 
             this.Load();
 
-            if (NonPlayerCharacters.Count < 1)
-            {
-                var newNPC = new NonPlayerCharacter();
+
+            //TODO !!!!!!!!!! temp code to load up a monster...  change this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+            #region ChangeMe
+            var newNPC = new NonPlayerCharacter();
                 Map[newNPC.Location.TopMapPosition, newNPC.Location.LeftMapPosition] = newNPC.UniqueId;
-                NonPlayerCharacters.Add(newNPC);
-            }
+                MapObjects.Add(newNPC);
+            #endregion
+            
 
             this.WriteConsole();
 
@@ -106,25 +109,16 @@ namespace SlashIt
             //                                   a uniqueId that can be easily looked up.  Should be able to apply this technique
             //                                   throughout.  Give it a try and see how you like it.
 
-                    switch (this.Map[top, left])
-                    {
-                        case (0):
-                            //Hallway
-                            return " ";
-                        case (1):
-                            //Wall
-                            return "#";
-                        case (2):
-                            //Closed Door
-                            return "+";
-                        case (3):
-                            //Open Door
-                            return "`";
-                        case (111):
-                            return NonPlayerCharacters.Where(n => n.UniqueId == 111).Single().DisplayCharacter;
-                        default:
-                            return " ";
-                    }
+
+
+
+            //TODO WORKING HERE
+            //   1) give the single npc more life by implementing simple time and simple AI
+            //   2) figure out how to store info on stuff
+
+
+
+            return MapObjects.Where(n => n.UniqueId == this.Map[top, left]).Single().DisplayCharacter;
         }
 
         public void CheckBounds()
@@ -139,20 +133,7 @@ namespace SlashIt
         //TODO -- Refactor!!!!!!!!!!
         public void DoLook()
         {
-            switch (Map[Character.TopMapPosition, Character.LeftMapPosition])
-            {
-                case (0):
-                    Status.Info = "You see empty floor";
-                    break;
-                case (2):
-                    Status.Info = "A big wooden door.  It's closed.";
-                    break;
-                case (3):
-                    Status.Info = "An open door";
-                    break;
-                default:
-                    break;
-            }
+            Status.Info = MapObjects.Where(n => n.UniqueId == Map[Character.TopMapPosition, Character.LeftMapPosition]).Single().Description;
         }
 
 
@@ -243,6 +224,22 @@ namespace SlashIt
 
                 saveFileStream.Close();
             }
+
+            this.LoadTiles();
+        }
+
+
+        //TODO -- move the details to config
+        private void LoadTiles()
+        {
+            MapObjects.AddRange(
+                new List<Tile> 
+                { 
+                    new Tile { Description = "A big wooden door.  It's closed", DisplayCharacter = "+", Name = "Door", UniqueId = Constants.UniqueIds.Door},
+                    new Tile { Description = "Empty floor", DisplayCharacter = " ", Name = "Floor", UniqueId = Constants.UniqueIds.Floor },
+                    new Tile { Description = "A brick wall", DisplayCharacter = "#", Name = "Wall", UniqueId = Constants.UniqueIds.Wall },
+                    new Tile { Description = "An open door", DisplayCharacter = "`", Name = "OpenDoor", UniqueId = Constants.UniqueIds.OpenDoor },
+                });
         }
 
 
@@ -261,5 +258,48 @@ namespace SlashIt
                 tw.Close();
             }
         }
+
+        //public System.Xml.Schema.XmlSchema GetSchema()
+        //{
+        //    return (null);
+        //}
+
+        //public void ReadXml(System.Xml.XmlReader reader)
+        //{
+        //    reader.MoveToContent();
+        //    reader.ReadStartElement();
+
+        //    XmlSerializer serializer;
+
+        //    while (!reader.EOF)
+        //    {
+        //        switch (reader.Name)
+        //        {
+        //            case "Character":
+        //                serializer = new XmlSerializer(typeof(Character));
+        //                this.Character = (Character) serializer.Deserialize(reader);
+        //                continue;
+        //            case "Map":
+        //                serializer = new XmlSerializer(typeof(Map));
+        //                this.Map = (Map)serializer.Deserialize(reader);
+        //                continue;
+        //            //case "NonPlayerCharacters":
+        //            //    reader.ReadStartElement();
+        //            //    serializer = new XmlSerializer(typeof(IMapObject));
+        //            //    var iMapObject = (IMapObject)serializer.Deserialize(reader);
+        //            //    this.NonPlayerCharacters.Add(iMapObject);
+        //            //    continue;
+        //            default:
+        //                break;
+        //        }
+
+        //        reader.ReadStartElement();
+        //    }
+        //}
+
+        //public void WriteXml(System.Xml.XmlWriter writer)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

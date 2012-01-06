@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SlashIt
 {
-    public class NonPlayerCharacter
+    public class NonPlayerCharacter : IMapObject
     {
         public NonPlayerCharacter()
         {
@@ -15,7 +15,7 @@ namespace SlashIt
             this.Name = "Bob";
             this.Description = "So plain it just bores you to death!";
             this.DisplayCharacter = "B";
-            this.UniqueId = 111;
+            this.UniqueId = Constants.UniqueIds.NonPlayerCharacter;
 
             this.Location = new Location(22, 9);
         }
@@ -23,7 +23,7 @@ namespace SlashIt
         public string Name { get; set; }
         public string Description { get; set; }
         public string DisplayCharacter { get; set; }
-        public Location Location { get; set; }
+        public Location Location { get; set; } // TODO right now this is tracked here and in the map matrix.  Should try to reduce to one place
         public int UniqueId { get; set; }
 
 

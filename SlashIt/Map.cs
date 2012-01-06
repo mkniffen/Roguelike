@@ -73,6 +73,11 @@ namespace SlashIt
         {
             reader.MoveToContent();
 
+
+            
+            //TODO -- Will need to add reading and setting of the Height, Width attributes
+
+
             var isEmptyElement = reader.IsEmptyElement;
             reader.ReadStartElement();
 
