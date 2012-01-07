@@ -104,20 +104,6 @@ namespace SlashIt
 
         private string CellCharacter(int left, int top)
         {
-           //TODO -- Can stop using the switch.  Instead use linq on the id returned from the map matrix.  Just
-            //                                   make all map objects use the same base class (or interface) that has
-            //                                   a uniqueId that can be easily looked up.  Should be able to apply this technique
-            //                                   throughout.  Give it a try and see how you like it.
-
-
-
-
-            //TODO WORKING HERE
-            //   1) give the single npc more life by implementing simple time and simple AI
-            //   2) figure out how to store info on stuff
-
-
-
             return MapObjects.Where(n => n.UniqueId == this.Map[top, left]).Single().DisplayCharacter;
         }
 
