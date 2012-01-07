@@ -7,7 +7,96 @@ using System.IO;
 
 namespace SlashIt
 {
+    public class Wall : Tile
+    {
+        public Wall()
+        {
+            Description = "A brick wall"; 
+            DisplayCharacter = "#";
+            Name = "Wall";
+            UniqueId = Constants.UniqueIds.Wall;
+        }
+    }
 
+    public class Floor : Tile
+    {
+        public Floor()
+        {
+            Description = "Empty floor";
+            DisplayCharacter = " "; 
+            Name = "Floor";
+            UniqueId = Constants.UniqueIds.Floor;
+        }
+    }
+
+    public class Door : Tile
+    {
+        public Door()
+        {
+            Description = "A big wooden door.  It's closed";
+            DisplayCharacter = "+";
+            Name = "Door";
+            UniqueId = Constants.UniqueIds.Door;
+        }
+    }
+
+    public class Map
+    {
+        [XmlIgnore]
+        public List<IMapObject> MapObjects { get; set; }
+
+        public Map()
+        {
+            this.MapObjects = new List<IMapObject>();
+            this.LoadTiles();
+        }
+
+        
+        
+
+        private void LoadTiles()
+        {
+            MapObjects.AddRange(
+                new List<Tile> 
+                { 
+                    new Wall { Location = new Location(1,1) },
+                    new Wall { Location = new Location(2,1) },
+                    new Wall { Location = new Location(3,1) },
+                    new Wall { Location = new Location(4,1) },
+                    new Wall { Location = new Location(5,1) },
+                    new Wall { Location = new Location(6,1) },
+                    new Wall { Location = new Location(7,1) },
+                    new Wall { Location = new Location(8,1) },
+                    new Wall { Location = new Location(9,1) },
+                    new Wall { Location = new Location(10,1) },
+                    new Wall { Location = new Location(1,2) },
+                    new Wall { Location = new Location(2,2) },
+                    new Floor { Location = new Location(3,2), Player = new Player() },
+                    new Floor { Location = new Location(4,2) },
+                    new Floor { Location = new Location(5,2) },
+                    new Door { Location = new Location(6,2) },
+                    new Floor { Location = new Location(7,2) },
+                    new Floor { Location = new Location(8,2) },
+                    new Floor { Location = new Location(9,2) },
+                    new Wall { Location = new Location(10,2) },
+                    new Wall { Location = new Location(1,3) },
+                    new Wall { Location = new Location(2,3) },
+                    new Wall { Location = new Location(3,3) },
+                    new Wall { Location = new Location(4,3) },
+                    new Wall { Location = new Location(5,3) },
+                    new Wall { Location = new Location(6,3) },
+                    new Wall { Location = new Location(7,3) },
+                    new Wall { Location = new Location(8,3) },
+                    new Wall { Location = new Location(9,3) },
+                    new Wall { Location = new Location(10,3) },
+                    
+                    //new Tile { Description = "An open door", DisplayCharacter = "`", Name = "OpenDoor", UniqueId = Constants.UniqueIds.OpenDoor },
+                });
+        }
+    }
+
+
+    /*
     public class Map : IXmlSerializable
     {
         public Map()
@@ -34,18 +123,6 @@ namespace SlashIt
         }
 
         private int[,] map = new int[10, 10];
-            //{ { 1,1,1,1,1,1,1,1,1,1 }, 
-            //  { 1,0,0,0,0,0,0,0,1,1 }, 
-            //  { 1,1,1,1,1,1,1,2,1,1 }, 
-            //  { 1,1,1,1,1,1,1,0,1,1 }, 
-            //  { 1,1,0,0,0,0,0,0,1,1 }, 
-            //  { 1,1,1,1,1,0,1,1,1,1 }, 
-            //  { 1,1,1,1,1,0,1,1,1,1 }, 
-            //  { 1,1,1,1,1,2,1,1,1,1 }, 
-            //  { 1,1,0,0,0,0,0,0,0,1 }, 
-            //  { 1,1,1,1,1,1,1,1,1,1 }, 
-            //};
-
 
 
         public Map Load(StreamReader saveFileStream)
@@ -120,4 +197,5 @@ namespace SlashIt
             return mapString.ToString();
         }
     }
+     */
 }

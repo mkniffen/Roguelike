@@ -1,12 +1,9 @@
 ﻿TODO
 
--- Modify how the map is handled
-   -- try a List instead of an array
 -- Refactor game loop
    -- Add some simple mob AI and determine how the main loop should be redone
    -- Check bounds needs to be done differently
 -- Find a good way to store variable info on mobs and objects.  Would be nice if it could be generic
--- Change all locations to be relative to the map instead of relative to the console
 -- Come up with better strategy for handling key input.
 -- Commands (like save, quit, doOpen) should be refactored.  Maybe the command pattern?
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SlashIt
 {
-    public class NonPlayerCharacter : IMapObject
+    public class NonPlayerCharacter //: IMapObject
     {
         public NonPlayerCharacter()
         {

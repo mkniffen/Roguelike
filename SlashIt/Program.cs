@@ -25,7 +25,6 @@ namespace SlashIt
             {
                 game.WriteConsole();
                 HandleInput();
-                game.CheckBounds();
             }
 
             Console.WriteLine("Game over!");
@@ -48,13 +47,13 @@ namespace SlashIt
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.UpArrow:
-                    game.Character.Move(keyInfo.Key, game.Map);
+                    game.DoMoveMapObject(keyInfo, Constants.UniqueIds.Player);
                     break;
                 case ConsoleKey.L:
-                    game.DoLook();
+               //     game.DoLook();
                     break;
                 case ConsoleKey.O:
-                    game.DoOpenClose();
+               //     game.DoOpenClose();
                     break;
                 case ConsoleKey.Q:
                     quit = game.Quit();

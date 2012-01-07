@@ -8,28 +8,17 @@ namespace SlashIt
     public class Tile : IMapObject
     {
 
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string DisplayCharacter { get; set; }
+        public int UniqueId { get; set; }
 
-        public string Description
-        {
-            get;
-            set;
-        }
+        public Location Location { get; set; }
+        public Player Player { get; set; }
 
-        public string DisplayCharacter
+        public virtual bool CanMoveTo(IMapObject mapObject)
         {
-            get;
-            set;
-        }
-
-        public int UniqueId
-        {
-            get;
-            set;
+            return false;
         }
     }
 }

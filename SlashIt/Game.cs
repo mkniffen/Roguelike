@@ -15,17 +15,16 @@ namespace SlashIt
         public Game()
         {
             Map = new Map();
-            MapObjects = new List<IMapObject>();
         }
 
-        public Character Character { get; set; }
+        //public Player Player { get; set; }
 
         [XmlIgnore]
-        public List<IMapObject> MapObjects { get; set; }
-
         public Map Map { get; set; }
-        public const short MapStartLeft = 20;
-        public const short MapStartTop = 1;
+        
+        
+        public const short MapStartLeft = 19;
+        public const short MapStartTop = 0;
 
         public void InitConsole()
         {
@@ -37,19 +36,16 @@ namespace SlashIt
             Console.BufferHeight = 25;
 
             Console.CursorVisible = false;
-
-            Character = new Character();
-            Character.SetPosition(22, 2);  //TODO Const
-
-            this.Load();
+            
+            //this.Load();
 
 
             //TODO !!!!!!!!!! temp code to load up a monster...  change this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-            #region ChangeMe
-            var newNPC = new NonPlayerCharacter();
-                Map[newNPC.Location.TopMapPosition, newNPC.Location.LeftMapPosition] = newNPC.UniqueId;
-                MapObjects.Add(newNPC);
-            #endregion
+            //#region ChangeMe
+            //var newNPC = new NonPlayerCharacter();
+            //    Map[newNPC.Location.TopMapPosition, newNPC.Location.LeftMapPosition] = newNPC.UniqueId;
+            //    MapObjects.Add(newNPC);
+            //#endregion
             
 
             this.WriteConsole();
@@ -62,17 +58,13 @@ namespace SlashIt
         //TODO maybe have use a second array that tracks what should be drawn on the grid.
         public void WriteConsole()
         {
-            if (Map.MapOutdated)
-            {
+            //if (Map.MapOutdated)
+            //{
                 Console.Clear();
                 this.GenerateMap();  //TODO only do this when really needed
-            }
+            //}
 
-            Console.SetCursorPosition(Character.LeftBeforeMove, Character.TopBeforeMove);
-            Console.Write(CellCharacter(Character.LeftMapPositionBeforeMove, Character.TopMapPositionBeforeMove));
-            Console.SetCursorPosition(Character.Left, Character.Top);
-            Console.Write("@");
-            Character.SetPositionBeforeMove();
+            
 
          //   Status.Message = "Map Left: " + character.LeftMapPosition + " :MapTop: " + character.TopMapPosition;
 
@@ -82,89 +74,116 @@ namespace SlashIt
 
         internal void GenerateMap()
         {
-            int mapStartLeft = Game.MapStartLeft;
-            int mapStartTop = Game.MapStartTop;
-
-            Console.SetCursorPosition(mapStartLeft, mapStartTop);
-
-            for (int top = 0; top <= this.Map.GetUpperBound(0); top++)
+            foreach (Tile tile in this.Map.MapObjects)
             {
-                for (int left = 0; left <= this.Map.GetUpperBound(1); left++)
+                Console.SetCursorPosition(tile.Location.Left + Game.MapStartLeft, tile.Location.Top + Game.MapStartTop);
+
+                if (tile.Player != null)
                 {
-                    Console.Write(CellCharacter(left, top));
+                    Console.Write(tile.Player.DisplayCharacter);
+                    continue;
                 }
 
-                Console.SetCursorPosition(mapStartLeft, ++mapStartTop);
-
+                Console.Write(tile.DisplayCharacter);
             }
 
-            Map.MapOutdated = false;
+            //Map.MapOutdated = false;
 
         }
 
-        private string CellCharacter(int left, int top)
+        public void DoMoveMapObject(ConsoleKeyInfo keyInfo, int uniqueId)
         {
-            return MapObjects.Where(n => n.UniqueId == this.Map[top, left]).Single().DisplayCharacter;
-        }
+            var mapObject = (Tile)this.Map.MapObjects
+                .Where(m => ((Tile)m).Player != null && ((Tile)m).Player.UniqueId == uniqueId)
+                .Single();
 
-        public void CheckBounds()
-        {
-            //TODO -- Improve this
-            if (Map[Character.TopMapPosition, Character.LeftMapPosition] != 0 && Map[Character.TopMapPosition, Character.LeftMapPosition] != 3)
+            var mapLocation = new Location(mapObject.Location.Left, mapObject.Location.Top);
+
+            switch (keyInfo.Key)
             {
-                Character.DisallowMove();
+                case ConsoleKey.UpArrow:
+                    mapLocation.Top--;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    mapLocation.Top++;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    mapLocation.Left--;
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    mapLocation.Left++;
+                    break;
+
+                default:
+                    break;
+            }
+
+            var tileToMoveTo = (Tile)this.Map.MapObjects
+                .Where(m => m.Location.Left == mapLocation.Left && m.Location.Top == mapLocation.Top)
+                .Single();
+
+            if (mapObject.Player.CanMoveTo(tileToMoveTo))
+            {
+                tileToMoveTo.Player = mapObject.Player;
+                tileToMoveTo.Player.Location = mapLocation;
+                mapObject.Player = null;
             }
         }
+
+
 
         //TODO -- Refactor!!!!!!!!!!
-        public void DoLook()
-        {
-            Status.Info = MapObjects.Where(n => n.UniqueId == Map[Character.TopMapPosition, Character.LeftMapPosition]).Single().Description;
-        }
+        //public void DoLook()
+        //{
+        //    Status.Info = MapObjects.Where(n => n.UniqueId == Map[Player.TopMapPosition, Player.LeftMapPosition]).Single().Description;
+        //}
 
 
 
-        public void DoOpenClose()
-        {
-            Status.ClearInfo();
-            Status.Info = "Which direction?";
-            Status.WriteToStatus();
+        //public void DoOpenClose()
+        //{
+        //    Status.ClearInfo();
+        //    Status.Info = "Which direction?";
+        //    Status.WriteToStatus();
 
-            var keyInfo = Console.ReadKey(true);
+        //    var keyInfo = Console.ReadKey(true);
 
-            //TODO -- Taking key input exists in more than one place now, REFACTOR
+        //    //TODO -- Taking key input exists in more than one place now, REFACTOR
 
-            if (keyInfo.Key == ConsoleKey.Escape)
-            {
-                Status.ClearInfo();
-                return;
-            }
+        //    if (keyInfo.Key == ConsoleKey.Escape)
+        //    {
+        //        Status.ClearInfo();
+        //        return;
+        //    }
 
-            var mapLocation = Character.Move(keyInfo.Key);
+        //    var mapLocation = Player.Move(keyInfo.Key);
 
-            switch (Map[mapLocation.Top, mapLocation.Left])
-            {
-                case (2):
-                    //Replace closed door with open door in map matrix
-                    Map[mapLocation.Top, mapLocation.Left] = 3;
-                    Map.MapOutdated = true;
-                    Status.ClearInfo();
-                    break;
-                case (3):
-                    //Replace open door with closed door in map matrix
-                    Map[mapLocation.Top, mapLocation.Left] = 2;
-                    Map.MapOutdated = true;
-                    Status.ClearInfo();
-                    break;
-                default:
-                    Status.Info = "That can't be opened or closed.  Press any key to continue.";
-                    Status.WriteToStatus();
+        //    switch (Map[mapLocation.Top, mapLocation.Left])
+        //    {
+        //        case (2):
+        //            //Replace closed door with open door in map matrix
+        //            Map[mapLocation.Top, mapLocation.Left] = 3;
+        //            Map.MapOutdated = true;
+        //            Status.ClearInfo();
+        //            break;
+        //        case (3):
+        //            //Replace open door with closed door in map matrix
+        //            Map[mapLocation.Top, mapLocation.Left] = 2;
+        //            Map.MapOutdated = true;
+        //            Status.ClearInfo();
+        //            break;
+        //        default:
+        //            Status.Info = "That can't be opened or closed.  Press any key to continue.";
+        //            Status.WriteToStatus();
 
-                    Console.ReadKey(true);
-                    DoOpenClose();
-                    break;
-            }
-        }
+        //            Console.ReadKey(true);
+        //            DoOpenClose();
+        //            break;
+        //    }
+        //}
 
         public bool Quit()
         {
@@ -205,28 +224,17 @@ namespace SlashIt
                 var game = (Game)serializer.Deserialize(saveFileStream);
 
                 this.Map = game.Map;
-                this.Character = game.Character;
                 //this.NonPlayerCharacters = game.NonPlayerCharacters;
 
                 saveFileStream.Close();
             }
 
-            this.LoadTiles();
+      
         }
 
 
         //TODO -- move the details to config
-        private void LoadTiles()
-        {
-            MapObjects.AddRange(
-                new List<Tile> 
-                { 
-                    new Tile { Description = "A big wooden door.  It's closed", DisplayCharacter = "+", Name = "Door", UniqueId = Constants.UniqueIds.Door},
-                    new Tile { Description = "Empty floor", DisplayCharacter = " ", Name = "Floor", UniqueId = Constants.UniqueIds.Floor },
-                    new Tile { Description = "A brick wall", DisplayCharacter = "#", Name = "Wall", UniqueId = Constants.UniqueIds.Wall },
-                    new Tile { Description = "An open door", DisplayCharacter = "`", Name = "OpenDoor", UniqueId = Constants.UniqueIds.OpenDoor },
-                });
-        }
+       
 
 
         public void Save()
@@ -261,9 +269,9 @@ namespace SlashIt
         //    {
         //        switch (reader.Name)
         //        {
-        //            case "Character":
-        //                serializer = new XmlSerializer(typeof(Character));
-        //                this.Character = (Character) serializer.Deserialize(reader);
+        //            case "Player":
+        //                serializer = new XmlSerializer(typeof(Player));
+        //                this.Player = (Player) serializer.Deserialize(reader);
         //                continue;
         //            case "Map":
         //                serializer = new XmlSerializer(typeof(Map));

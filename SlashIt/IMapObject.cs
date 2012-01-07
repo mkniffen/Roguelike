@@ -11,5 +11,9 @@ namespace SlashIt
         string Description { get; set; }
         string DisplayCharacter { get; set; }
         int UniqueId { get; set; }
+
+        Location Location { get; set; }
+
+        bool CanMoveTo(IMapObject mapObject);
     }
 }
