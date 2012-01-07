@@ -91,13 +91,11 @@ namespace SlashIt
 
         }
 
-        public void DoMoveMapObject(ConsoleKeyInfo keyInfo, int uniqueId)
+        public void DoMoveMapPlayer(ConsoleKeyInfo keyInfo)
         {
-            var mapObject = (Tile)this.Map.MapObjects
-                .Where(m => ((Tile)m).Player != null && ((Tile)m).Player.UniqueId == uniqueId)
-                .Single();
+            var mapTile = this.GetPlayerTile();
 
-            var mapLocation = new Location(mapObject.Location.Left, mapObject.Location.Top);
+            var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
 
             switch (keyInfo.Key)
             {
@@ -121,27 +119,22 @@ namespace SlashIt
                     break;
             }
 
-            var tileToMoveTo = (Tile)this.Map.MapObjects
-                .Where(m => m.Location.Left == mapLocation.Left && m.Location.Top == mapLocation.Top)
-                .Single();
+            var tileToMoveTo = GetTileForLocation(mapLocation);
 
-            if (mapObject.Player.CanMoveTo(tileToMoveTo))
+            if (mapTile.Player.CanMoveTo(tileToMoveTo))
             {
-                tileToMoveTo.Player = mapObject.Player;
+                tileToMoveTo.Player = mapTile.Player;
                 tileToMoveTo.Player.Location = mapLocation;
-                mapObject.Player = null;
+                mapTile.Player = null;
             }
         }
 
+        public void DoLook()
+        {
+            //TODO -- will need to modify this so that all the items in the tile are put in the Info
 
-
-        //TODO -- Refactor!!!!!!!!!!
-        //public void DoLook()
-        //{
-        //    Status.Info = MapObjects.Where(n => n.UniqueId == Map[Player.TopMapPosition, Player.LeftMapPosition]).Single().Description;
-        //}
-
-
+            Status.Info = this.GetPlayerTile().Description;
+        }
 
         //public void DoOpenClose()
         //{
@@ -213,24 +206,6 @@ namespace SlashIt
             return quit;
         }
 
-        private void Load()
-        {
-
-            using (StreamReader saveFileStream = new StreamReader(SaveFile))
-            {
-
-        //TODO -- Not sure if this is the best place to do this.  Should I move this to a higher level (Program)??
-                XmlSerializer serializer = new XmlSerializer(typeof(Game));
-                var game = (Game)serializer.Deserialize(saveFileStream);
-
-                this.Map = game.Map;
-                //this.NonPlayerCharacters = game.NonPlayerCharacters;
-
-                saveFileStream.Close();
-            }
-
-      
-        }
 
 
         //TODO -- move the details to config
@@ -295,5 +270,40 @@ namespace SlashIt
         //{
         //    throw new NotImplementedException();
         //}
+
+        private void Load()
+        {
+
+            using (StreamReader saveFileStream = new StreamReader(SaveFile))
+            {
+
+                //TODO -- Not sure if this is the best place to do this.  Should I move this to a higher level (Program)??
+                XmlSerializer serializer = new XmlSerializer(typeof(Game));
+                var game = (Game)serializer.Deserialize(saveFileStream);
+
+                this.Map = game.Map;
+                //this.NonPlayerCharacters = game.NonPlayerCharacters;
+
+                saveFileStream.Close();
+            }
+
+
+        }
+
+        private Tile GetTileForLocation(Location mapLocation)
+        {
+            var tileToMoveTo = (Tile)this.Map.MapObjects
+                .Where(m => m.Location.Left == mapLocation.Left && m.Location.Top == mapLocation.Top)
+                .Single();
+            return tileToMoveTo;
+        }
+
+        private Tile GetPlayerTile()
+        {
+            var mapTile = (Tile)this.Map.MapObjects
+                .Where(m => ((Tile)m).Player != null)
+                .Single();
+            return mapTile;
+        }
     }
 }

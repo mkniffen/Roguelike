@@ -47,10 +47,10 @@ namespace SlashIt
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.UpArrow:
-                    game.DoMoveMapObject(keyInfo, Constants.UniqueIds.Player);
+                    game.DoMoveMapPlayer(keyInfo);
                     break;
                 case ConsoleKey.L:
-               //     game.DoLook();
+                    game.DoLook();
                     break;
                 case ConsoleKey.O:
                //     game.DoOpenClose();
