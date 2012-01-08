@@ -8,19 +8,19 @@ namespace SlashIt
     class Program
     {
         static bool quit = false;
-        static Game game;
+        static Game game = new Game();
+        static Map map = new Map();
 
         static void Main(string[] args)
         {
-            game = new Game();
+            OpenCloseCommand openClose = new OpenCloseCommand(map);
+            game.SetCommand(openClose, 0);
+
+
+            game.Map = map;
             game.InitConsole();
 
-            MainLoop();
 
-        }
-
-        private static void MainLoop()
-        {
             while (!quit)
             {
                 game.WriteConsole();
@@ -28,6 +28,7 @@ namespace SlashIt
             }
 
             Console.WriteLine("Game over!");
+
         }
 
         private static void HandleInput()
@@ -53,7 +54,8 @@ namespace SlashIt
                     game.DoLook();
                     break;
                 case ConsoleKey.O:
-               //     game.DoOpenClose();
+                    game.CommandActivated(0);
+                    //game.DoOpenClose();
                     break;
                 case ConsoleKey.Q:
                     quit = game.Quit();

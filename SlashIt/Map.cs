@@ -40,6 +40,19 @@ namespace SlashIt
         }
     }
 
+    //new Tile { Description = "An open door", DisplayCharacter = "`", Name = "OpenDoor", UniqueId = Constants.UniqueIds.OpenDoor },
+
+    public class OpenDoor : Tile
+    {
+        public OpenDoor()
+        {
+            Description = "An open door";
+            DisplayCharacter = "`";
+            Name = "OpenDoor";
+            UniqueId = Constants.UniqueIds.OpenDoor;
+        }
+    }
+
     public class Map
     {
         [XmlIgnore]
@@ -51,8 +64,24 @@ namespace SlashIt
             this.LoadTiles();
         }
 
-        
-        
+
+
+
+        public Tile GetTileForLocation(Location mapLocation)
+        {
+            var tileToMoveTo = (Tile)this.MapObjects
+                .Where(m => m.Location.Left == mapLocation.Left && m.Location.Top == mapLocation.Top)
+                .Single();
+            return tileToMoveTo;
+        }
+
+        public Tile GetPlayerTile()
+        {
+            var mapTile = (Tile)this.MapObjects
+                .Where(m => ((Tile)m).Player != null)
+                .Single();
+            return mapTile;
+        }
 
         private void LoadTiles()
         {
@@ -90,7 +119,7 @@ namespace SlashIt
                     new Wall { Location = new Location(9,3) },
                     new Wall { Location = new Location(10,3) },
                     
-                    //new Tile { Description = "An open door", DisplayCharacter = "`", Name = "OpenDoor", UniqueId = Constants.UniqueIds.OpenDoor },
+                   
                 });
         }
     }

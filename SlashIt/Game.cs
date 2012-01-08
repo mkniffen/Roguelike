@@ -14,7 +14,8 @@ namespace SlashIt
 
         public Game()
         {
-            Map = new Map();
+
+            commands = new ICommand[1];  //TODO could add noCommand init (see book)
         }
 
         //public Player Player { get; set; }
@@ -25,6 +26,20 @@ namespace SlashIt
         
         public const short MapStartLeft = 19;
         public const short MapStartTop = 0;
+
+
+        ICommand[] commands;
+
+        public void SetCommand(ICommand command, int slot)
+        {
+            commands[slot] = command;
+        }
+
+        public void CommandActivated(int slot)
+        {
+            commands[slot].execute();
+        }
+
 
         public void InitConsole()
         {
@@ -93,7 +108,7 @@ namespace SlashIt
 
         public void DoMoveMapPlayer(ConsoleKeyInfo keyInfo)
         {
-            var mapTile = this.GetPlayerTile();
+            var mapTile = this.Map.GetPlayerTile();
 
             var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
 
@@ -119,7 +134,7 @@ namespace SlashIt
                     break;
             }
 
-            var tileToMoveTo = GetTileForLocation(mapLocation);
+            var tileToMoveTo = this.Map.GetTileForLocation(mapLocation);
 
             if (mapTile.Player.CanMoveTo(tileToMoveTo))
             {
@@ -133,7 +148,7 @@ namespace SlashIt
         {
             //TODO -- will need to modify this so that all the items in the tile are put in the Info
 
-            Status.Info = this.GetPlayerTile().Description;
+            Status.Info = this.Map.GetPlayerTile().Description;
         }
 
         //public void DoOpenClose()
@@ -288,22 +303,6 @@ namespace SlashIt
             }
 
 
-        }
-
-        private Tile GetTileForLocation(Location mapLocation)
-        {
-            var tileToMoveTo = (Tile)this.Map.MapObjects
-                .Where(m => m.Location.Left == mapLocation.Left && m.Location.Top == mapLocation.Top)
-                .Single();
-            return tileToMoveTo;
-        }
-
-        private Tile GetPlayerTile()
-        {
-            var mapTile = (Tile)this.Map.MapObjects
-                .Where(m => ((Tile)m).Player != null)
-                .Single();
-            return mapTile;
         }
     }
 }
