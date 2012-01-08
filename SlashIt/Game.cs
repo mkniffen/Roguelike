@@ -11,33 +11,27 @@ namespace SlashIt
     public class Game// : IXmlSerializable
     {
         const string SaveFile = @".\game.sav";
-
-        public Game()
-        {
-
-            commands = new ICommand[1];  //TODO could add noCommand init (see book)
-        }
-
-        //public Player Player { get; set; }
+        Dictionary<LocalKeyInfo, ICommand> commands; 
 
         [XmlIgnore]
         public Map Map { get; set; }
         
-        
         public const short MapStartLeft = 19;
         public const short MapStartTop = 0;
 
-
-        ICommand[] commands;
-
-        public void SetCommand(ICommand command, int slot)
+        public Game()
         {
-            commands[slot] = command;
+            commands = new Dictionary<LocalKeyInfo, ICommand>();
         }
 
-        public void CommandActivated(int slot)
+        public void SetCommand(LocalKeyInfo keyInfo, ICommand command)
         {
-            commands[slot].execute();
+            commands.Add(keyInfo, command);
+        }
+
+        public void CommandActivated(LocalKeyInfo keyInfo)
+        {
+            commands[keyInfo].execute();
         }
 
 
@@ -106,35 +100,13 @@ namespace SlashIt
 
         }
 
-        public void DoMoveMapPlayer(ConsoleKeyInfo keyInfo)
+        public void DoMoveMapPlayer(LocalKeyInfo keyInfo)
         {
             var mapTile = this.Map.GetPlayerTile();
 
             var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
 
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.UpArrow:
-                    mapLocation.Top--;
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    mapLocation.Top++;
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    mapLocation.Left--;
-                    break;
-
-                case ConsoleKey.RightArrow:
-                    mapLocation.Left++;
-                    break;
-
-                default:
-                    break;
-            }
-
-            var tileToMoveTo = this.Map.GetTileForLocation(mapLocation);
+            var tileToMoveTo = this.Map.GetTileToMoveTo(keyInfo, mapLocation);
 
             if (mapTile.Player.CanMoveTo(tileToMoveTo))
             {
@@ -144,54 +116,15 @@ namespace SlashIt
             }
         }
 
+
+
+        //TODO Move to command...
         public void DoLook()
         {
             //TODO -- will need to modify this so that all the items in the tile are put in the Info
 
             Status.Info = this.Map.GetPlayerTile().Description;
         }
-
-        //public void DoOpenClose()
-        //{
-        //    Status.ClearInfo();
-        //    Status.Info = "Which direction?";
-        //    Status.WriteToStatus();
-
-        //    var keyInfo = Console.ReadKey(true);
-
-        //    //TODO -- Taking key input exists in more than one place now, REFACTOR
-
-        //    if (keyInfo.Key == ConsoleKey.Escape)
-        //    {
-        //        Status.ClearInfo();
-        //        return;
-        //    }
-
-        //    var mapLocation = Player.Move(keyInfo.Key);
-
-        //    switch (Map[mapLocation.Top, mapLocation.Left])
-        //    {
-        //        case (2):
-        //            //Replace closed door with open door in map matrix
-        //            Map[mapLocation.Top, mapLocation.Left] = 3;
-        //            Map.MapOutdated = true;
-        //            Status.ClearInfo();
-        //            break;
-        //        case (3):
-        //            //Replace open door with closed door in map matrix
-        //            Map[mapLocation.Top, mapLocation.Left] = 2;
-        //            Map.MapOutdated = true;
-        //            Status.ClearInfo();
-        //            break;
-        //        default:
-        //            Status.Info = "That can't be opened or closed.  Press any key to continue.";
-        //            Status.WriteToStatus();
-
-        //            Console.ReadKey(true);
-        //            DoOpenClose();
-        //            break;
-        //    }
-        //}
 
         public bool Quit()
         {

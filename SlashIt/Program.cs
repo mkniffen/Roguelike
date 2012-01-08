@@ -14,7 +14,12 @@ namespace SlashIt
         static void Main(string[] args)
         {
             OpenCloseCommand openClose = new OpenCloseCommand(map);
-            game.SetCommand(openClose, 0);
+            var ok = new LocalKeyInfo(ConsoleKey.O, false, false, false);
+            game.SetCommand(ok, openClose);
+
+            TestCommand tt = new TestCommand();
+            ok = new LocalKeyInfo(ConsoleKey.O, false, false, true);
+            game.SetCommand(ok, tt);
 
 
             game.Map = map;
@@ -35,11 +40,23 @@ namespace SlashIt
         {
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            var localKeyInfo = new LocalKeyInfo(keyInfo);
+
           //    Status.Message = "Key: " + keyInfo.Key;
 
             Status.ClearInfo();
 
-//TODO -- Look at a command pattern or maybe a factory.
+//TODO -- fully implement command pattern.  Could use a hash for commands instead of an array
+            //   then, could use the key as the index (ConsoleKey.O) and associated to the command
+            //   we want.  This could facilitate a key config.  The key config would be read at
+            //   start up and the commands loaded accordingly
+
+
+
+            // Make commands for the rest.  Remove switch, just need game.ComandActivated...
+
+
+
             switch (keyInfo.Key)
             {
                 case ConsoleKey.C:
@@ -48,13 +65,13 @@ namespace SlashIt
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.UpArrow:
-                    game.DoMoveMapPlayer(keyInfo);
+                    game.DoMoveMapPlayer(localKeyInfo);
                     break;
                 case ConsoleKey.L:
                     game.DoLook();
                     break;
                 case ConsoleKey.O:
-                    game.CommandActivated(0);
+                    game.CommandActivated(localKeyInfo);
                     //game.DoOpenClose();
                     break;
                 case ConsoleKey.Q:

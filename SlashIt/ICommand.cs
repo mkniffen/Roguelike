@@ -10,6 +10,14 @@ namespace SlashIt
         void execute();
     }
 
+    public class TestCommand : ICommand
+    {
+        public void execute()
+        {
+            Status.Info = "hello from Test Command";
+        }
+    }
+
     public class OpenCloseCommand : ICommand
     {
         Map map;
@@ -21,62 +29,39 @@ namespace SlashIt
 
         public void execute()
         {
-
             Status.ClearInfo();
             Status.Info = "Which direction?";
             Status.WriteToStatus();
 
-            var keyInfo = Console.ReadKey(true);
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            var localKeyInfo = new LocalKeyInfo(keyInfo);
 
             //TODO -- Taking key input exists in more than one place now, REFACTOR
-
-            if (keyInfo.Key == ConsoleKey.Escape)
-            {
-                Status.ClearInfo();
-                return;
-            }
 
             var mapTile = map.GetPlayerTile();
 
             var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
 
-            switch (keyInfo.Key)
+            var tileToUse = this.map.GetTileToMoveTo(localKeyInfo, mapLocation);
+
+            if (tileToUse.UniqueId == Constants.UniqueIds.Door)
             {
-                case ConsoleKey.UpArrow:
-                    mapLocation.Top--;
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    mapLocation.Top++;
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    mapLocation.Left--;
-                    break;
-
-                case ConsoleKey.RightArrow:
-                    mapLocation.Left++;
-                    break;
-
-                default:
-                    break;
+                map.MapObjects.Remove(tileToUse);
+                map.MapObjects.Add(new OpenDoor() { Location = tileToUse.Location });
             }
-
-            var tileToUse = map.GetTileForLocation(mapLocation);
-
-            if (tileToUse.UniqueId != Constants.UniqueIds.Door)
+            else if(tileToUse.UniqueId == Constants.UniqueIds.OpenDoor)
+            {
+                map.MapObjects.Remove(tileToUse);
+                map.MapObjects.Add(new Door() { Location = tileToUse.Location });
+            }
+            else
             {
                 Status.Info = "That can't be opened or closed.  Press any key to continue.";
                 Status.WriteToStatus();
-
                 Console.ReadKey(true);
-                this.execute();
-
-                return;
             }
 
-            map.MapObjects.Remove(tileToUse);
-            map.MapObjects.Add(new OpenDoor() { Location = tileToUse.Location });
+            Status.ClearInfo();
         }
     }
 }

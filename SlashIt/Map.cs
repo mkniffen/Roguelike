@@ -83,6 +83,34 @@ namespace SlashIt
             return mapTile;
         }
 
+        public Tile GetTileToMoveTo(LocalKeyInfo keyInfo, Location mapLocation)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    mapLocation.Top--;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    mapLocation.Top++;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    mapLocation.Left--;
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    mapLocation.Left++;
+                    break;
+
+                default:
+                    break;
+            }
+
+            return this.GetTileForLocation(mapLocation);
+        }
+
+
         private void LoadTiles()
         {
             MapObjects.AddRange(
