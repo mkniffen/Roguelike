@@ -31,7 +31,7 @@ namespace SlashIt
 
         public void CommandActivated(LocalKeyInfo keyInfo)
         {
-            commands[keyInfo].execute();
+            commands[keyInfo].execute(keyInfo);
         }
 
 
@@ -100,81 +100,6 @@ namespace SlashIt
 
         }
 
-        public void DoMoveMapPlayer(LocalKeyInfo keyInfo)
-        {
-            var mapTile = this.Map.GetPlayerTile();
-
-            var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
-
-            var tileToMoveTo = this.Map.GetTileToMoveTo(keyInfo, mapLocation);
-
-            if (mapTile.Player.CanMoveTo(tileToMoveTo))
-            {
-                tileToMoveTo.Player = mapTile.Player;
-                tileToMoveTo.Player.Location = mapLocation;
-                mapTile.Player = null;
-            }
-        }
-
-
-
-        //TODO Move to command...
-        public void DoLook()
-        {
-            //TODO -- will need to modify this so that all the items in the tile are put in the Info
-
-            Status.Info = this.Map.GetPlayerTile().Description;
-        }
-
-        public bool Quit()
-        {
-            bool quit = true;
-
-            Status.ClearInfo();
-            Status.Info = "Really quit (Y or N)?";
-            Status.WriteToStatus();
-
-            var keyInfo = Console.ReadKey(true);
-
-            if (keyInfo.Key == ConsoleKey.Y)
-            {
-                ;
-            }
-            else if (keyInfo.Key == ConsoleKey.N)
-            {
-                Status.ClearInfo();
-                Status.Info = "Returning to game.";
-                quit = false;
-            }
-            else
-            {
-                this.Quit();
-            }
-
-            return quit;
-        }
-
-
-
-        //TODO -- move the details to config
-       
-
-
-        public void Save()
-        {
-            Status.ClearInfo();
-            Status.Info = "Game Saved.";
-
-            using (TextWriter tw = new StreamWriter(SaveFile))
-            {
-                //TODO -- Move this up too (along with Load)???
-
-                XmlSerializer serializer = new XmlSerializer(typeof(Game));
-                serializer.Serialize(tw, this);
-
-                tw.Close();
-            }
-        }
 
         //public System.Xml.Schema.XmlSchema GetSchema()
         //{
@@ -218,24 +143,5 @@ namespace SlashIt
         //{
         //    throw new NotImplementedException();
         //}
-
-        private void Load()
-        {
-
-            using (StreamReader saveFileStream = new StreamReader(SaveFile))
-            {
-
-                //TODO -- Not sure if this is the best place to do this.  Should I move this to a higher level (Program)??
-                XmlSerializer serializer = new XmlSerializer(typeof(Game));
-                var game = (Game)serializer.Deserialize(saveFileStream);
-
-                this.Map = game.Map;
-                //this.NonPlayerCharacters = game.NonPlayerCharacters;
-
-                saveFileStream.Close();
-            }
-
-
-        }
     }
 }

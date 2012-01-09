@@ -4,8 +4,8 @@
    -- Add some simple mob AI and determine how the main loop should be redone
    -- Check bounds needs to be done differently
 -- Find a good way to store variable info on mobs and objects.  Would be nice if it could be generic
--- Come up with better strategy for handling key input.
--- Commands (like save, quit, doOpen) should be refactored.  Maybe the command pattern?
+-- Add key bindings config along with loading commands
+-- Redo Save/Load
 
 
 Longer Term
