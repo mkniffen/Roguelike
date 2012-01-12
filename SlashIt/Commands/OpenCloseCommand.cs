@@ -33,13 +33,13 @@ namespace SlashIt
 
             if (tileToUse.UniqueId == Constants.UniqueIds.Door)
             {
-                map.MapObjects.Remove(tileToUse);
-                map.MapObjects.Add(new OpenDoor() { Location = tileToUse.Location });
+                map.Tiles.Remove(tileToUse);
+                map.Tiles.Add(new OpenDoor() { Location = tileToUse.Location });
             }
             else if (tileToUse.UniqueId == Constants.UniqueIds.OpenDoor)
             {
-                map.MapObjects.Remove(tileToUse);
-                map.MapObjects.Add(new Door() { Location = tileToUse.Location });
+                map.Tiles.Remove(tileToUse);
+                map.Tiles.Add(new Door() { Location = tileToUse.Location });
             }
             else
             {

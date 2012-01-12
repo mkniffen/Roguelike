@@ -7,69 +7,20 @@ using System.IO;
 
 namespace SlashIt
 {
-    public class Wall : Tile
-    {
-        public Wall()
-        {
-            Description = "A brick wall"; 
-            DisplayCharacter = "#";
-            Name = "Wall";
-            UniqueId = Constants.UniqueIds.Wall;
-        }
-    }
-
-    public class Floor : Tile
-    {
-        public Floor()
-        {
-            Description = "Empty floor";
-            DisplayCharacter = " "; 
-            Name = "Floor";
-            UniqueId = Constants.UniqueIds.Floor;
-        }
-    }
-
-    public class Door : Tile
-    {
-        public Door()
-        {
-            Description = "A big wooden door.  It's closed";
-            DisplayCharacter = "+";
-            Name = "Door";
-            UniqueId = Constants.UniqueIds.Door;
-        }
-    }
-
-    //new Tile { Description = "An open door", DisplayCharacter = "`", Name = "OpenDoor", UniqueId = Constants.UniqueIds.OpenDoor },
-
-    public class OpenDoor : Tile
-    {
-        public OpenDoor()
-        {
-            Description = "An open door";
-            DisplayCharacter = "`";
-            Name = "OpenDoor";
-            UniqueId = Constants.UniqueIds.OpenDoor;
-        }
-    }
-
     public class Map
     {
         [XmlIgnore]
-        public List<IMapObject> MapObjects { get; set; }
+        public List<Tile> Tiles { get; set; }
 
         public Map()
         {
-            this.MapObjects = new List<IMapObject>();
+            this.Tiles = new List<Tile>();
             this.LoadTiles();
         }
 
-
-
-
         public Tile GetTileForLocation(Location mapLocation)
         {
-            var tileToMoveTo = (Tile)this.MapObjects
+            var tileToMoveTo = this.Tiles
                 .Where(m => m.Location.Left == mapLocation.Left && m.Location.Top == mapLocation.Top)
                 .Single();
             return tileToMoveTo;
@@ -77,9 +28,10 @@ namespace SlashIt
 
         public Tile GetPlayerTile()
         {
-            var mapTile = (Tile)this.MapObjects
-                .Where(m => ((Tile)m).Player != null)
+            var mapTile = this.Tiles
+                .Where(m => m.Mobile != null && m.Mobile is Player)
                 .Single();
+
             return mapTile;
         }
 
@@ -113,7 +65,7 @@ namespace SlashIt
 
         private void LoadTiles()
         {
-            MapObjects.AddRange(
+            Tiles.AddRange(
                 new List<Tile> 
                 { 
                     new Wall { Location = new Location(1,1) },
@@ -128,13 +80,13 @@ namespace SlashIt
                     new Wall { Location = new Location(10,1) },
                     new Wall { Location = new Location(1,2) },
                     new Wall { Location = new Location(2,2) },
-                    new Floor { Location = new Location(3,2), Player = new Player() },
+                    new Floor { Location = new Location(3,2), Mobile = new Player() },
                     new Floor { Location = new Location(4,2) },
                     new Floor { Location = new Location(5,2) },
                     new Door { Location = new Location(6,2) },
                     new Floor { Location = new Location(7,2) },
                     new Floor { Location = new Location(8,2) },
-                    new Floor { Location = new Location(9,2) },
+                    new Floor { Location = new Location(9,2), Mobile = new NonPlayerCharacter() },
                     new Wall { Location = new Location(10,2) },
                     new Wall { Location = new Location(1,3) },
                     new Wall { Location = new Location(2,3) },

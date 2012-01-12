@@ -83,13 +83,13 @@ namespace SlashIt
 
         internal void GenerateMap()
         {
-            foreach (Tile tile in this.Map.MapObjects)
+            foreach (Tile tile in this.Map.Tiles)
             {
                 Console.SetCursorPosition(tile.Location.Left + Game.MapStartLeft, tile.Location.Top + Game.MapStartTop);
 
-                if (tile.Player != null)
+                if (tile.Mobile != null)
                 {
-                    Console.Write(tile.Player.DisplayCharacter);
+                    Console.Write(tile.Mobile.DisplayCharacter);
                     continue;
                 }
 

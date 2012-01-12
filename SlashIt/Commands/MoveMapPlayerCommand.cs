@@ -22,11 +22,10 @@ namespace SlashIt
 
             var tileToMoveTo = this.map.GetTileToMoveTo(keyInfo, mapLocation);
 
-            if (mapTile.Player.CanMoveTo(tileToMoveTo))
+            if (mapTile.Mobile.CanMoveTo(tileToMoveTo))
             {
-                tileToMoveTo.Player = mapTile.Player;
-                tileToMoveTo.Player.Location = mapLocation;
-                mapTile.Player = null;
+                tileToMoveTo.Mobile = mapTile.Mobile;
+                mapTile.Mobile = null;
             }
         }
     }
