@@ -18,6 +18,15 @@ namespace SlashIt
             this.UniqueId = Constants.UniqueIds.NonPlayerCharacter;
         }
 
+        public void Move()
+        {
+
+            //TODO WORKING HERE -- Adding AI for NPC.  Figure out how to move
+
+
+            var direction = Program.RandomNumber(4);
+        }
+
         //TODO -- Add Load/Save (very basic for now...)
     }
 }

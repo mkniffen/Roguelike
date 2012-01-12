@@ -57,10 +57,18 @@ namespace SlashIt
             {
                 game.WriteConsole();
                 HandleInput();
+                game.MoveNonPlayerCharacters();
             }
 
             Console.WriteLine("Game over!");
         }
+        static Random r = new Random();
+
+        public static int RandomNumber(int max)
+        {
+            return r.Next(max);
+        }
+
 
         private static void HandleInput()
         {

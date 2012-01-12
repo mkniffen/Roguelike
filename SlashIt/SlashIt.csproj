@@ -48,6 +48,7 @@
     <Compile Include="Commands\LookCommand.cs" />
     <Compile Include="Commands\MoveMapPlayerCommand.cs" />
     <Compile Include="Commands\OpenCloseCommand.cs" />
+    <Compile Include="Tiles\OpenDoor.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Game.cs" />
@@ -60,6 +61,9 @@
     <Compile Include="Commands\QuitCommand.cs" />
     <Compile Include="Status.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="Tiles\Door.cs" />
+    <Compile Include="Tiles\Floor.cs" />
+    <Compile Include="Tiles\Wall.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TODO.txt" />

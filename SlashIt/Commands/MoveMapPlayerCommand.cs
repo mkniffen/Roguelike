@@ -18,6 +18,9 @@ namespace SlashIt
         {
             var mapTile = this.map.GetPlayerTile();
 
+
+
+            #region MoveToMethod
             var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
 
             var tileToMoveTo = this.map.GetTileToMoveTo(keyInfo, mapLocation);
@@ -26,7 +29,8 @@ namespace SlashIt
             {
                 tileToMoveTo.Mobile = mapTile.Mobile;
                 mapTile.Mobile = null;
-            }
+            } 
+            #endregion
         }
     }
 }

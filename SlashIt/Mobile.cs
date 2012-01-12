@@ -23,5 +23,7 @@ namespace SlashIt
             //See if this map object can make the requested move
             return (canMoveToTiles.Contains(tile.UniqueId) && tile.Mobile == null);
         }
+
+
     }
 }

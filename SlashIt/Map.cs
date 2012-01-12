@@ -35,6 +35,15 @@ namespace SlashIt
             return mapTile;
         }
 
+        public List<Tile> GetNonPlayerTiles()
+        {
+            var mapTiles = this.Tiles
+                .Where(m => m.Mobile != null && m.Mobile is NonPlayerCharacter)
+                .ToList();
+
+            return mapTiles;
+        }
+
         public Tile GetTileToMoveTo(LocalKeyInfo keyInfo, Location mapLocation)
         {
             switch (keyInfo.Key)

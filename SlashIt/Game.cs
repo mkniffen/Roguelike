@@ -48,15 +48,6 @@ namespace SlashIt
             
             //this.Load();
 
-
-            //TODO !!!!!!!!!! temp code to load up a monster...  change this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-            //#region ChangeMe
-            //var newNPC = new NonPlayerCharacter();
-            //    Map[newNPC.Location.TopMapPosition, newNPC.Location.LeftMapPosition] = newNPC.UniqueId;
-            //    MapObjects.Add(newNPC);
-            //#endregion
-            
-
             this.WriteConsole();
 
             Status.Message = "Height: " + Console.WindowHeight + " Width: " + Console.WindowWidth;
@@ -81,7 +72,7 @@ namespace SlashIt
         }
 
 
-        internal void GenerateMap()
+        public void GenerateMap()
         {
             foreach (Tile tile in this.Map.Tiles)
             {
@@ -98,6 +89,16 @@ namespace SlashIt
 
             //Map.MapOutdated = false;
 
+        }
+
+        public void MoveNonPlayerCharacters()
+        {
+            List<Tile> nonPlayerCharacterTiles = Map.GetNonPlayerTiles();
+
+            foreach (Tile nonPlayerCharacterTile in nonPlayerCharacterTiles)
+            {
+                ((NonPlayerCharacter)nonPlayerCharacterTile.Mobile).Move();
+            }
         }
 
 
