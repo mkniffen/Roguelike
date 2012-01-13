@@ -13,7 +13,9 @@ namespace SlashIt
             public const int Wall = 1;
             public const int Door = 2;
             public const int OpenDoor = 3;
-            public const int NonPlayerCharacter = 111;  //TODO -- NonPlayerCharacter will likely become a base classe...
+
+            public const int Rat = 112;
+            public const int Bob = 111;
 
             public const int Player = 1000;
         }

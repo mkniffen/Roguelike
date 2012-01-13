@@ -56,8 +56,13 @@ namespace SlashIt
             while (!Quit)
             {
                 game.WriteConsole();
-                HandleInput();
-                game.MoveNonPlayerCharacters();
+                if (game.PlayerCanAct())
+                {
+                    HandleInput();
+                    map.GetPlayer().TimeBucket = 0;
+                }
+                game.PerformNonPlayerCharacterAction();
+                game.AdvanceTime();
             }
 
             Console.WriteLine("Game over!");

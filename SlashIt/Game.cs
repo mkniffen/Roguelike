@@ -91,20 +91,29 @@ namespace SlashIt
 
         }
 
-        public void MoveNonPlayerCharacters()
+        public void PerformNonPlayerCharacterAction()
         {
-            List<Tile> nonPlayerCharacterTiles = Map.GetNonPlayerTiles();
+            List<Tile> nonPlayerCharacterTiles = Map.GetNonPlayerTiles().Where(t => t.Mobile.CanAct()).ToList();
 
-            foreach (Tile nonPlayerCharacterTile in nonPlayerCharacterTiles)
+            Mobile mobile;
+
+            while (nonPlayerCharacterTiles.Count > 0)
             {
-                //TODO -- this will need to be more complicated.  Probably using
-                //        various commands generated from AI code.
-                var direction = ((NonPlayerCharacter)nonPlayerCharacterTile.Mobile).GetDirectionToMove();
-
-                if (direction != null)
+                foreach (Tile nonPlayerCharacterTile in nonPlayerCharacterTiles)
                 {
-                    this.Map.MoveMobile(direction, nonPlayerCharacterTile);
+                    mobile = ((Mobile)nonPlayerCharacterTile.Mobile);
+                    //TODO -- this will need to be more complicated.  Probably using
+                    //        various commands generated from AI code.
+                    var direction = ((INonPlayerCharacter)mobile).GetDirectionToMove();
+
+                    if (direction != null)
+                    {
+                        this.Map.MoveMobile(direction, nonPlayerCharacterTile);
+                    }
+
+                    mobile.TimeBucket = 0;
                 }
+                nonPlayerCharacterTiles = Map.GetNonPlayerTiles().Where(t => t.Mobile.CanAct()).ToList();
             }
         }
 
@@ -151,5 +160,21 @@ namespace SlashIt
         //{
         //    throw new NotImplementedException();
         //}
+
+        public void AdvanceTime()
+        {
+            List<Mobile> mobiles = this.Map.GetMobiles();
+
+            foreach (var mobile in mobiles)
+            {
+                mobile.AdvanceTime();
+            }
+        }
+
+        public bool PlayerCanAct()
+        {
+            return this.Map.GetPlayer().CanAct();
+        }
+
     }
 }
