@@ -72,6 +72,19 @@ namespace SlashIt
         }
 
 
+        public void MoveMobile(LocalKeyInfo keyInfo, Tile mapTile)
+        {
+            var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
+
+            var tileToMoveTo = this.GetTileToMoveTo(keyInfo, mapLocation);
+
+            if (mapTile.Mobile.CanMoveTo(tileToMoveTo))
+            {
+                tileToMoveTo.Mobile = mapTile.Mobile;
+                mapTile.Mobile = null;
+            }
+        }
+
         private void LoadTiles()
         {
             Tiles.AddRange(

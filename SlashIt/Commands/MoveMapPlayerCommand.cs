@@ -17,20 +17,7 @@ namespace SlashIt
         public void execute(LocalKeyInfo keyInfo)
         {
             var mapTile = this.map.GetPlayerTile();
-
-
-
-            #region MoveToMethod
-            var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
-
-            var tileToMoveTo = this.map.GetTileToMoveTo(keyInfo, mapLocation);
-
-            if (mapTile.Mobile.CanMoveTo(tileToMoveTo))
-            {
-                tileToMoveTo.Mobile = mapTile.Mobile;
-                mapTile.Mobile = null;
-            } 
-            #endregion
+            this.map.MoveMobile(keyInfo, mapTile);
         }
     }
 }

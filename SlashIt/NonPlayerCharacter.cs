@@ -18,13 +18,31 @@ namespace SlashIt
             this.UniqueId = Constants.UniqueIds.NonPlayerCharacter;
         }
 
-        public void Move()
+        public LocalKeyInfo GetDirectionToMove()
         {
 
             //TODO WORKING HERE -- Adding AI for NPC.  Figure out how to move
 
 
-            var direction = Program.RandomNumber(4);
+            var direction = Program.RandomNumber(5);
+
+            switch (direction)
+            {
+                case 0:
+                    return null;
+                case 1:
+                    return new LocalKeyInfo(ConsoleKey.UpArrow, false, false, false);
+                case 2:
+                    return new LocalKeyInfo(ConsoleKey.DownArrow, false, false, false);
+                case 3:
+                    return new LocalKeyInfo(ConsoleKey.LeftArrow, false, false, false);
+                case 4:
+                    return new LocalKeyInfo(ConsoleKey.RightArrow, false, false, false);
+                default:
+                    return null;
+            }
+
+
         }
 
         //TODO -- Add Load/Save (very basic for now...)

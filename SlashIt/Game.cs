@@ -97,7 +97,14 @@ namespace SlashIt
 
             foreach (Tile nonPlayerCharacterTile in nonPlayerCharacterTiles)
             {
-                ((NonPlayerCharacter)nonPlayerCharacterTile.Mobile).Move();
+                //TODO -- this will need to be more complicated.  Probably using
+                //        various commands generated from AI code.
+                var direction = ((NonPlayerCharacter)nonPlayerCharacterTile.Mobile).GetDirectionToMove();
+
+                if (direction != null)
+                {
+                    this.Map.MoveMobile(direction, nonPlayerCharacterTile);
+                }
             }
         }
 
