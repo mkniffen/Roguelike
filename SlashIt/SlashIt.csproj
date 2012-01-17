@@ -68,6 +68,7 @@
     <Compile Include="Tiles\Wall.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\Config.xml" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
