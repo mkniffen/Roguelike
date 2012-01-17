@@ -18,6 +18,7 @@ namespace SlashIt
         {
             var mapTile = this.map.GetPlayerTile();
             this.map.MoveMobile(keyInfo, mapTile);
+            this.map.MapOutdated = true;
         }
     }
 }

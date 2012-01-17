@@ -49,6 +49,8 @@ namespace SlashIt
             }
 
             Status.ClearInfo();
+
+            this.map.MapOutdated = true;
         }
     }
 }

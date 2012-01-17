@@ -12,8 +12,11 @@ namespace SlashIt
         [XmlIgnore]
         public List<Tile> Tiles { get; set; }
 
+        public bool MapOutdated { get; set; }
+
         public Map()
         {
+            this.MapOutdated = true;
             this.Tiles = new List<Tile>();
             this.LoadTiles();
         }
@@ -275,8 +278,6 @@ namespace SlashIt
             set { this.map[top, left] = value; }
         }
 
-
-        public bool MapOutdated { get; set; }
 
         public int GetUpperBound(int dimension)
         {

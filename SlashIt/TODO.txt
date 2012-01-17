@@ -1,10 +1,9 @@
 ﻿TODO
 
--- Implement more detailed time
--- Optimize map drawing
 -- Add key bindings config along with loading commands
 -- Redo Save/Load
 -- Find a good way to store variable info on mobs and objects.  Would be nice if it could be generic
+-- Optimize map drawing
 
 
 
