@@ -54,7 +54,7 @@ namespace SlashIt
             game.Map = map;
             game.InitConsole();
 
-            while (!Quit)
+            while (!Quit && !game.PlayerIsDead)
             {
                 game.WriteConsole();
                 if (game.PlayerCanAct())
@@ -66,8 +66,18 @@ namespace SlashIt
                 game.AdvanceTime();
             }
 
-            Console.WriteLine("Game over!");
+            if (game.PlayerIsDead)
+            {
+                Status.WriteToStatusLine("You are Dead!!!!!!!!!!!");
+            }
+            else
+            {
+                Console.WriteLine("Game over!");
+            }
+
+            Console.ReadKey();
         }
+
         static Random r = new Random();
 
         public static int RandomNumber(int max)
@@ -82,6 +92,7 @@ namespace SlashIt
             var localKeyInfo = new LocalKeyInfo(keyInfo);
 
             Status.ClearInfo();
+            Status.WriteToStatusLine("");
 
             game.CommandActivated(localKeyInfo);
         }
@@ -92,18 +103,13 @@ namespace SlashIt
             //TODO -- eventually move the selection of key bindings to the ui in game
 
 
-            //TODO WORKING HERE -- Define the rest of the bindings in the switches below.  Is there a better way??
-
-
+            //TODO Is there a better way??
 
             var bindings = ReadConfig("KeyBindings");
 
             ICommand command = null;
             ConsoleKey key = ConsoleKey.A;
             LocalKeyInfo localKey = null;
-
-
-            var ttt = ConsoleKey.UpArrow;
 
             foreach (var binding in bindings)
             {

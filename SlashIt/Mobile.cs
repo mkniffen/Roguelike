@@ -29,9 +29,16 @@ namespace SlashIt
         //How much is added to the TimeBucket each game turn
         public virtual int Speed { get; set; }
 
+        public int HitPoints { get; set; }
+
         public virtual bool CanAct()
         {
             return TimeBucket > CanMoveLevel;
+        }
+
+        public virtual bool IsDead()
+        {
+            return HitPoints < 1;
         }
 
         public virtual bool CanMoveTo(Tile tile)
@@ -47,6 +54,28 @@ namespace SlashIt
         }
 
 
+
+        public bool CanAttack(Map map, Tile nonPlayerCharacterTile)
+        {
+            
+            var topStart = nonPlayerCharacterTile.Location.Top - 1 < 1 ? 1 : nonPlayerCharacterTile.Location.Top - 1;
+            var leftStart = nonPlayerCharacterTile.Location.Left - 1 < 1 ? 1 : nonPlayerCharacterTile.Location.Left - 1;
+
+            var playerTile = map.GetPlayerTile();
+
+            for (int top = topStart; top <= nonPlayerCharacterTile.Location.Top + 1; top++)
+            {
+                for (int left = leftStart; left <= nonPlayerCharacterTile.Location.Left + 1; left++)
+                {
+                    if (playerTile.Location.Top == top && playerTile.Location.Left == left)
+                    { 
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
 
         public void AdvanceTime()
         {

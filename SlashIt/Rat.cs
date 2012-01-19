@@ -16,13 +16,39 @@ namespace SlashIt
             this.Description = "A simple rat that wants to EAT you!";
             this.DisplayCharacter = "r";
             this.UniqueId = Constants.UniqueIds.Rat;
+            this.HitPoints = 10;
+        }
+
+        public void PerformAction(Map map, Tile nonPlayerCharacterTile)
+        {
+
+            //TODO WORKING HERE -- Add Player attack
+
+            var num = Program.RandomNumber(4);
+
+            if (num < 3)
+            {
+                //Move
+                var direction = this.GetDirectionToMove();
+
+                if (direction != null)
+                {
+                    map.MoveMobile(direction, nonPlayerCharacterTile);
+                }
+            }
+            else
+            {
+                //Attack
+                if (nonPlayerCharacterTile.Mobile.CanAttack(map, nonPlayerCharacterTile))
+                {
+                    map.GetPlayer().HitPoints -= 3;
+                    Status.WriteToStatusLine("The rat bites you!");
+                }
+            }
         }
 
         public LocalKeyInfo GetDirectionToMove()
         {
-
-            //TODO WORKING HERE -- Adding AI for NPC.  Figure out how to move
-
 
             var direction = Program.RandomNumber(5);
 

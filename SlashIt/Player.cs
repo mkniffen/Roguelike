@@ -15,6 +15,7 @@ namespace SlashIt
             DisplayCharacter = "@";
             Name = "Player";
             UniqueId = Constants.UniqueIds.Player;
+            HitPoints = 10; //TODO -- This should be based on hit dice
         }
 
         public void Save(TextWriter saveFileWriter)

@@ -16,7 +16,21 @@ namespace SlashIt
             this.Description = "So plain it just bores you to death!";
             this.DisplayCharacter = "B";
             this.UniqueId = Constants.UniqueIds.Bob;
+            this.HitPoints = 100;
         }
+
+
+        public void PerformAction(Map map, Tile nonPlayerCharacterTile)
+        {
+
+            var direction = this.GetDirectionToMove();
+
+            if (direction != null)
+            {
+                map.MoveMobile(direction, nonPlayerCharacterTile);
+            }
+        }
+
 
         public LocalKeyInfo GetDirectionToMove()
         {

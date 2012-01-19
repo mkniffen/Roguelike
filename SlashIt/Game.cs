@@ -15,6 +15,7 @@ namespace SlashIt
 
         [XmlIgnore]
         public Map Map { get; set; }
+        public bool PlayerIsDead { get; set; }
 
         public const short MapStartLeft = 19;
         public const short MapStartTop = 0;
@@ -22,6 +23,7 @@ namespace SlashIt
         public Game()
         {
             commands = new Dictionary<LocalKeyInfo, ICommand>();
+            this.PlayerIsDead = false;
         }
 
         public void SetCommand(LocalKeyInfo keyInfo, ICommand command)
@@ -102,21 +104,22 @@ namespace SlashIt
 
             Mobile mobile;
 
-            while (nonPlayerCharacterTiles.Count > 0)
+            while (!this.PlayerIsDead && nonPlayerCharacterTiles.Count > 0)
             {
                 foreach (Tile nonPlayerCharacterTile in nonPlayerCharacterTiles)
                 {
                     mobile = ((Mobile)nonPlayerCharacterTile.Mobile);
-                    //TODO -- this will need to be more complicated.  Probably using
-                    //        various commands generated from AI code.
-                    var direction = ((INonPlayerCharacter)mobile).GetDirectionToMove();
 
-                    if (direction != null)
+                    ((INonPlayerCharacter)mobile).PerformAction(this.Map, nonPlayerCharacterTile);
+
+                    this.PlayerIsDead = this.Map.GetPlayer().IsDead();
+
+                    if (this.PlayerIsDead)
                     {
-                        this.Map.MoveMobile(direction, nonPlayerCharacterTile);
+                        break;
                     }
 
-                    mobile.TimeBucket = 0;
+                    mobile.TimeBucket = 0;  //TODO -- probably move into NPC or specific commands
                 }
                 nonPlayerCharacterTiles = Map.GetNonPlayerTiles().Where(t => t.Mobile.CanAct()).ToList();
             }
