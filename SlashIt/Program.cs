@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SlashIt
 {
@@ -85,36 +86,107 @@ namespace SlashIt
             game.CommandActivated(localKeyInfo);
         }
 
-        //TODO -- eventually refactor so the commands are set up using a config file with bindable keys
+        
         private static void InitCommands()
         {
-            var openCloseCommand = new OpenCloseCommand(map);
-            var lk = new LocalKeyInfo(ConsoleKey.O, false, false, false);
-            game.SetCommand(lk, openCloseCommand);
+            //TODO -- eventually move the selection of key bindings to the ui in game
 
-            var movePlayerCommand = new MoveMapPlayerCommand(map);
-            lk = new LocalKeyInfo(ConsoleKey.DownArrow, false, false, false);
-            game.SetCommand(lk, movePlayerCommand);
 
-            movePlayerCommand = new MoveMapPlayerCommand(map);
-            lk = new LocalKeyInfo(ConsoleKey.LeftArrow, false, false, false);
-            game.SetCommand(lk, movePlayerCommand);
+            //TODO WORKING HERE -- Define the rest of the bindings in the switches below.  Is there a better way??
 
-            movePlayerCommand = new MoveMapPlayerCommand(map);
-            lk = new LocalKeyInfo(ConsoleKey.RightArrow, false, false, false);
-            game.SetCommand(lk, movePlayerCommand);
 
-            movePlayerCommand = new MoveMapPlayerCommand(map);
-            lk = new LocalKeyInfo(ConsoleKey.UpArrow, false, false, false);
-            game.SetCommand(lk, movePlayerCommand);
 
-            var lookCommand = new LookCommand(map);
-            lk = new LocalKeyInfo(ConsoleKey.L, false, false, false);
-            game.SetCommand(lk, lookCommand);
+            var bindings = ReadConfig("KeyBindings");
+
+            ICommand command = null;
+            ConsoleKey key = ConsoleKey.A;
+            LocalKeyInfo localKey = null;
+
+
+            var ttt = ConsoleKey.UpArrow;
+
+            foreach (var binding in bindings)
+            {
+             
+                switch (binding.Value)
+                {
+                    case "o":
+                        key = ConsoleKey.O;
+                        break;
+                    case "UpArrow":
+                        key = ConsoleKey.UpArrow;
+                        break;
+                    case "DownArrow":
+                        key = ConsoleKey.DownArrow;
+                        break;
+                    case "RightArrow":
+                        key = ConsoleKey.RightArrow;
+                        break;
+                    case "LeftArrow":
+                        key = ConsoleKey.LeftArrow;
+                        break;
+                    case "l":
+                        key = ConsoleKey.L;
+                        break;
+                    default:
+                        continue;
+                }
+
+
+                switch (binding.Key)
+                {
+                    case "OpenCloseCommand":
+                        command = new OpenCloseCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "MoveUp":
+                        command = new MoveMapPlayerCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "MoveDown":
+                        command = new MoveMapPlayerCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "MoveRight":
+                        command = new MoveMapPlayerCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "MoveLeft":
+                        command = new MoveMapPlayerCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "Look":
+                        command = new LookCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    default:
+                        break;
+                }
+
+                game.SetCommand(localKey, command);
+            }
+
+            //var lookCommand = new LookCommand(map);
+            //lk = new LocalKeyInfo(ConsoleKey.L, false, false, false);
+            //game.SetCommand(lk, lookCommand);
+
+            #region Non Bindable Keys
 
             var quitCommand = new QuitCommand(map);
-            lk = new LocalKeyInfo(ConsoleKey.Q, false, false, false);
+            var lk = new LocalKeyInfo(ConsoleKey.Q, false, false, false);
             game.SetCommand(lk, quitCommand);
+
+            #endregion
+        }
+
+        private static Dictionary<string, string> ReadConfig(string p)
+        {
+            XDocument doc = XDocument.Load(@".\Config\Config.xml");
+
+            return doc.Descendants("KeyBindings")
+                .SelectMany(kb => kb.Elements())
+                .Select(e => new { e.Name, e.Value })
+                .ToDictionary(x => x.Name.ToString(), x => x.Value.ToString());
         }
     }
 }

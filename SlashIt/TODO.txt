@@ -1,8 +1,7 @@
 ﻿TODO
 
--- Add key bindings config along with loading commands
--- Redo Save/Load
 -- Find a good way to store variable info on mobs and objects.  Would be nice if it could be generic
+-- Redo Save/Load
 -- Optimize map drawing
 
 

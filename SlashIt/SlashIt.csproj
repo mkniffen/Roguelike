@@ -68,7 +68,10 @@
     <Compile Include="Tiles\Wall.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\Config.xml" />
+    <Content Include="Config\Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

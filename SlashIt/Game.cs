@@ -11,11 +11,11 @@ namespace SlashIt
     public class Game// : IXmlSerializable
     {
         const string SaveFile = @".\game.sav";
-        Dictionary<LocalKeyInfo, ICommand> commands; 
+        Dictionary<LocalKeyInfo, ICommand> commands;
 
         [XmlIgnore]
         public Map Map { get; set; }
-        
+
         public const short MapStartLeft = 19;
         public const short MapStartTop = 0;
 
@@ -31,7 +31,16 @@ namespace SlashIt
 
         public void CommandActivated(LocalKeyInfo keyInfo)
         {
-            commands[keyInfo].execute(keyInfo);
+            try
+            {
+                commands[keyInfo].execute(keyInfo);
+            }
+                //TODO add logging...
+            catch (Exception e)
+            {
+                Status.WriteToStatusLine(keyInfo.Key + " key is not bound to a command.  Press any key to continue");
+                Console.ReadKey(true);
+            }
         }
 
 
@@ -45,7 +54,7 @@ namespace SlashIt
             Console.BufferHeight = 25;
 
             Console.CursorVisible = false;
-            
+
             //this.Load();
 
             this.WriteConsole();
@@ -63,7 +72,7 @@ namespace SlashIt
                 this.GenerateMap();  //TODO only do this when really needed
             }
 
-         //   Status.Message = "Map Left: " + character.LeftMapPosition + " :MapTop: " + character.TopMapPosition;
+            //   Status.Message = "Map Left: " + character.LeftMapPosition + " :MapTop: " + character.TopMapPosition;
 
             Status.WriteToStatus();
         }
