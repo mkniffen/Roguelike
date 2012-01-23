@@ -50,7 +50,19 @@ namespace SlashIt
             };
 
             //See if this map object can make the requested move
-            return (canMoveToTiles.Contains(tile.UniqueId) && tile.Mobile == null);
+            return canMoveToTiles.Contains(tile.UniqueId) && tile.Mobile == null;
+        }
+
+        public virtual bool CanMoveOnPath(Tile tile)
+        {
+            List<int> canMoveToTiles = new List<int>
+            {
+                Constants.UniqueIds.Floor,
+                Constants.UniqueIds.OpenDoor
+            };
+
+            //See if this map object can make the requested move
+            return canMoveToTiles.Contains(tile.UniqueId) && ((tile.Mobile == null) || (tile.Mobile is Player));
         }
 
 
@@ -81,5 +93,7 @@ namespace SlashIt
         {
             this.TimeBucket += this.Speed;
         }
+
+        public string HitMessage { get; set; }
     }
 }

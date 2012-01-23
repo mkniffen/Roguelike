@@ -17,19 +17,15 @@ namespace SlashIt
             this.DisplayCharacter = "r";
             this.UniqueId = Constants.UniqueIds.Rat;
             this.HitPoints = 10;
+            this.HitMessage = "the " + this.Name + " ";
         }
 
         public void PerformAction(Map map, Tile nonPlayerCharacterTile)
         {
-
-            //TODO WORKING HERE -- Add Player attack
-
-            var num = Program.RandomNumber(4);
-
-            if (num < 3)
+            if (Program.RandomNumber(4) < 3)
             {
                 //Move
-                var direction = this.GetDirectionToMove();
+                var direction = map.GetDirectionRandom();
 
                 if (direction != null)
                 {
@@ -45,30 +41,6 @@ namespace SlashIt
                     Status.WriteToStatusLine("The rat bites you!");
                 }
             }
-        }
-
-        public LocalKeyInfo GetDirectionToMove()
-        {
-
-            var direction = Program.RandomNumber(5);
-
-            switch (direction)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return new LocalKeyInfo(ConsoleKey.UpArrow, false, false, false);
-                case 2:
-                    return new LocalKeyInfo(ConsoleKey.DownArrow, false, false, false);
-                case 3:
-                    return new LocalKeyInfo(ConsoleKey.LeftArrow, false, false, false);
-                case 4:
-                    return new LocalKeyInfo(ConsoleKey.RightArrow, false, false, false);
-                default:
-                    return null;
-            }
-
-
         }
 
         //TODO -- Add Load/Save (very basic for now...)

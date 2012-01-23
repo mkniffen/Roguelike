@@ -5,5 +5,6 @@
   <MoveDown>DownArrow</MoveDown>
   <MoveRight>RightArrow</MoveRight>
   <MoveLeft>LeftArrow</MoveLeft>
-  <OpenCloseCommand>o</OpenCloseCommand>
+  <OpenClose>o</OpenClose>
+  <Attack>a</Attack>
 </KeyBindings>

@@ -134,6 +134,9 @@ namespace SlashIt
                     case "l":
                         key = ConsoleKey.L;
                         break;
+                    case "a":
+                        key = ConsoleKey.A;
+                        break;
                     default:
                         continue;
                 }
@@ -141,7 +144,7 @@ namespace SlashIt
 
                 switch (binding.Key)
                 {
-                    case "OpenCloseCommand":
+                    case "OpenClose":
                         command = new OpenCloseCommand(map);
                         localKey = new LocalKeyInfo(key, false, false, false);
                         break;
@@ -163,6 +166,10 @@ namespace SlashIt
                         break;
                     case "Look":
                         command = new LookCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "Attack":
+                        command = new AttackCommand(map);
                         localKey = new LocalKeyInfo(key, false, false, false);
                         break;
                     default:

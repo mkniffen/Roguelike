@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Rat.cs" />
     <Compile Include="INonPlayerCharacter.cs" />

@@ -69,7 +69,7 @@ namespace SlashIt
         //TODO maybe have use a second array that tracks what should be drawn on the grid.
         public void WriteConsole()
         {
-            if (Map.MapOutdated)
+            if (Map.Outdated)
             {
                 this.GenerateMap();  //TODO only do this when really needed
             }
@@ -95,7 +95,7 @@ namespace SlashIt
                 Console.Write(tile.DisplayCharacter);
             }
 
-            Map.MapOutdated = false;
+            Map.Outdated = false;
         }
 
         public void PerformNonPlayerCharacterAction()

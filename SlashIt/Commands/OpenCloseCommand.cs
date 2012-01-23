@@ -29,7 +29,7 @@ namespace SlashIt
 
             var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
 
-            var tileToUse = this.map.GetTileToMoveTo(localKeyInfo, mapLocation);
+            var tileToUse = this.map.GetTileInDirection(localKeyInfo, mapLocation);
 
             if (tileToUse.UniqueId == Constants.UniqueIds.Door)
             {
@@ -50,7 +50,7 @@ namespace SlashIt
 
             Status.ClearInfo();
 
-            this.map.MapOutdated = true;
+            this.map.Outdated = true;
         }
     }
 }

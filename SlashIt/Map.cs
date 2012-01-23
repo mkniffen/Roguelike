@@ -12,11 +12,11 @@ namespace SlashIt
         [XmlIgnore]
         public List<Tile> Tiles { get; set; }
 
-        public bool MapOutdated { get; set; }
+        public bool Outdated { get; set; }
 
         public Map()
         {
-            this.MapOutdated = true;
+            this.Outdated = true;
             this.Tiles = new List<Tile>();
             this.LoadTiles();
         }
@@ -27,6 +27,158 @@ namespace SlashIt
                 .Where(m => m.Location.Left == mapLocation.Left && m.Location.Top == mapLocation.Top)
                 .Single();
             return tileToMoveTo;
+        }
+
+        public LocalKeyInfo GetDirectionTowardsPlayer(Location playerLocation, Location mobileLocation)
+        {
+            if (playerLocation.Top < mobileLocation.Top)
+            {
+                return new LocalKeyInfo(ConsoleKey.UpArrow, false, false, false);
+            }
+
+            if (playerLocation.Top > mobileLocation.Top)
+            {
+                return new LocalKeyInfo(ConsoleKey.DownArrow, false, false, false);
+            }
+
+            if (playerLocation.Left < mobileLocation.Left)
+            {
+                return new LocalKeyInfo(ConsoleKey.LeftArrow, false, false, false);
+            }
+
+            if (playerLocation.Left > mobileLocation.Left)
+            {
+                return new LocalKeyInfo(ConsoleKey.RightArrow, false, false, false);
+            }
+
+            return null;
+        }
+
+
+        /*
+        1. Find the destination tile (where the player is). 
+        2. Put the starting tile (where the monster is) on the OPEN list. It's starting cost is zero.
+        3. While the OPEN list is not empty, and a path isn't found: 
+            1. Get the tile from the OPEN list with the lowest movement cost. Let's call it the CURRENT tile.
+            2. If this is the destination tile, the path has been found. Exit the loop now.
+            3. Find the tiles to which you can immediately walk to from this tile. These would the tiles around this tile, which don't contain obstacles. Call these tiles "successors".
+            4. For each successor: 
+                1. Set the successor's parent to the CURRENT tile. 
+                2. Set the successor's movement cost to the parent's movement cost, plus 1 (for diagonal movements, add more if it takes longer to go diagonally in your game).
+                3. If the successor doesn't exist on either the OPEN list or the CLOSED list, add it to the OPEN list. Otherwise, if the successor's movement cost is lower than the movement cost of the same tile on one of the lists, delete the occurrences of the successor from the lists add the successor to the OPEN list Otherwise, if the successor's movement cost is higher than that of the same tile on one of the lists, get rid of the successor
+            5. Delete the CURRENT tile from the OPEN list, and put it on the CLOSED list. 
+        4. If the while loop has been ended because the OPEN list is empty, there is no path.
+        5. If this is not the case, the last tile pulled from the OPEN list, and its parents, describe the shortest path (in reverse order - i.e. from the player to the monster - you should read the list of tiles back to front).
+        */
+        public Tile GetShortestDistanceDirectionToPlayer(Mobile mobile, Location playerLocation, Location mobileLocation)
+        {
+
+            //TODO  COmment this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+            var openLocations = new List<PathLocation>();
+            var closedLocations = new List<PathLocation>();
+            List<PathLocation> successorLocations = null;
+            PathLocation currentLocation = null;
+            //Keep a PathLocation for the mobile.  It is needed at the end when walking the child parent relationship
+            //It is used to filter out the location of the mobile, so we don't try to move to where the
+            //mobile already is.
+            PathLocation mobilePathLocation = new PathLocation(mobileLocation, 0, null);
+
+            openLocations.Add(mobilePathLocation);
+
+            while (openLocations.Count > 0)
+            {
+                            //TODO MAKE sure MIN is working as expected
+                int minMovementCost = openLocations.Min(o => o.MovementCost);
+                currentLocation = openLocations.Where(o => o.MovementCost == minMovementCost).First();
+
+                if (currentLocation.ThisLocation == playerLocation)
+                {
+                    break;
+                }
+
+                var topStart = currentLocation.ThisLocation.Top - 1 < 1 ? 1 : currentLocation.ThisLocation.Top - 1;
+                var leftStart = currentLocation.ThisLocation.Left - 1 < 1 ? 1 : currentLocation.ThisLocation.Left - 1;
+                successorLocations = new List<PathLocation>();
+
+                for (int top = topStart; top <= currentLocation.ThisLocation.Top + 1; top++)
+                {
+                    for (int left = leftStart; left <= currentLocation.ThisLocation.Left + 1; left++)
+                    {
+                        var potentialTile = this.GetTileForLocation(new Location(left, top));
+                        if (mobile.CanMoveOnPath(potentialTile))
+                        {
+                            successorLocations.Add(new PathLocation(potentialTile.Location, currentLocation.MovementCost + 1, currentLocation));
+                        }
+                    }
+                }
+
+                foreach (var successorLocation in successorLocations)
+                {
+                    var onOpenLocations = openLocations.Where(o => o.ThisLocation == successorLocation.ThisLocation);
+                    var onClosedLocations = closedLocations.Where(o => o.ThisLocation == successorLocation.ThisLocation);
+
+                    if (onOpenLocations.Count() < 1 && onClosedLocations.Count() < 1)
+                    {
+                        openLocations.Add(successorLocation);
+                    }
+                    else if ((onOpenLocations.Count() > 0 && successorLocation.MovementCost < onOpenLocations.Min(o => o.MovementCost)) ||
+                        (onClosedLocations.Count() > 0 && successorLocation.MovementCost < onClosedLocations.Min(o => o.MovementCost)))
+                    {
+                        openLocations.RemoveAll(o => onOpenLocations.Contains(o));
+                        closedLocations.RemoveAll(o => onClosedLocations.Contains(o));
+
+                        openLocations.Add(successorLocation);
+                    }                                     //TODO MAKE sure MIN is working as expected
+                    else if ((onOpenLocations.Count() > 0 && successorLocation.MovementCost > onOpenLocations.Min(o => o.MovementCost)) ||
+                        (onClosedLocations.Count() > 0 && successorLocation.MovementCost > onClosedLocations.Min(o => o.MovementCost)))
+                    {
+                        ; //Do nothing (effectively get rid of the successor
+                    }
+                }
+
+                openLocations.Remove(currentLocation);
+                closedLocations.Add(currentLocation);
+                currentLocation = null;
+            }
+
+            if (currentLocation == null)
+            {
+                return null;
+            }
+
+            PathLocation locationToMoveTo = currentLocation.ParentPathLocation;
+
+            while ( locationToMoveTo.ParentPathLocation != null && 
+                locationToMoveTo.ParentPathLocation.ThisLocation != mobilePathLocation.ThisLocation)
+            {
+                locationToMoveTo = locationToMoveTo.ParentPathLocation;
+            }
+
+            return this.GetTileForLocation(locationToMoveTo.ThisLocation);
+        }
+
+
+        public LocalKeyInfo GetDirectionRandom()
+        {
+            var direction = Program.RandomNumber(5);
+
+            switch (direction)
+            {
+                case 0:
+                    return null;
+                case 1:
+                    return new LocalKeyInfo(ConsoleKey.UpArrow, false, false, false);
+                case 2:
+                    return new LocalKeyInfo(ConsoleKey.DownArrow, false, false, false);
+                case 3:
+                    return new LocalKeyInfo(ConsoleKey.LeftArrow, false, false, false);
+                case 4:
+                    return new LocalKeyInfo(ConsoleKey.RightArrow, false, false, false);
+                default:
+                    return null;
+            }
         }
 
         public Tile GetPlayerTile()
@@ -47,7 +199,7 @@ namespace SlashIt
             return mapTiles;
         }
 
-        public Tile GetTileToMoveTo(LocalKeyInfo keyInfo, Location mapLocation)
+        public Tile GetTileInDirection(LocalKeyInfo keyInfo, Location mapLocation)
         {
             switch (keyInfo.Key)
             {
@@ -75,17 +227,27 @@ namespace SlashIt
         }
 
 
-        public void MoveMobile(LocalKeyInfo keyInfo, Tile mapTile)
+        public Tile MoveMobile(LocalKeyInfo keyInfo, Tile mobileMapTile)
         {
-            var mapLocation = new Location(mapTile.Location.Left, mapTile.Location.Top);
+            var mapLocation = new Location(mobileMapTile.Location.Left, mobileMapTile.Location.Top);
 
-            var tileToMoveTo = this.GetTileToMoveTo(keyInfo, mapLocation);
+            var tileToMoveTo = this.GetTileInDirection(keyInfo, mapLocation);
 
-            if (mapTile.Mobile.CanMoveTo(tileToMoveTo))
+            return this.MoveMobile(mobileMapTile, tileToMoveTo);
+        }
+
+        public Tile MoveMobile(Tile mobileMapTile, Tile tileToMoveTo)
+        {
+            if (mobileMapTile.Mobile.CanMoveTo(tileToMoveTo))
             {
-                tileToMoveTo.Mobile = mapTile.Mobile;
-                mapTile.Mobile = null;
+                tileToMoveTo.Mobile = mobileMapTile.Mobile;
+                mobileMapTile.Mobile = null;
+                this.Outdated = true;
+
+                return tileToMoveTo;
             }
+
+            return null;
         }
 
         private void LoadTiles()
@@ -128,7 +290,7 @@ namespace SlashIt
                     new Floor { Location = new Location(3,3) },
                     new Wall { Location = new Location(4,3) },
                     new Wall { Location = new Location(5,3) },
-                    new Floor { Location = new Location(6,3) },
+                    new Wall { Location = new Location(6,3) },
                     new Floor { Location = new Location(7,3) },
                     new Floor { Location = new Location(8,3) },
                     new Floor { Location = new Location(9,3) },
@@ -259,105 +421,18 @@ namespace SlashIt
         }
     }
 
-
-    /*
-    public class Map : IXmlSerializable
+    public class PathLocation
     {
-        public Map()
+        public PathLocation(Location currentLocation, int movementCost, PathLocation parentPathLocation)
         {
-            MapOutdated = true;
-            //MapFile = @".\game.sav";
+            this.ThisLocation = currentLocation;
+            this.ParentPathLocation = parentPathLocation;
+            this.MovementCost = movementCost;
         }
 
-        //public string MapFile { get; set; }
-
-        //TODO not sure about this syntax.  Gonna give it a try for now...
-        public int this[int top, int left]
-        {
-            get { return this.map[top,left]; }
-            set { this.map[top, left] = value; }
-        }
-
-
-        public int GetUpperBound(int dimension)
-        {
-            return map.GetUpperBound(dimension);
-        }
-
-        private int[,] map = new int[10, 10];
-
-
-        public Map Load(StreamReader saveFileStream)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Map));
-            return (Map)serializer.Deserialize(saveFileStream);
-        }
-
-
-        public void Save(TextWriter saveFileWriter)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Map));
-
-            serializer.Serialize(saveFileWriter, this);
-        }
-
-
-        public System.Xml.Schema.XmlSchema GetSchema()
-        {
-            return (null);
-        }
-
-
-        public void ReadXml(System.Xml.XmlReader reader)
-        {
-            reader.MoveToContent();
-
-
-            
-            //TODO -- Will need to add reading and setting of the Height, Width attributes
-
-
-            var isEmptyElement = reader.IsEmptyElement;
-            reader.ReadStartElement();
-
-            if (!isEmptyElement)
-            {
-                var definitionList = reader.ReadElementString("Definition").Split(',');
-                int listPosition = 0;
-
-                for (int top = 0; top <= map.GetUpperBound(0); top++)
-                {
-                    for (int left = 0; left <= map.GetUpperBound(1); left++)
-                    {
-                        map[top, left] = int.Parse(definitionList[listPosition]);
-                        listPosition++;
-                    }
-                }
-            }
-        }
-
-        public void WriteXml(System.Xml.XmlWriter writer)
-        {
-            writer.WriteAttributeString("Height", (this.GetUpperBound(0)+1).ToString());
-            writer.WriteAttributeString("Width", (this.GetUpperBound(1)+1).ToString());
-            writer.WriteElementString("Definition", this.MapToString());
-        }
-
-        private string MapToString()
-        {
-            StringBuilder mapString = new StringBuilder();
-
-            for (int top = 0; top <= this.GetUpperBound(0); top++)
-            {
-                for (int left = 0; left <= this.GetUpperBound(1); left++)
-                {
-                    mapString.Append(map[top, left]);
-                    mapString.Append(",");
-                }
-            }
-
-            return mapString.ToString();
-        }
+        public Location ThisLocation { get; set; }
+        public PathLocation ParentPathLocation { get; set; }
+        public int MovementCost { get; set; }
     }
-     */
+ 
 }
