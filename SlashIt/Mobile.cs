@@ -65,11 +65,8 @@ namespace SlashIt
             return canMoveToTiles.Contains(tile.UniqueId) && ((tile.Mobile == null) || (tile.Mobile is Player));
         }
 
-
-
         public bool CanAttack(Map map, Tile nonPlayerCharacterTile)
         {
-            
             var topStart = nonPlayerCharacterTile.Location.Top - 1 < 1 ? 1 : nonPlayerCharacterTile.Location.Top - 1;
             var leftStart = nonPlayerCharacterTile.Location.Left - 1 < 1 ? 1 : nonPlayerCharacterTile.Location.Left - 1;
 
@@ -80,7 +77,7 @@ namespace SlashIt
                 for (int left = leftStart; left <= nonPlayerCharacterTile.Location.Left + 1; left++)
                 {
                     if (playerTile.Location.Top == top && playerTile.Location.Left == left)
-                    { 
+                    {
                         return true;
                     }
                 }

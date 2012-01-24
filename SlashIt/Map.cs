@@ -72,10 +72,7 @@ namespace SlashIt
         */
         public Tile GetShortestDistanceDirectionToPlayer(Mobile mobile, Location playerLocation, Location mobileLocation)
         {
-
-            //TODO  COmment this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
+            //Set up lists for tracking tiles while pathfinding
             var openLocations = new List<PathLocation>();
             var closedLocations = new List<PathLocation>();
             List<PathLocation> successorLocations = null;
@@ -85,23 +82,36 @@ namespace SlashIt
             //mobile already is.
             PathLocation mobilePathLocation = new PathLocation(mobileLocation, 0, null);
 
+            //Add the mobiles location as a starting point
             openLocations.Add(mobilePathLocation);
 
+            //Continue to check for paths until we've looked at all possible tiles (tiles that the mobile can move into
+            //from it's original location)
             while (openLocations.Count > 0)
             {
-                            //TODO MAKE sure MIN is working as expected
+                //Get the tile with the least movement cost.  There may be several that have equal costs.
+                //Just take the first one
                 int minMovementCost = openLocations.Min(o => o.MovementCost);
                 currentLocation = openLocations.Where(o => o.MovementCost == minMovementCost).First();
 
+                //If we have found the players location with a tile that has the least associated movement
+                //cost, then we are done.
                 if (currentLocation.ThisLocation == playerLocation)
                 {
                     break;
                 }
 
+                //Init the adject tiles scanning loops
                 var topStart = currentLocation.ThisLocation.Top - 1 < 1 ? 1 : currentLocation.ThisLocation.Top - 1;
                 var leftStart = currentLocation.ThisLocation.Left - 1 < 1 ? 1 : currentLocation.ThisLocation.Left - 1;
+                //Make sure the successor list is empty.  It will be filled wiht tiles that can be moved to from,
+                //the current location.
                 successorLocations = new List<PathLocation>();
 
+        //TODO a similar loop to this is used in Mobile.CanAttack.  See if can refactor
+
+                //Go through each of the tiles adjacent to the current location and add it to the successor list
+                //if the mobile can move to it (ie. it's not a wall or another mobile, etc...)
                 for (int top = topStart; top <= currentLocation.ThisLocation.Top + 1; top++)
                 {
                     for (int left = leftStart; left <= currentLocation.ThisLocation.Left + 1; left++)
@@ -109,20 +119,29 @@ namespace SlashIt
                         var potentialTile = this.GetTileForLocation(new Location(left, top));
                         if (mobile.CanMoveOnPath(potentialTile))
                         {
+                            //Add the adjacent tile to the successor list setting its movement cost
+                            //and parent tile (the current location adjacenct to this one).
                             successorLocations.Add(new PathLocation(potentialTile.Location, currentLocation.MovementCost + 1, currentLocation));
                         }
                     }
                 }
 
+                //Go through the successors and determine what to do with them
                 foreach (var successorLocation in successorLocations)
                 {
+                    //See if the successor location is already on the open or closed locations list
                     var onOpenLocations = openLocations.Where(o => o.ThisLocation == successorLocation.ThisLocation);
                     var onClosedLocations = closedLocations.Where(o => o.ThisLocation == successorLocation.ThisLocation);
 
+                    //If the successor is NOT on either the closed or open list, then add it to open.  This means
+                    //we need probably need to do more pathfinding from this successor.
                     if (onOpenLocations.Count() < 1 && onClosedLocations.Count() < 1)
                     {
                         openLocations.Add(successorLocation);
                     }
+                        //If this successor has a lower movement cost than the same location with a higher movement cost,
+                        //the remove it from both lists and add it to the open list.  This means we have found a shorter
+                        //path (the lower movement cost) and so we will want to continue pathfinding from this successor.
                     else if ((onOpenLocations.Count() > 0 && successorLocation.MovementCost < onOpenLocations.Min(o => o.MovementCost)) ||
                         (onClosedLocations.Count() > 0 && successorLocation.MovementCost < onClosedLocations.Min(o => o.MovementCost)))
                     {
@@ -130,33 +149,61 @@ namespace SlashIt
                         closedLocations.RemoveAll(o => onClosedLocations.Contains(o));
 
                         openLocations.Add(successorLocation);
-                    }                                     //TODO MAKE sure MIN is working as expected
+                    }
+                        //If this successor has a greater movement cost, then throw it out.  This means this successor is
+                        //through a longer path that we don't want to persue.
                     else if ((onOpenLocations.Count() > 0 && successorLocation.MovementCost > onOpenLocations.Min(o => o.MovementCost)) ||
                         (onClosedLocations.Count() > 0 && successorLocation.MovementCost > onClosedLocations.Min(o => o.MovementCost)))
                     {
                         ; //Do nothing (effectively get rid of the successor
                     }
+
+                    //Note that we did nothing with successors that have == movement costs.  We want to make sure
+                    //we check all the paths from it, so it will be skipped or removed at a later point.
                 }
 
+                //We are done with the current location at this point.  Move it to the closed list.
                 openLocations.Remove(currentLocation);
                 closedLocations.Add(currentLocation);
                 currentLocation = null;
             }
 
+            //If current location is null, there is no path to the player.
             if (currentLocation == null)
             {
                 return null;
             }
 
+            //If we get to this point with a current location, that location is the player.
             PathLocation locationToMoveTo = currentLocation.ParentPathLocation;
 
+
+            //Now walk backwards from the player location through the parents to the mobile, but stop
+            //at the tile before the mobile.
             while ( locationToMoveTo.ParentPathLocation != null && 
                 locationToMoveTo.ParentPathLocation.ThisLocation != mobilePathLocation.ThisLocation)
             {
                 locationToMoveTo = locationToMoveTo.ParentPathLocation;
             }
 
+            //Return the tile adjancent to the mobile that we would like to move to.  this tile
+            //is part of the shortest path at this point (of course the path can change later if the player moves).
             return this.GetTileForLocation(locationToMoveTo.ThisLocation);
+        }
+
+
+        public void ToggleDoor(Tile tileToUse, bool isOpen)
+        {
+            this.Tiles.Remove(tileToUse);
+
+            if (isOpen)
+            {
+                this.Tiles.Add(new Door() { Location = tileToUse.Location });
+            }
+            else
+            {
+                this.Tiles.Add(new OpenDoor() { Location = tileToUse.Location });
+            }
         }
 
 
@@ -420,19 +467,4 @@ namespace SlashIt
             return this.GetPlayerTile().Mobile;
         }
     }
-
-    public class PathLocation
-    {
-        public PathLocation(Location currentLocation, int movementCost, PathLocation parentPathLocation)
-        {
-            this.ThisLocation = currentLocation;
-            this.ParentPathLocation = parentPathLocation;
-            this.MovementCost = movementCost;
-        }
-
-        public Location ThisLocation { get; set; }
-        public PathLocation ParentPathLocation { get; set; }
-        public int MovementCost { get; set; }
-    }
- 
 }
