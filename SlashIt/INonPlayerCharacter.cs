@@ -7,7 +7,6 @@ namespace SlashIt
 {
     public interface INonPlayerCharacter
     {
-        //LocalKeyInfo GetDirectionToMove();
         void PerformAction(Map map, Tile nonPlayerCharacterTile);
     }
 }

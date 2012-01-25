@@ -93,4 +93,46 @@ namespace SlashIt
 
         public string HitMessage { get; set; }
     }
+
+
+    public class Context<T>
+    {
+        private T owner;
+        private State<T> state;
+
+        public void Configure(T owner, State<T> state)
+        {
+            this.state = state;
+            this.owner = owner;
+        }
+
+        public State<T> State
+        {
+            get { return this.state; }
+            set { this.state = value; }
+        }
+
+        public void Request(Map map, Tile nonPlayerCharacterTile)
+        {
+            this.State.Handle(owner, map, nonPlayerCharacterTile);
+        }
+
+        public void ChangeState(State<T> state)
+        {
+            //PreviousState = CurrentState;
+            //if (CurrentState != null)
+            //    CurrentState.Exit(Owner);
+            //CurrentState = NewState;
+            //if (CurrentState != null)
+            //    CurrentState.Enter(Owner);
+
+            this.state = state;
+        }
+
+    }
+
+    public abstract class State<T>
+    {
+        public abstract void Handle(T entity, Map map, Tile nonPlayerCharacterTile);
+    }
 }
