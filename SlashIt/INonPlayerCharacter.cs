@@ -7,6 +7,6 @@ namespace SlashIt
 {
     public interface INonPlayerCharacter
     {
-        void PerformAction(Map map, Tile nonPlayerCharacterTile);
+        void UpdateState(Map map, Tile nonPlayerCharacterTile);
     }
 }

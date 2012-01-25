@@ -7,8 +7,6 @@ namespace SlashIt
 {
     public class Bob : Mobile, INonPlayerCharacter
     {
-        private Context<Bob> context;
-
         public Bob()
         {
             //TODO -- !!!!!! Hard coding for now.  This will probably be part of a strategy (or maybe factory) pattern.
@@ -21,8 +19,8 @@ namespace SlashIt
             this.HitPoints = 20;
             this.HitMessage = this.Name + " ";
 
-            context = new Context<Bob>();
-            context.Configure(this, RestState.Instance);
+            this.transitionTable = new BobTransitionTable();
+            this.Event = BobEvent.Rest;
         }
 
         override public bool CanMoveOnPath(Tile tile)
@@ -37,48 +35,71 @@ namespace SlashIt
             //See if this map object can make the requested move
             return canMoveToTiles.Contains(tile.UniqueId) && ((tile.Mobile == null) || (tile.Mobile is Player));
         }
-
-
-        public void ChangeState(State<Bob> state)
-        {
-            this.context.ChangeState(state);
-        }
-
-
-        // Simple States rest->chase->attack
-        //               rest->attack
-        //               attack->chase
-        //               chase->attack
-        public void PerformAction(Map map, Tile nonPlayerCharacterTile)
-        {
-
-
-            //TODO WORKING HERE -- Refined the state machine.  Maybe  use a transition Dictionary instead of embeding in state class
-
-            context.Request(map, nonPlayerCharacterTile);
-        }
-
     }
     
-
-    public class AttackState : State<Bob>
+    public enum BobEvent
     {
-        static readonly AttackState instance = new AttackState();
-        public static AttackState Instance 
+        Attack,
+        Rest,
+        Chase
+    }
+
+    public interface IState
+    {
+        void Enter(Mobile mobile);
+        void Execute(Mobile mobile, Map map, Tile nonPlayerCharacterTile);
+        void Exit(Mobile mobile);
+    }
+
+    class BobTransitionTable : StateTransitionTable
+    {
+        public BobTransitionTable()
         {
-            get 
-            {
-                return instance;
-            }
+            base.table.Add(BobEvent.Attack, new AttackState());
+            base.table.Add(BobEvent.Rest, new RestState());
+            base.table.Add(BobEvent.Chase, new ChaseState());
+        }
+    }
+  
+ 
+    abstract public class StateTransitionTable
+    {
+        protected Dictionary<object, IState> table = new Dictionary<object, IState>();
+
+        public void SetState(object evt, IState state)
+        {
+            table.Add(evt, state);
         }
 
-        static AttackState() { }
-        private AttackState() { }
-
-        public override void Handle(Bob entity, Map map, Tile nonPlayerCharacterTile)
+        public IState GetState(object evt)
         {
-            //Attack
-            if (entity.CanAttack(map, nonPlayerCharacterTile))
+            IState i = null;
+
+            try
+            {
+                i = table[evt];
+
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+
+            return i;
+        }
+    }
+
+
+    public class AttackState : IState
+    {
+        public void Enter(Mobile mobile)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Execute(Mobile mobile, Map map, Tile nonPlayerCharacterTile)
+        {
+            if (mobile.CanAttack(map, nonPlayerCharacterTile))
             {
                 map.GetPlayer().HitPoints -= 3;
                 Status.WriteToStatusLine("Bob bores you to death... literally!");
@@ -86,63 +107,59 @@ namespace SlashIt
                 return;
             }
         }
-    }
 
-    public class RestState : State<Bob>
-    {
-        static readonly RestState instance = new RestState();
-        public static RestState Instance 
+        public void Exit(Mobile mobile)
         {
-            get 
-            {
-                return instance;
-            }
-        }
-
-        static RestState() { }
-        private RestState() { }
-
-        public override void Handle(Bob entity, Map map, Tile nonPlayerCharacterTile)
-        {
-            if (entity.CanAttack(map, nonPlayerCharacterTile))
-            {
-                entity.ChangeState(AttackState.Instance);
-            }
-            else 
-            {
-                entity.ChangeState(ChaseState.Instance);
-            }
+            throw new NotImplementedException();
         }
     }
 
-    public class ChaseState : State<Bob>
+    public class RestState : IState
     {
-        static readonly ChaseState instance = new ChaseState();
-        public static ChaseState Instance 
+        public void Enter(Mobile mobile)
         {
-            get 
+            throw new NotImplementedException();
+        }
+
+        public void Execute(Mobile mobile, Map map, Tile nonPlayerCharacterTile)
+        {
+            if (mobile.CanAttack(map, nonPlayerCharacterTile))
             {
-                return instance;
+                mobile.Event = BobEvent.Attack;
+            }
+            else
+            {
+                mobile.Event = BobEvent.Chase;
             }
         }
 
-        static ChaseState() { }
-        private ChaseState() { }
-
-        public override void Handle(Bob entity, Map map, Tile nonPlayerCharacterTile)
+        public void Exit(Mobile mobile)
         {
+            throw new NotImplementedException();
+        }
+    }
 
-            if (entity.CanAttack(map, nonPlayerCharacterTile))
+    public class ChaseState : IState
+    {
+
+        public void Enter(Mobile mobile)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Execute(Mobile mobile, Map map, Tile nonPlayerCharacterTile)
+        {
+            if (mobile.CanAttack(map, nonPlayerCharacterTile))
             {
-                entity.ChangeState(AttackState.Instance);
+                mobile.Event = BobEvent.Attack;
                 return;
             }
 
             var playerTile = map.GetPlayerTile();
 
-            var tileToMoveTo = map.GetShortestDistanceDirectionToPlayer(entity, playerTile.Location, nonPlayerCharacterTile.Location);
+            var tileToMoveTo = map.GetShortestDistanceDirectionToPlayer(mobile, playerTile.Location, nonPlayerCharacterTile.Location);
             //if null, don't move
-            if (tileToMoveTo != null) 
+            if (tileToMoveTo != null)
             {
                 if (tileToMoveTo.UniqueId == Constants.UniqueIds.Door)
                 {
@@ -153,6 +170,11 @@ namespace SlashIt
                     var tile = map.MoveMobile(nonPlayerCharacterTile, tileToMoveTo);
                 }
             }
+        }
+
+        public void Exit(Mobile mobile)
+        {
+            throw new NotImplementedException();
         }
     }
 }

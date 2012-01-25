@@ -20,7 +20,7 @@ namespace SlashIt
             this.HitMessage = "the " + this.Name + " ";
         }
 
-        public void PerformAction(Map map, Tile nonPlayerCharacterTile)
+        public void UpdateState(Map map, Tile nonPlayerCharacterTile)
         {
             if (Program.RandomNumber(4) < 3)
             {

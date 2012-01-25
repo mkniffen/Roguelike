@@ -7,6 +7,46 @@ namespace SlashIt
 {
     public abstract class Mobile
     {
+        protected StateTransitionTable transitionTable = null;
+        protected IState currentState = null;
+
+        public void UpdateState(Map map, Tile nonPlayerCharacterTile)
+        {
+            if (currentState != null)
+                currentState.Execute(this, map, nonPlayerCharacterTile);
+            else
+                System.Diagnostics.Trace.WriteLine("zero state");
+        }
+
+
+        public object Event
+        {
+            set
+            {
+                if (value == null)
+                {
+                    currentState.Exit(this);
+                    currentState = null;
+                    return;
+                }
+
+                IState i = transitionTable.GetState(value);
+
+                if (i != null)
+                {
+                    if (currentState != null)
+                        currentState.Exit(this);
+
+                    currentState = i;
+                    currentState.Enter(this);
+                }
+            }
+        }
+
+
+
+
+
         public Mobile()
         {
             this.TimeBucket = 0;
@@ -92,47 +132,5 @@ namespace SlashIt
         }
 
         public string HitMessage { get; set; }
-    }
-
-
-    public class Context<T>
-    {
-        private T owner;
-        private State<T> state;
-
-        public void Configure(T owner, State<T> state)
-        {
-            this.state = state;
-            this.owner = owner;
-        }
-
-        public State<T> State
-        {
-            get { return this.state; }
-            set { this.state = value; }
-        }
-
-        public void Request(Map map, Tile nonPlayerCharacterTile)
-        {
-            this.State.Handle(owner, map, nonPlayerCharacterTile);
-        }
-
-        public void ChangeState(State<T> state)
-        {
-            //PreviousState = CurrentState;
-            //if (CurrentState != null)
-            //    CurrentState.Exit(Owner);
-            //CurrentState = NewState;
-            //if (CurrentState != null)
-            //    CurrentState.Enter(Owner);
-
-            this.state = state;
-        }
-
-    }
-
-    public abstract class State<T>
-    {
-        public abstract void Handle(T entity, Map map, Tile nonPlayerCharacterTile);
     }
 }

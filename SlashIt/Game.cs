@@ -109,16 +109,7 @@ namespace SlashIt
                 foreach (Tile nonPlayerCharacterTile in nonPlayerCharacterTiles)
                 {
                     mobile = nonPlayerCharacterTile.Mobile;
-
-
-
-
-                    ((INonPlayerCharacter)mobile).PerformAction(this.Map, nonPlayerCharacterTile);
-                    //((INonPlayerCharacter)mobile).PerformAction();
-
-
-
-
+                    ((INonPlayerCharacter)mobile).UpdateState(this.Map, nonPlayerCharacterTile);
                     this.PlayerIsDead = this.Map.GetPlayer().IsDead();
 
                     if (this.PlayerIsDead)
