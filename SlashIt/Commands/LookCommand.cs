@@ -18,7 +18,7 @@ namespace SlashIt
         {
             //TODO -- will need to modify this so that all the items in the tile are put in the Info
 
-            Status.Info = this.map.GetPlayerTile().Description;
+            Status.Info = this.map.availableTiles[this.map.GetPlayerTile().TypeId].Description;
         }
     }
 }

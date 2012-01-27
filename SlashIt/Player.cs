@@ -14,21 +14,8 @@ namespace SlashIt
             Description = "This guy is a newb!!";
             DisplayCharacter = "@";
             Name = "Player";
-            UniqueId = Constants.UniqueIds.Player;
+            TypeId = Constants.TypeIds.Player;
             HitPoints = 10; //TODO -- This should be based on hit dice
-        }
-
-        public void Save(TextWriter saveFileWriter)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Player));
-
-            serializer.Serialize(saveFileWriter, this);
-        }
-
-        public Player Load(StreamReader saveFileStream)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Player));
-            return (Player)serializer.Deserialize(saveFileStream);
         }
     }
 }

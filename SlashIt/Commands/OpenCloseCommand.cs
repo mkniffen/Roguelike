@@ -31,11 +31,11 @@ namespace SlashIt
 
             var tileToUse = this.map.GetTileInDirection(localKeyInfo, mapLocation);
 
-            if (tileToUse.UniqueId == Constants.UniqueIds.Door)
+            if (tileToUse.TypeId == Constants.TypeIds.Door)
             {
                 this.map.ToggleDoor(tileToUse, false);
             }
-            else if (tileToUse.UniqueId == Constants.UniqueIds.OpenDoor)
+            else if (tileToUse.TypeId == Constants.TypeIds.OpenDoor)
             {
                 this.map.ToggleDoor(tileToUse, true);
             }

@@ -92,7 +92,7 @@ namespace SlashIt
                     continue;
                 }
 
-                Console.Write(tile.DisplayCharacter);
+                Console.Write(this.Map.availableTiles[tile.TypeId].DisplayCharacter);
             }
 
             Map.Outdated = false;

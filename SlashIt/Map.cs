@@ -4,12 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+using System.Xml.Linq;
 
 namespace SlashIt
 {
     public class Map
     {
-        [XmlIgnore]
+
+        //TODO move this to loading from config (maybe remove name) -- convert to Factory??????????
+        public Dictionary<int, TileDetail> availableTiles = new Dictionary<int, TileDetail>
+        {
+            {Constants.TypeIds.Door, new TileDetail {Description = "A big wooden door.  It's closed", DisplayCharacter = "+", Name = "Door"}},
+            {Constants.TypeIds.Floor, new TileDetail {Description = "Empty floor", DisplayCharacter = ".", Name = "Floor"}},
+            {Constants.TypeIds.OpenDoor, new TileDetail {Description = "An open door", DisplayCharacter = "`", Name = "OpenDoor"}},
+            {Constants.TypeIds.Wall, new TileDetail {Description = "A brick wall", DisplayCharacter = "#", Name = "Wall"}},
+        };
+
+        //TODO move this to loading from config (maybe remove name) -- convert to Factory??????????
+
+
+
         public List<Tile> Tiles { get; set; }
 
         public bool Outdated { get; set; }
@@ -198,11 +212,11 @@ namespace SlashIt
 
             if (isOpen)
             {
-                this.Tiles.Add(new Door() { Location = tileToUse.Location });
+                this.Tiles.Add(new Tile { Location = tileToUse.Location, TypeId = Constants.TypeIds.Door });
             }
             else
             {
-                this.Tiles.Add(new OpenDoor() { Location = tileToUse.Location });
+                this.Tiles.Add(new Tile { Location = tileToUse.Location, TypeId = Constants.TypeIds.OpenDoor });
             }
         }
 
@@ -302,156 +316,156 @@ namespace SlashIt
             Tiles.AddRange(
                 new List<Tile> 
                 { 
-                    new Wall { Location = new Location(1,1) },
-                    new Wall { Location = new Location(2,1) },
-                    new Wall { Location = new Location(3,1) },
-                    new Wall { Location = new Location(4,1) },
-                    new Wall { Location = new Location(5,1) },
-                    new Wall { Location = new Location(6,1) },
-                    new Wall { Location = new Location(7,1) },
-                    new Wall { Location = new Location(8,1) },
-                    new Wall { Location = new Location(9,1) },
-                    new Wall { Location = new Location(10,1) },
-                    new Wall { Location = new Location(11,1) },
-                    new Wall { Location = new Location(12,1) },
-                    new Wall { Location = new Location(13,1) },
-                    new Wall { Location = new Location(14,1) },
-                    new Wall { Location = new Location(15,1) },
-                    new Wall { Location = new Location(1,2) },
-                    new Wall { Location = new Location(2,2) },
-                    new Floor { Location = new Location(3,2), Mobile = new Player() },
-                    new Floor { Location = new Location(4,2) },
-                    new Floor { Location = new Location(5,2) },
-                    new Door { Location = new Location(6,2) },
-                    new Floor { Location = new Location(7,2) },
-                    new Floor { Location = new Location(8,2) },
-                    new Floor { Location = new Location(9,2), Mobile = new Bob() },
-                    new Wall { Location = new Location(10,2) },
-                    new Wall { Location = new Location(11,2) },
-                    new Wall { Location = new Location(12,2) },
-                    new Wall { Location = new Location(13,2) },
-                    new Wall { Location = new Location(14,2) },
-                    new Wall { Location = new Location(15,2) },
-                    new Wall { Location = new Location(1,3) },
-                    new Wall { Location = new Location(2,3) },
-                    new Floor { Location = new Location(3,3) },
-                    new Wall { Location = new Location(4,3) },
-                    new Wall { Location = new Location(5,3) },
-                    new Wall { Location = new Location(6,3) },
-                    new Floor { Location = new Location(7,3) },
-                    new Floor { Location = new Location(8,3) },
-                    new Floor { Location = new Location(9,3) },
-                    new Floor { Location = new Location(10,3) },
-                    new Floor { Location = new Location(11,3) },
-                    new Wall { Location = new Location(12,3) },
-                    new Wall { Location = new Location(13,3) },
-                    new Wall { Location = new Location(14,3) },
-                    new Wall { Location = new Location(15,3) },
-                    new Wall { Location = new Location(1,4) },
-                    new Wall { Location = new Location(2,4) },
-                    new Floor { Location = new Location(3,4) },
-                    new Wall { Location = new Location(4,4) },
-                    new Wall { Location = new Location(5,4) },
-                    new Wall { Location = new Location(6,4) },
-                    new Wall { Location = new Location(7,4) },
-                    new Wall { Location = new Location(8,4) },
-                    new Wall { Location = new Location(9,4) },
-                    new Wall { Location = new Location(10,4) },
-                    new Floor { Location = new Location(11,4) },
-                    new Wall { Location = new Location(12,4) },
-                    new Wall { Location = new Location(13,4) },
-                    new Wall { Location = new Location(14,4) },
-                    new Wall { Location = new Location(15,4) },
-                    new Wall { Location = new Location(1,5) },
-                    new Wall { Location = new Location(2,5) },
-                    new Floor { Location = new Location(3,5) },
-                    new Floor { Location = new Location(4,5) },
-                    new Floor { Location = new Location(5,5) },
-                    new Floor { Location = new Location(6,5) },
-                    new Wall { Location = new Location(7,5) },
-                    new Wall { Location = new Location(8,5) },
-                    new Wall { Location = new Location(9,5) },
-                    new Wall { Location = new Location(10,5) },
-                    new Floor { Location = new Location(11,5) },
-                    new Wall { Location = new Location(12,5) },
-                    new Wall { Location = new Location(13,5) },
-                    new Wall { Location = new Location(14,5) },
-                    new Wall { Location = new Location(15,5) },
-                    new Wall { Location = new Location(1,6) },
-                    new Wall { Location = new Location(2,6) },
-                    new Floor { Location = new Location(3,6) },
-                    new Wall { Location = new Location(4,6) },
-                    new Wall { Location = new Location(5,6) },
-                    new Wall { Location = new Location(6,6) },
-                    new Wall { Location = new Location(7,6) },
-                    new Floor { Location = new Location(8,6) },
-                    new Floor { Location = new Location(9,6) },
-                    new Wall { Location = new Location(10,6) },
-                    new Floor { Location = new Location(11,6) },
-                    new Wall { Location = new Location(12,6) },
-                    new Wall { Location = new Location(13,6) },
-                    new Wall { Location = new Location(14,6) },
-                    new Wall { Location = new Location(15,6) },
-                    new Wall { Location = new Location(1,7) },
-                    new Wall { Location = new Location(2,7) },
-                    new Floor { Location = new Location(3,7) },
-                    new Wall { Location = new Location(4,7) },
-                    new Wall { Location = new Location(5,7) },
-                    new Wall { Location = new Location(6,7) },
-                    new Wall { Location = new Location(7,7) },
-                    new Wall { Location = new Location(8,7) },
-                    new Floor { Location = new Location(9,7) },
-                    new Floor { Location = new Location(10,7) },
-                    new Floor { Location = new Location(11,7) },
-                    new Wall { Location = new Location(12,7) },
-                    new Wall { Location = new Location(13,7) },
-                    new Wall { Location = new Location(14,7) },
-                    new Wall { Location = new Location(15,7) },
-                    new Wall { Location = new Location(1,8) },
-                    new Wall { Location = new Location(2,8) },
-                    new Floor { Location = new Location(3,8) },
-                    new Floor { Location = new Location(4,8) },
-                    new Floor { Location = new Location(5,8) },
-                    new Wall { Location = new Location(6,8) },
-                    new Wall { Location = new Location(7,8) },
-                    new Wall { Location = new Location(8,8) },
-                    new Floor { Location = new Location(9,8) },
-                    new Wall { Location = new Location(10,8) },
-                    new Wall { Location = new Location(11,8) },
-                    new Wall { Location = new Location(12,8) },
-                    new Wall { Location = new Location(13,8) },
-                    new Wall { Location = new Location(14,8) },
-                    new Wall { Location = new Location(15,8) },
-                    new Wall { Location = new Location(1,9) },
-                    new Wall { Location = new Location(2,9) },
-                    new Floor { Location = new Location(3,9) },
-                    new Floor { Location = new Location(4,9) },
-                    new Floor { Location = new Location(5,9) },
-                    new Wall { Location = new Location(6,9) },
-                    new Wall { Location = new Location(7,9) },
-                    new Wall { Location = new Location(8,9) },
-                    new Floor { Location = new Location(9,9), Mobile = new Rat() },
-                    new Floor { Location = new Location(10,9) },
-                    new Floor { Location = new Location(11,9) },
-                    new Floor { Location = new Location(12,9) },
-                    new Floor { Location = new Location(13,9) },
-                    new Floor { Location = new Location(14,9) },
-                    new Wall { Location = new Location(15,9) },
-                    new Wall { Location = new Location(1,10) },
-                    new Wall { Location = new Location(2,10) },
-                    new Wall { Location = new Location(3,10) },
-                    new Wall { Location = new Location(4,10) },
-                    new Wall { Location = new Location(5,10) },
-                    new Wall { Location = new Location(6,10) },
-                    new Wall { Location = new Location(7,10) },
-                    new Wall { Location = new Location(8,10) },
-                    new Wall { Location = new Location(9,10) },
-                    new Wall { Location = new Location(10,10) },
-                    new Wall { Location = new Location(11,10) },
-                    new Wall { Location = new Location(12,10) },
-                    new Wall { Location = new Location(13,10) },
-                    new Wall { Location = new Location(14,10) },
-                    new Wall { Location = new Location(15,10) },
+                    new Tile { Location = new Location(1,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(4,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(5,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(6,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(7,1) , TypeId = Constants.TypeIds.Wall},
+                    new Tile { Location = new Location(8,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(9,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(10,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(11,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(12,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,1), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,2), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,2), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,2), Mobile = new Player(), TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(4,2), TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(5,2) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(6,2), TypeId = Constants.TypeIds.Door },
+                    new Tile { Location = new Location(7,2) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(8,2) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(9,2), Mobile = new Bob() , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(10,2), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(11,2), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(12,2), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,2), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,2), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,2), TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,3) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(4,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(5,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(6,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(7,3) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(8,3) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(9,3) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(10,3) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(11,3) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(12,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,3) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,4) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(4,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(5,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(6,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(7,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(8,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(9,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(10,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(11,4) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(12,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,4) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,5) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(4,5) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(5,5) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(6,5) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(7,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(8,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(9,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(10,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(11,5) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(12,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,5) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,6) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(4,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(5,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(6,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(7,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(8,6) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(9,6) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(10,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(11,6) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(12,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,6) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,7) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(4,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(5,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(6,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(7,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(8,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(9,7) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(10,7) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(11,7) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(12,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,7) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,8) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(4,8) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(5,8) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(6,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(7,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(8,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(9,8) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(10,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(11,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(12,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,8) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,9) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,9) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,9) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(4,9) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(5,9) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(6,9) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(7,9) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(8,9) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(9,9), Mobile = new Rat() , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(10,9) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(11,9) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(12,9) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(13,9) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(14,9) , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(15,9) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(1,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(2,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(3,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(4,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(5,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(6,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(7,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(8,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(9,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(10,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(11,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(12,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(13,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(14,10) , TypeId = Constants.TypeIds.Wall },
+                    new Tile { Location = new Location(15,10) , TypeId = Constants.TypeIds.Wall },
                     
                    
                 });
@@ -465,6 +479,37 @@ namespace SlashIt
         public Mobile GetPlayer()
         {
             return this.GetPlayerTile().Mobile;
+        }
+
+        public XElement Save()
+        {
+            return new XElement("Tiles",
+                Tiles.Select(t => 
+                    new XElement("Tile", 
+                        new XElement("Location",
+                            new XElement("Top", t.Location.Top),
+                            new XElement("Left", t.Location.Left)),
+                        new XElement("Mobile", (t.Mobile == null ? new XElement("Mobile","") : t.Mobile.Save())),  //TODO need to code save on player and mobile
+                        new XElement("TypeId", t.TypeId)
+                            ))
+                );
+        }
+
+        public void Load(IEnumerable<XElement> tilesToLoad)
+        {
+            foreach (XElement tile in tilesToLoad.Descendants("Tile"))
+            {
+                var top = Int32.Parse(tile.Element("Location").Element("Top").Value);
+                var left = Int32.Parse(tile.Element("Location").Element("Left").Value);
+                //var mobile = Convert.ToInt32(tile.Element("Mobile").Value);
+                var tileTypeId = Int32.Parse(tile.Element("TypeId").Value);
+
+
+
+        //TODO WORKING HERE -- THIS needs some WORK.  Need to deal with load of Mobile (and Save)
+
+                Tiles.Add(new Tile {Location = new Location(left, top), TypeId = tileTypeId, Mobile = null });
+            }
         }
     }
 }

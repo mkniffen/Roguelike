@@ -15,7 +15,7 @@ namespace SlashIt
             this.Name = "Bob";
             this.Description = "So plain it just bores you to death!";
             this.DisplayCharacter = "B";
-            this.UniqueId = Constants.UniqueIds.Bob;
+            this.TypeId = Constants.TypeIds.Bob;
             this.HitPoints = 20;
             this.HitMessage = this.Name + " ";
 
@@ -27,13 +27,13 @@ namespace SlashIt
         {
             List<int> canMoveToTiles = new List<int>
             {
-                Constants.UniqueIds.Floor,
-                Constants.UniqueIds.OpenDoor,
-                Constants.UniqueIds.Door
+                Constants.TypeIds.Floor,
+                Constants.TypeIds.OpenDoor,
+                Constants.TypeIds.Door
             };
 
             //See if this map object can make the requested move
-            return canMoveToTiles.Contains(tile.UniqueId) && ((tile.Mobile == null) || (tile.Mobile is Player));
+            return canMoveToTiles.Contains(tile.TypeId) && ((tile.Mobile == null) || (tile.Mobile is Player));
         }
     }
     
@@ -128,7 +128,7 @@ namespace SlashIt
             //if null, don't move
             if (tileToMoveTo != null)
             {
-                if (tileToMoveTo.UniqueId == Constants.UniqueIds.Door)
+                if (tileToMoveTo.TypeId == Constants.TypeIds.Door)
                 {
                     map.ToggleDoor(tileToMoveTo, false);
                 }

@@ -15,21 +15,18 @@ namespace SlashIt
 
         public static void Save()
         {
-            //Status.ClearInfo();
-            //Status.Info = "Game Saved.";
+            Status.ClearInfo();
+            Status.Info = "Game Saved.";
 
-            //using (TextWriter tw = new StreamWriter(SaveFile))
-            //{
-            //    //TODO -- Move this up too (along with Load)???
+            XDocument doc = new XDocument(
+                new XElement("SlashIt",
+                    new XElement("Map", map.Save())
+                    ));
 
-            //    XmlSerializer serializer = new XmlSerializer(typeof(Game));
-            //    serializer.Serialize(tw, this);
-
-            //    tw.Close();
-            //}
+            doc.Save(@".\game.sav");
         }
 
-        private void Load()
+        private static void Load()
         {
 
             //using (StreamReader saveFileStream = new StreamReader(SaveFile))
@@ -45,12 +42,20 @@ namespace SlashIt
             //    saveFileStream.Close();
             //}
 
+            XDocument doc = XDocument.Load(@".\game.sav");
 
+            map.Load(doc.Descendants("Tiles"));
+            //return doc.Descendants("KeyBindings")
+            //    .SelectMany(kb => kb.Elements())
+            //    .Select(e => new { e.Name, e.Value })
+            //    .ToDictionary(x => x.Name.ToString(), x => x.Value.ToString());
         }
 
         static void Main(string[] args)
         {
             InitCommands();
+           // Load();
+
             game.Map = map;
             game.InitConsole();
 

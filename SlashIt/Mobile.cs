@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SlashIt
 {
@@ -21,7 +22,7 @@ namespace SlashIt
         public string Name { get; set; }
         public string Description { get; set; }
         public string DisplayCharacter { get; set; }
-        public int UniqueId { get; set; }
+        public int TypeId { get; set; }
         public string HitMessage { get; set; }
 
         //This will fill up with "time" units
@@ -74,24 +75,24 @@ namespace SlashIt
         {
             List<int> canMoveToTiles = new List<int>
             {
-                Constants.UniqueIds.Floor,
-                Constants.UniqueIds.OpenDoor
+                Constants.TypeIds.Floor,
+                Constants.TypeIds.OpenDoor
             };
 
             //See if this map object can make the requested move
-            return canMoveToTiles.Contains(tile.UniqueId) && tile.Mobile == null;
+            return canMoveToTiles.Contains(tile.TypeId) && tile.Mobile == null;
         }
 
         public virtual bool CanMoveOnPath(Tile tile)
         {
             List<int> canMoveToTiles = new List<int>
             {
-                Constants.UniqueIds.Floor,
-                Constants.UniqueIds.OpenDoor
+                Constants.TypeIds.Floor,
+                Constants.TypeIds.OpenDoor
             };
 
             //See if this map object can make the requested move
-            return canMoveToTiles.Contains(tile.UniqueId) && ((tile.Mobile == null) || (tile.Mobile is Player));
+            return canMoveToTiles.Contains(tile.TypeId) && ((tile.Mobile == null) || (tile.Mobile is Player));
         }
 
         public bool CanAttack(Map map, Tile nonPlayerCharacterTile)
@@ -126,6 +127,11 @@ namespace SlashIt
                 currentState.Execute(this, map, nonPlayerCharacterTile);
             else
                 System.Diagnostics.Trace.WriteLine("zero state");
+        }
+
+        public XElement Save()
+        {
+            return new XElement("Mobile", "test stuff");
         }
     }
 }

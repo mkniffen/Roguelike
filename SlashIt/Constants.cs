@@ -7,7 +7,7 @@ namespace SlashIt
 {
     public class Constants
     {
-        public class UniqueIds
+        public class TypeIds
         {
             public const int Floor = 0;
             public const int Wall = 1;
