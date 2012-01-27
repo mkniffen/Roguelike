@@ -44,12 +44,7 @@ namespace SlashIt
         Chase
     }
 
-    public interface IState
-    {
-        void Enter(Mobile mobile);
-        void Execute(Mobile mobile, Map map, Tile nonPlayerCharacterTile);
-        void Exit(Mobile mobile);
-    }
+
 
     class BobTransitionTable : StateTransitionTable
     {
@@ -61,40 +56,12 @@ namespace SlashIt
         }
     }
   
- 
-    abstract public class StateTransitionTable
-    {
-        protected Dictionary<object, IState> table = new Dictionary<object, IState>();
-
-        public void SetState(object evt, IState state)
-        {
-            table.Add(evt, state);
-        }
-
-        public IState GetState(object evt)
-        {
-            IState i = null;
-
-            try
-            {
-                i = table[evt];
-
-            }
-            catch (KeyNotFoundException)
-            {
-                return null;
-            }
-
-            return i;
-        }
-    }
-
 
     public class AttackState : IState
     {
         public void Enter(Mobile mobile)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void Execute(Mobile mobile, Map map, Tile nonPlayerCharacterTile)
@@ -110,7 +77,7 @@ namespace SlashIt
 
         public void Exit(Mobile mobile)
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 
@@ -118,7 +85,7 @@ namespace SlashIt
     {
         public void Enter(Mobile mobile)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void Execute(Mobile mobile, Map map, Tile nonPlayerCharacterTile)
@@ -135,7 +102,7 @@ namespace SlashIt
 
         public void Exit(Mobile mobile)
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 
@@ -144,7 +111,7 @@ namespace SlashIt
 
         public void Enter(Mobile mobile)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void Execute(Mobile mobile, Map map, Tile nonPlayerCharacterTile)
@@ -174,7 +141,7 @@ namespace SlashIt
 
         public void Exit(Mobile mobile)
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 }

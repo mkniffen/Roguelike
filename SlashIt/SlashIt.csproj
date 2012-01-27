@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="IState.cs" />
     <Compile Include="PathLocation.cs" />
     <Compile Include="Rat.cs" />
     <Compile Include="INonPlayerCharacter.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Commands\LookCommand.cs" />
     <Compile Include="Commands\MoveMapPlayerCommand.cs" />
     <Compile Include="Commands\OpenCloseCommand.cs" />
+    <Compile Include="StateTransitionTable.cs" />
     <Compile Include="Tiles\OpenDoor.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Constants.cs" />

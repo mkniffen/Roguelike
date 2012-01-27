@@ -10,13 +10,30 @@ namespace SlashIt
         protected StateTransitionTable transitionTable = null;
         protected IState currentState = null;
 
-        public void UpdateState(Map map, Tile nonPlayerCharacterTile)
+        public Mobile()
         {
-            if (currentState != null)
-                currentState.Execute(this, map, nonPlayerCharacterTile);
-            else
-                System.Diagnostics.Trace.WriteLine("zero state");
+            this.TimeBucket = 0;
+            this.CanMoveLevel = 10;
+            this.TimeBucket = 5;
+            this.Speed = 5;
         }
+
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string DisplayCharacter { get; set; }
+        public int UniqueId { get; set; }
+        public string HitMessage { get; set; }
+
+        //This will fill up with "time" units
+        public virtual int TimeBucket { get; set; }
+        //This determines how much needs to be in the TimeBucket before the Mobile can move
+        public virtual int CanMoveLevel { get; set; }
+        //This determines how much "time" is added to the bucket each game turn
+        public virtual int TimeBucketFillAmount { get; set; }
+        //How much is added to the TimeBucket each game turn
+        public virtual int Speed { get; set; }
+
+        public int HitPoints { get; set; }
 
 
         public object Event
@@ -30,46 +47,18 @@ namespace SlashIt
                     return;
                 }
 
-                IState i = transitionTable.GetState(value);
+                IState state = transitionTable.GetState(value);
 
-                if (i != null)
+                if (state != null)
                 {
                     if (currentState != null)
                         currentState.Exit(this);
 
-                    currentState = i;
+                    currentState = state;
                     currentState.Enter(this);
                 }
             }
         }
-
-
-
-
-
-        public Mobile()
-        {
-            this.TimeBucket = 0;
-            this.CanMoveLevel = 10;
-            this.TimeBucket = 5;
-            this.Speed = 5;
-        }
-
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string DisplayCharacter { get; set; }
-        public int UniqueId { get; set; }
-
-        //This will fill up with "time" units
-        public virtual int TimeBucket { get; set; }
-        //This determines how much needs to be in the TimeBucket before the Mobile can move
-        public virtual int CanMoveLevel { get; set; }
-        //This determines how much "time" is added to the bucket each game turn
-        public virtual int TimeBucketFillAmount { get; set; }
-        //How much is added to the TimeBucket each game turn
-        public virtual int Speed { get; set; }
-
-        public int HitPoints { get; set; }
 
         public virtual bool CanAct()
         {
@@ -131,6 +120,12 @@ namespace SlashIt
             this.TimeBucket += this.Speed;
         }
 
-        public string HitMessage { get; set; }
+        public void UpdateState(Map map, Tile nonPlayerCharacterTile)
+        {
+            if (currentState != null)
+                currentState.Execute(this, map, nonPlayerCharacterTile);
+            else
+                System.Diagnostics.Trace.WriteLine("zero state");
+        }
     }
 }
