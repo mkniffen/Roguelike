@@ -7,15 +7,15 @@ using System.IO;
 
 namespace SlashIt
 {
-    public class Player : Mobile
-    {
-        public Player()
-        {
-            Description = "This guy is a newb!!";
-            DisplayCharacter = "@";
-            Name = "Player";
-            TypeId = Constants.TypeIds.Player;
-            HitPoints = 10; //TODO -- This should be based on hit dice
-        }
-    }
+    //public class Player : Mobile
+    //{
+    //    public Player()
+    //    {
+    //        Description = "This guy is a newb!!";
+    //        DisplayCharacter = "@";
+    //        Name = "Player";
+    //        TypeId = Constants.TypeIds.Player;
+    //        HitPoints = 10; //TODO -- This should be based on hit dice
+    //    }
+    //}
 }

@@ -20,10 +20,6 @@ namespace SlashIt
             {Constants.TypeIds.Wall, new TileDetail {Description = "A brick wall", DisplayCharacter = "#", Name = "Wall"}},
         };
 
-        //TODO move this to loading from config (maybe remove name) -- convert to Factory??????????
-
-
-
         public List<Tile> Tiles { get; set; }
 
         public bool Outdated { get; set; }
@@ -32,7 +28,7 @@ namespace SlashIt
         {
             this.Outdated = true;
             this.Tiles = new List<Tile>();
-            this.LoadTiles();
+           //this.LoadTiles();
         }
 
         public Tile GetTileForLocation(Location mapLocation)
@@ -245,7 +241,7 @@ namespace SlashIt
         public Tile GetPlayerTile()
         {
             var mapTile = this.Tiles
-                .Where(m => m.Mobile != null && m.Mobile is Player)
+                .Where(m => m.Mobile != null && m.Mobile.TypeId == Constants.TypeIds.Player)
                 .Single();
 
             return mapTile;
@@ -333,13 +329,13 @@ namespace SlashIt
                     new Tile { Location = new Location(15,1), TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(1,2), TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(2,2), TypeId = Constants.TypeIds.Wall },
-                    new Tile { Location = new Location(3,2), Mobile = new Player(), TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(3,2), Mobile = new Mobile {TypeId = Constants.TypeIds.Player, DisplayCharacter = "@", Description =  "This guy is a newb!!", HitMessage = "The player ", Name = "Player", HitPoints = 30, TransitionTable = null, CurrentTransition = null }, TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(4,2), TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(5,2) , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(6,2), TypeId = Constants.TypeIds.Door },
                     new Tile { Location = new Location(7,2) , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(8,2) , TypeId = Constants.TypeIds.Floor },
-                    new Tile { Location = new Location(9,2), Mobile = new Bob() , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(9,2), Mobile = new Mobile {TypeId = Constants.TypeIds.Bob, DisplayCharacter = "B", Description =  "So plain it just bores you to death!", HitMessage = "Bob ", Name = "Bob", HitPoints = 20, TransitionTable = new BobTransitionTable(), CurrentTransition = (int)Transition.Rest} , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(10,2), TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(11,2), TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(12,2), TypeId = Constants.TypeIds.Wall },
@@ -444,7 +440,7 @@ namespace SlashIt
                     new Tile { Location = new Location(6,9) , TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(7,9) , TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(8,9) , TypeId = Constants.TypeIds.Wall },
-                    new Tile { Location = new Location(9,9), Mobile = new Rat() , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(9,9), Mobile = new Mobile {TypeId = Constants.TypeIds.Rat, DisplayCharacter = "r", Description = "A simple rat that wants to EAT you!", HitMessage = "the Rat ", Name = "Rat" , HitPoints = 10, TransitionTable = null, CurrentTransition = (int)Transition.Rest} , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(10,9) , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(11,9) , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(12,9) , TypeId = Constants.TypeIds.Floor },
@@ -489,7 +485,7 @@ namespace SlashIt
                         new XElement("Location",
                             new XElement("Top", t.Location.Top),
                             new XElement("Left", t.Location.Left)),
-                        new XElement("Mobile", (t.Mobile == null ? new XElement("Mobile","") : t.Mobile.Save())),  //TODO need to code save on player and mobile
+                        new XElement(t.Mobile == null ? new XElement("Mobile", "") : t.Mobile.Save()),  //TODO need to code save on player and mobile
                         new XElement("TypeId", t.TypeId)
                             ))
                 );
@@ -501,14 +497,16 @@ namespace SlashIt
             {
                 var top = Int32.Parse(tile.Element("Location").Element("Top").Value);
                 var left = Int32.Parse(tile.Element("Location").Element("Left").Value);
-                //var mobile = Convert.ToInt32(tile.Element("Mobile").Value);
                 var tileTypeId = Int32.Parse(tile.Element("TypeId").Value);
 
+                Mobile mobile = null;
+                if (!string.IsNullOrEmpty(tile.Element("Mobile").Value))
+                {
+                    mobile = Mobile.GetMobileById((Int32.Parse(tile.Element("Mobile").Element("TypeId").Value)));
+                    mobile.Load(tile.Element("Mobile"));
+                }
 
-
-        //TODO WORKING HERE -- THIS needs some WORK.  Need to deal with load of Mobile (and Save)
-
-                Tiles.Add(new Tile {Location = new Location(left, top), TypeId = tileTypeId, Mobile = null });
+                Tiles.Add(new Tile {Location = new Location(left, top), TypeId = tileTypeId, Mobile = mobile });
             }
         }
     }

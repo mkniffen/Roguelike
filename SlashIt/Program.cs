@@ -54,7 +54,7 @@ namespace SlashIt
         static void Main(string[] args)
         {
             InitCommands();
-           // Load();
+            Load();
 
             game.Map = map;
             game.InitConsole();

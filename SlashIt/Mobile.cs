@@ -6,14 +6,25 @@ using System.Xml.Linq;
 
 namespace SlashIt
 {
-    public abstract class Mobile
+    public class Mobile : INonPlayerCharacter
     {
-        protected StateTransitionTable transitionTable = null;
+
+
+        //TODO move this to loading from config (maybe remove name) -- convert to Factory??????????
+
+
+        public static List<Mobile> availableMobiles = new List<Mobile>
+        {
+            { new Mobile {TypeId = Constants.TypeIds.Player, DisplayCharacter = "@", Description =  "This guy is a newb!!", HitMessage = "The player ", Name = "Player", HitPoints = 30, TransitionTable = null, CurrentTransition = null }},
+            { new Mobile {TypeId = Constants.TypeIds.Rat, DisplayCharacter = "r", Description = "A simple rat that wants to EAT you!", HitMessage = "the Rat ", Name = "Rat" , HitPoints = 10, TransitionTable = null, CurrentTransition = (int)Transition.Rest }},
+            { new Mobile {TypeId = Constants.TypeIds.Bob, DisplayCharacter = "B", Description =  "So plain it just bores you to death!", HitMessage = "Bob ", Name = "Bob", HitPoints = 20, TransitionTable = new BobTransitionTable(), CurrentTransition = (int)Transition.Rest}}
+        };
+
+
         protected IState currentState = null;
 
         public Mobile()
         {
-            this.TimeBucket = 0;
             this.CanMoveLevel = 10;
             this.TimeBucket = 5;
             this.Speed = 5;
@@ -36,6 +47,10 @@ namespace SlashIt
 
         public int HitPoints { get; set; }
 
+        public StateTransitionTable TransitionTable { get; set; }
+        public int? CurrentTransition { get; set; }
+
+        //public enum Transitions;
 
         public object Event
         {
@@ -45,10 +60,11 @@ namespace SlashIt
                 {
                     currentState.Exit(this);
                     currentState = null;
+                    CurrentTransition = null;
                     return;
                 }
 
-                IState state = transitionTable.GetState(value);
+                IState state = TransitionTable.GetState(value);
 
                 if (state != null)
                 {
@@ -56,6 +72,7 @@ namespace SlashIt
                         currentState.Exit(this);
 
                     currentState = state;
+                    CurrentTransition = (int)value;
                     currentState.Enter(this);
                 }
             }
@@ -85,6 +102,8 @@ namespace SlashIt
 
         public virtual bool CanMoveOnPath(Tile tile)
         {
+            //TODO This list will need to vary depending on the mobile (Can Move To also)
+
             List<int> canMoveToTiles = new List<int>
             {
                 Constants.TypeIds.Floor,
@@ -92,7 +111,7 @@ namespace SlashIt
             };
 
             //See if this map object can make the requested move
-            return canMoveToTiles.Contains(tile.TypeId) && ((tile.Mobile == null) || (tile.Mobile is Player));
+            return canMoveToTiles.Contains(tile.TypeId) && ((tile.Mobile == null) || (tile.Mobile.TypeId == Constants.TypeIds.Player));
         }
 
         public bool CanAttack(Map map, Tile nonPlayerCharacterTile)
@@ -121,6 +140,11 @@ namespace SlashIt
             this.TimeBucket += this.Speed;
         }
 
+        public static Mobile GetMobileById(int id)
+        {
+            return availableMobiles.Where(m => m.TypeId == id).Single<Mobile>();
+        }
+
         public void UpdateState(Map map, Tile nonPlayerCharacterTile)
         {
             if (currentState != null)
@@ -131,7 +155,24 @@ namespace SlashIt
 
         public XElement Save()
         {
-            return new XElement("Mobile", "test stuff");
+            return new XElement("Mobile",
+                new XElement("TypeId", this.TypeId),
+                new XElement("CanMoveLevel",this.CanMoveLevel),
+                new XElement("TimeBucket",this.TimeBucket),
+                new XElement("Speed",this.Speed),
+                new XElement("HitPoints",this.HitPoints),
+                new XElement("CurrentTransition", this.CurrentTransition)
+                );
+        }
+
+        public void Load(XElement mobile)
+        {
+            this.CanMoveLevel = Int32.Parse(mobile.Element("CanMoveLevel").Value);
+            this.TimeBucket = Int32.Parse(mobile.Element("TimeBucket").Value);
+            this.Speed = Int32.Parse(mobile.Element("Speed").Value);
+            this.HitPoints = Int32.Parse(mobile.Element("HitPoints").Value);
+            int i;
+            this.CurrentTransition = Int32.TryParse(mobile.Element("CurrentTransition").Value, out i) ? (int?)i : null;
         }
     }
 }

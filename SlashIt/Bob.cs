@@ -5,39 +5,39 @@ using System.Text;
 
 namespace SlashIt
 {
-    public class Bob : Mobile, INonPlayerCharacter
-    {
-        public Bob()
-        {
-            //TODO -- !!!!!! Hard coding for now.  This will probably be part of a strategy (or maybe factory) pattern.
-            //                                     Could do using a container too.
+    //public class Bob : Mobile, INonPlayerCharacter
+    //{
+    //    public Bob()
+    //    {
+    //        //TODO -- !!!!!! Hard coding for now.  This will probably be part of a strategy (or maybe factory) pattern.
+    //        //                                     Could do using a container too.
 
-            this.Name = "Bob";
-            this.Description = "So plain it just bores you to death!";
-            this.DisplayCharacter = "B";
-            this.TypeId = Constants.TypeIds.Bob;
-            this.HitPoints = 20;
-            this.HitMessage = this.Name + " ";
+    //        this.Name = "Bob";
+    //        this.Description = "So plain it just bores you to death!";
+    //        this.DisplayCharacter = "B";
+    //        this.TypeId = Constants.TypeIds.Bob;
+    //        this.HitPoints = 20;
+    //        this.HitMessage = this.Name + " ";
 
-            this.transitionTable = new BobTransitionTable();
-            this.Event = BobEvent.Rest;
-        }
+    //        this.transitionTable = new BobTransitionTable();
+    //        this.Event = BobEvent.Rest;
+    //    }
 
-        override public bool CanMoveOnPath(Tile tile)
-        {
-            List<int> canMoveToTiles = new List<int>
-            {
-                Constants.TypeIds.Floor,
-                Constants.TypeIds.OpenDoor,
-                Constants.TypeIds.Door
-            };
+    //    override public bool CanMoveOnPath(Tile tile)
+    //    {
+    //        List<int> canMoveToTiles = new List<int>
+    //        {
+    //            Constants.TypeIds.Floor,
+    //            Constants.TypeIds.OpenDoor,
+    //            Constants.TypeIds.Door
+    //        };
 
-            //See if this map object can make the requested move
-            return canMoveToTiles.Contains(tile.TypeId) && ((tile.Mobile == null) || (tile.Mobile is Player));
-        }
-    }
+    //        //See if this map object can make the requested move
+    //        return canMoveToTiles.Contains(tile.TypeId) && ((tile.Mobile == null) || (tile.Mobile is Player));
+    //    }
+    //}
     
-    public enum BobEvent
+    public enum Transition
     {
         Attack,
         Rest,
@@ -46,13 +46,13 @@ namespace SlashIt
 
 
 
-    class BobTransitionTable : StateTransitionTable
+    public class BobTransitionTable : StateTransitionTable
     {
         public BobTransitionTable()
         {
-            base.table.Add(BobEvent.Attack, new AttackState());
-            base.table.Add(BobEvent.Rest, new RestState());
-            base.table.Add(BobEvent.Chase, new ChaseState());
+            base.table.Add(Transition.Attack, new AttackState());
+            base.table.Add(Transition.Rest, new RestState());
+            base.table.Add(Transition.Chase, new ChaseState());
         }
     }
   
@@ -92,11 +92,11 @@ namespace SlashIt
         {
             if (mobile.CanAttack(map, nonPlayerCharacterTile))
             {
-                mobile.Event = BobEvent.Attack;
+                mobile.Event = Transition.Attack;
             }
             else
             {
-                mobile.Event = BobEvent.Chase;
+                mobile.Event = Transition.Chase;
             }
         }
 
@@ -118,7 +118,7 @@ namespace SlashIt
         {
             if (mobile.CanAttack(map, nonPlayerCharacterTile))
             {
-                mobile.Event = BobEvent.Attack;
+                mobile.Event = Transition.Attack;
                 return;
             }
 
