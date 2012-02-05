@@ -28,27 +28,8 @@ namespace SlashIt
 
         private static void Load()
         {
-
-            //using (StreamReader saveFileStream = new StreamReader(SaveFile))
-            //{
-
-            //    //TODO -- Not sure if this is the best place to do this.  Should I move this to a higher level (Program)??
-            //    XmlSerializer serializer = new XmlSerializer(typeof(Game));
-            //    var game = (Game)serializer.Deserialize(saveFileStream);
-
-            //    this.Map = game.Map;
-            //    //this.NonPlayerCharacters = game.NonPlayerCharacters;
-
-            //    saveFileStream.Close();
-            //}
-
             XDocument doc = XDocument.Load(@".\game.sav");
-
             map.Load(doc.Descendants("Tiles"));
-            //return doc.Descendants("KeyBindings")
-            //    .SelectMany(kb => kb.Elements())
-            //    .Select(e => new { e.Name, e.Value })
-            //    .ToDictionary(x => x.Name.ToString(), x => x.Value.ToString());
         }
 
         static void Main(string[] args)

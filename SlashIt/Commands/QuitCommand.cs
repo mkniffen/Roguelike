@@ -19,14 +19,22 @@ namespace SlashIt
             bool quit = true;
 
             Status.ClearInfo();
-            Status.Info = "Really quit (Y or N)?";
+            Status.Info = "Really quit(Y or N)?";
             Status.WriteToStatus();
 
             var consoleKeyInfo = Console.ReadKey(true);
 
             if (consoleKeyInfo.Key == ConsoleKey.Y)
             {
-                Program.Save();
+                Status.Info = "Save(Y or N)?";
+                Status.WriteToStatus();
+
+                consoleKeyInfo = Console.ReadKey(true);
+
+                if (consoleKeyInfo.Key == ConsoleKey.Y)
+                {
+                    Program.Save();
+                }
             }
             else if (consoleKeyInfo.Key == ConsoleKey.N)
             {

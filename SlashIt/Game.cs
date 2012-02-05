@@ -8,12 +8,11 @@ using System.IO;
 namespace SlashIt
 {
 
-    public class Game// : IXmlSerializable
+    public class Game
     {
         const string SaveFile = @".\game.sav";
         Dictionary<LocalKeyInfo, ICommand> commands;
 
-        [XmlIgnore]
         public Map Map { get; set; }
         public bool PlayerIsDead { get; set; }
 
@@ -56,8 +55,6 @@ namespace SlashIt
             Console.BufferHeight = 25;
 
             Console.CursorVisible = false;
-
-            //this.Load();
 
             this.WriteConsole();
 

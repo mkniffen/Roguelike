@@ -15,9 +15,9 @@ namespace SlashIt
 
         public static List<Mobile> availableMobiles = new List<Mobile>
         {
-            { new Mobile {TypeId = Constants.TypeIds.Player, DisplayCharacter = "@", Description =  "This guy is a newb!!", HitMessage = "The player ", Name = "Player", HitPoints = 30, TransitionTable = null, CurrentTransition = null }},
-            { new Mobile {TypeId = Constants.TypeIds.Rat, DisplayCharacter = "r", Description = "A simple rat that wants to EAT you!", HitMessage = "the Rat ", Name = "Rat" , HitPoints = 10, TransitionTable = null, CurrentTransition = (int)Transition.Rest }},
-            { new Mobile {TypeId = Constants.TypeIds.Bob, DisplayCharacter = "B", Description =  "So plain it just bores you to death!", HitMessage = "Bob ", Name = "Bob", HitPoints = 20, TransitionTable = new BobTransitionTable(), CurrentTransition = (int)Transition.Rest}}
+            { new Mobile {TypeId = Constants.TypeIds.Player, DisplayCharacter = "@", Description =  "This guy is a newb!!", HitMessage = "The player ", Name = "Player", HitPoints = 30, TransitionTable = null, CurrentTransition = null, currentState = null }},
+            { new Mobile {TypeId = Constants.TypeIds.Rat, DisplayCharacter = "r", Description = "A simple rat that wants to EAT you!", HitMessage = "The rat bites you!!!", Name = "Rat" , HitPoints = 10, TransitionTable = new RatTransitionTable(), CurrentTransition = (int)Transition.Attack, currentState = new AttackStateRat() }},
+            { new Mobile {TypeId = Constants.TypeIds.Bob, DisplayCharacter = "B", Description =  "So plain it just bores you to death!", HitMessage = "Bob ", Name = "Bob", HitPoints = 15, TransitionTable = new BobTransitionTable(), CurrentTransition = (int)Transition.Rest, currentState = new RestStateBob() }}
         };
 
 
