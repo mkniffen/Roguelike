@@ -16,9 +16,17 @@ namespace SlashIt
 
         public void execute(LocalKeyInfo keyInfo)
         {
-            //TODO -- will need to modify this so that all the items in the tile are put in the Info
+            Tile tile = this.map.GetPlayerTile();
 
-            Status.Info = this.map.availableTiles[this.map.GetPlayerTile().TypeId].Description;
+            if (tile.HasItem())
+            {
+                Status.Info = Item.availableItems[tile.TypeId].Description;
+            }
+            else 
+            {
+                Status.Info = Map.availableTiles[tile.TypeId].Description;
+            }
+            
         }
     }
 }

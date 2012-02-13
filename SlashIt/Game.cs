@@ -89,7 +89,13 @@ namespace SlashIt
                     continue;
                 }
 
-                Console.Write(this.Map.availableTiles[tile.TypeId].DisplayCharacter);
+                if (tile.Item != null)
+                {
+                    Console.Write(tile.Item.DisplayCharacter);
+                    continue;
+                }
+
+                Console.Write(Map.availableTiles[tile.TypeId].DisplayCharacter);
             }
 
             Map.Outdated = false;
@@ -119,50 +125,6 @@ namespace SlashIt
                 nonPlayerCharacterTiles = Map.GetNonPlayerTiles().Where(t => t.Mobile.CanAct()).ToList();
             }
         }
-
-
-        //public System.Xml.Schema.XmlSchema GetSchema()
-        //{
-        //    return (null);
-        //}
-
-        //public void ReadXml(System.Xml.XmlReader reader)
-        //{
-        //    reader.MoveToContent();
-        //    reader.ReadStartElement();
-
-        //    XmlSerializer serializer;
-
-        //    while (!reader.EOF)
-        //    {
-        //        switch (reader.Name)
-        //        {
-        //            case "Player":
-        //                serializer = new XmlSerializer(typeof(Player));
-        //                this.Player = (Player) serializer.Deserialize(reader);
-        //                continue;
-        //            case "Map":
-        //                serializer = new XmlSerializer(typeof(Map));
-        //                this.Map = (Map)serializer.Deserialize(reader);
-        //                continue;
-        //            //case "NonPlayerCharacters":
-        //            //    reader.ReadStartElement();
-        //            //    serializer = new XmlSerializer(typeof(IMapObject));
-        //            //    var iMapObject = (IMapObject)serializer.Deserialize(reader);
-        //            //    this.NonPlayerCharacters.Add(iMapObject);
-        //            //    continue;
-        //            default:
-        //                break;
-        //        }
-
-        //        reader.ReadStartElement();
-        //    }
-        //}
-
-        //public void WriteXml(System.Xml.XmlWriter writer)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public void AdvanceTime()
         {

@@ -10,6 +10,12 @@ namespace SlashIt
         public int TypeId { get; set; }
         public Location Location { get; set; }
         public Mobile Mobile { get; set; }
+        public Item Item { get; set; }
+
+        public bool HasItem()
+        {
+            return Item != null;
+        }
     }
 
     public class TileDetail

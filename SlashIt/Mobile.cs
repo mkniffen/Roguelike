@@ -167,6 +167,7 @@ namespace SlashIt
 
         public void Load(XElement mobile)
         {
+            this.TypeId = Int32.Parse(mobile.Element("TypeId").Value);
             this.CanMoveLevel = Int32.Parse(mobile.Element("CanMoveLevel").Value);
             this.TimeBucket = Int32.Parse(mobile.Element("TimeBucket").Value);
             this.Speed = Int32.Parse(mobile.Element("Speed").Value);

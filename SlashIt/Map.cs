@@ -12,7 +12,7 @@ namespace SlashIt
     {
 
         //TODO move this to loading from config (maybe remove name) -- convert to Factory??????????
-        public Dictionary<int, TileDetail> availableTiles = new Dictionary<int, TileDetail>
+        public static Dictionary<int, TileDetail> availableTiles = new Dictionary<int, TileDetail>
         {
             {Constants.TypeIds.Door, new TileDetail {Description = "A big wooden door.  It's closed", DisplayCharacter = "+", Name = "Door"}},
             {Constants.TypeIds.Floor, new TileDetail {Description = "Empty floor", DisplayCharacter = ".", Name = "Floor"}},
@@ -486,6 +486,7 @@ namespace SlashIt
                             new XElement("Top", t.Location.Top),
                             new XElement("Left", t.Location.Left)),
                         new XElement(t.Mobile == null ? new XElement("Mobile", "") : t.Mobile.Save()),  //TODO need to code save on player and mobile
+                        new XElement(t.Item == null ? new XElement("Item","") : t.Item.Save()),
                         new XElement("TypeId", t.TypeId)
                             ))
                 );
@@ -493,20 +494,30 @@ namespace SlashIt
 
         public void Load(IEnumerable<XElement> tilesToLoad)
         {
+            Mobile mobile = null;
+            Item item = null;
+
             foreach (XElement tile in tilesToLoad.Descendants("Tile"))
             {
                 var top = Int32.Parse(tile.Element("Location").Element("Top").Value);
                 var left = Int32.Parse(tile.Element("Location").Element("Left").Value);
                 var tileTypeId = Int32.Parse(tile.Element("TypeId").Value);
 
-                Mobile mobile = null;
+                mobile = null;
                 if (!string.IsNullOrEmpty(tile.Element("Mobile").Value))
                 {
                     mobile = Mobile.GetMobileById((Int32.Parse(tile.Element("Mobile").Element("TypeId").Value)));
                     mobile.Load(tile.Element("Mobile"));
                 }
 
-                Tiles.Add(new Tile {Location = new Location(left, top), TypeId = tileTypeId, Mobile = mobile });
+                item = null;
+                if (!string.IsNullOrEmpty(tile.Element("Item").Value))
+                {
+                    item = Item.GetItemById((Int32.Parse(tile.Element("Item").Element("TypeId").Value)));
+                    item.Load(tile.Element("Item"));
+                }
+
+                Tiles.Add(new Tile {Location = new Location(left, top), TypeId = tileTypeId, Mobile = mobile, Item = item });
             }
         }
     }

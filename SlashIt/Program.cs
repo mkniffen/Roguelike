@@ -123,6 +123,9 @@ namespace SlashIt
                     case "a":
                         key = ConsoleKey.A;
                         break;
+                    case "p":
+                        key = ConsoleKey.P;
+                        break;
                     default:
                         continue;
                 }
@@ -156,6 +159,10 @@ namespace SlashIt
                         break;
                     case "Attack":
                         command = new AttackCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "PickUp":
+                        command = new PickUpCommand(map);
                         localKey = new LocalKeyInfo(key, false, false, false);
                         break;
                     default:

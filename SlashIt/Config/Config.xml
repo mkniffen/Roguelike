@@ -7,4 +7,5 @@
   <MoveLeft>LeftArrow</MoveLeft>
   <OpenClose>o</OpenClose>
   <Attack>a</Attack>
+  <PickUp>p</PickUp>
 </KeyBindings>

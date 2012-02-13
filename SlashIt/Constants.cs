@@ -18,6 +18,10 @@ namespace SlashIt
             public const int Bob = 111;
 
             public const int Player = 1000;
+
+            #region Items
+            public const int Wallet = 100000;
+            #endregion
         }
     }
 }
