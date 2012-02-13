@@ -28,6 +28,7 @@ namespace SlashIt
             this.CanMoveLevel = 10;
             this.TimeBucket = 5;
             this.Speed = 5;
+            this.Items = new List<Item>();
         }
 
         public string Name { get; set; }
@@ -46,6 +47,8 @@ namespace SlashIt
         public virtual int Speed { get; set; }
 
         public int HitPoints { get; set; }
+
+        public List<Item> Items { get; set; }
 
         public StateTransitionTable TransitionTable { get; set; }
         public int? CurrentTransition { get; set; }
@@ -161,7 +164,8 @@ namespace SlashIt
                 new XElement("TimeBucket",this.TimeBucket),
                 new XElement("Speed",this.Speed),
                 new XElement("HitPoints",this.HitPoints),
-                new XElement("CurrentTransition", this.CurrentTransition)
+                new XElement("CurrentTransition", this.CurrentTransition),
+                Items.Count <= 0 ? new XElement("Inventory", "") : new XElement("Inventory", Items.Select(i => i.Save()))
                 );
         }
 
@@ -174,6 +178,16 @@ namespace SlashIt
             this.HitPoints = Int32.Parse(mobile.Element("HitPoints").Value);
             int i;
             this.CurrentTransition = Int32.TryParse(mobile.Element("CurrentTransition").Value, out i) ? (int?)i : null;
+
+            foreach (XElement item in mobile.Descendants("Inventory"))
+            {
+                if (item.HasElements)
+                {
+                    var itemToLoad = Item.GetItemById((Int32.Parse(item.Element("Item").Element("TypeId").Value)));
+                    itemToLoad.Load(item.Element("Item"));
+                    this.Items.Add(itemToLoad);
+                }
+            }
         }
     }
 }

@@ -9,10 +9,6 @@ namespace SlashIt
     {
         Map map;
 
-
-        //TODO !!!!!!!  WORKING HERE  !!!!!!  Implement inventory
-
-
         public PickUpCommand(Map map)
         {
             this.map = map;
@@ -23,7 +19,9 @@ namespace SlashIt
             Tile tile = this.map.GetPlayerTile();
             if (tile.HasItem())
             {
+                tile.Mobile.Items.Add(tile.Item);
                 Status.Info = "You take " + tile.Item.Name + ".";
+                tile.Item = null;
             }
             else 
             {
