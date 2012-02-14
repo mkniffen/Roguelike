@@ -14,7 +14,7 @@ namespace SlashIt
             this.map = map;
         }
 
-        public void execute(LocalKeyInfo keyInfo)
+        public bool execute(LocalKeyInfo keyInfo)
         {
             Status.ClearInfo();
             Status.Info = "Which direction?";
@@ -49,6 +49,8 @@ namespace SlashIt
             Status.ClearInfo();
 
             this.map.Outdated = true;
+
+            return false;
         }
     }
 }

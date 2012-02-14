@@ -16,7 +16,7 @@ namespace SlashIt
         public Map Map { get; set; }
         public bool PlayerIsDead { get; set; }
 
-        public const short MapStartLeft = 19;
+        public const short MapStartLeft = 0;
         public const short MapStartTop = 0;
 
         public Game()
@@ -30,11 +30,13 @@ namespace SlashIt
             commands.Add(keyInfo, command);
         }
 
-        public void CommandActivated(LocalKeyInfo keyInfo)
+        public bool CommandActivated(LocalKeyInfo keyInfo)
         {
+            bool nonTurnAction = false;
+
             try
             {
-                commands[keyInfo].execute(keyInfo);
+                nonTurnAction = commands[keyInfo].execute(keyInfo);
             }
                 //TODO add logging...
             catch (Exception e)
@@ -42,6 +44,8 @@ namespace SlashIt
                 Status.WriteToStatusLine(keyInfo.Key + " key is not bound to a command.  Press any key to continue");
                 Console.ReadKey(true);
             }
+
+            return nonTurnAction;
         }
 
 

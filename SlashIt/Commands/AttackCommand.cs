@@ -14,7 +14,7 @@ namespace SlashIt
             this.map = map;
         }
 
-        public void execute(LocalKeyInfo keyInfo)
+        public bool execute(LocalKeyInfo keyInfo)
         {
             Status.ClearInfo();
             Status.Info = "Which direction?";
@@ -48,6 +48,8 @@ namespace SlashIt
             {
                 Status.Info = "Not a valid target.";
             }
+
+            return false;
         }
     }
 }

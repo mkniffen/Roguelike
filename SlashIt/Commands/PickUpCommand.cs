@@ -14,7 +14,7 @@ namespace SlashIt
             this.map = map;
         }
 
-        public void execute(LocalKeyInfo keyInfo)
+        public bool execute(LocalKeyInfo keyInfo)
         {
             Tile tile = this.map.GetPlayerTile();
             if (tile.HasItem())
@@ -27,6 +27,8 @@ namespace SlashIt
             {
                 Status.Info = "This is nothing to pick up here.";
             }
+
+            return false;
         }
     }
 }

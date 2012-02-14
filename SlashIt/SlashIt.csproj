@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AI\Common.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
+    <Compile Include="Commands\InventoryCommand.cs" />
     <Compile Include="Commands\PickUpCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="IState.cs" />

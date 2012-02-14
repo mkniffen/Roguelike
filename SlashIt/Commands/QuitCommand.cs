@@ -14,7 +14,7 @@ namespace SlashIt
             this.map = map;
         }
 
-        public void execute(LocalKeyInfo keyInfo)
+        public bool execute(LocalKeyInfo keyInfo)
         {
             bool quit = true;
 
@@ -48,6 +48,8 @@ namespace SlashIt
             }
 
             Program.Quit = quit;
+
+            return true;
         }
     }
 }

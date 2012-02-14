@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <KeyBindings>
+  <Attack>a</Attack>
+  <Inventory>i</Inventory>
   <Look>l</Look>
   <MoveUp>UpArrow</MoveUp>
   <MoveDown>DownArrow</MoveDown>
   <MoveRight>RightArrow</MoveRight>
   <MoveLeft>LeftArrow</MoveLeft>
   <OpenClose>o</OpenClose>
-  <Attack>a</Attack>
   <PickUp>p</PickUp>
 </KeyBindings>

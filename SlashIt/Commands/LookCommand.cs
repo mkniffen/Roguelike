@@ -14,7 +14,7 @@ namespace SlashIt
             this.map = map;
         }
 
-        public void execute(LocalKeyInfo keyInfo)
+        public bool execute(LocalKeyInfo keyInfo)
         {
             Tile tile = this.map.GetPlayerTile();
 
@@ -26,7 +26,8 @@ namespace SlashIt
             {
                 Status.Info = Map.availableTiles[tile.TypeId].Description;
             }
-            
+
+            return true;
         }
     }
 }

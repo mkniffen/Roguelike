@@ -7,6 +7,6 @@ namespace SlashIt
 {
     public interface ICommand
     {
-        void execute(LocalKeyInfo keyInfo);
+        bool execute(LocalKeyInfo keyInfo);
     }
 }

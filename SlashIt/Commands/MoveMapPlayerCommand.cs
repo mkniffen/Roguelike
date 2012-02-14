@@ -14,11 +14,13 @@ namespace SlashIt
             this.map = map;
         }
 
-        public void execute(LocalKeyInfo keyInfo)
+        public bool execute(LocalKeyInfo keyInfo)
         {
             var mapTile = this.map.GetPlayerTile();
             this.map.MoveMobile(keyInfo, mapTile);
             this.map.Outdated = true;
+
+            return false;
         }
     }
 }

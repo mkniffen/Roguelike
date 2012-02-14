@@ -45,7 +45,9 @@ namespace SlashIt
                 game.WriteConsole();
                 if (game.PlayerCanAct())
                 {
-                    HandleInput();
+                    var nonTurnAction = HandleInput();
+                    if (nonTurnAction) continue;
+
                     map.GetPlayer().TimeBucket = 0;
                 }
                 game.PerformNonPlayerCharacterAction();
@@ -58,10 +60,10 @@ namespace SlashIt
             }
             else
             {
-                Console.WriteLine("Game over!");
+                Status.WriteToStatusLine("Game over!");
             }
 
-            Console.ReadKey();
+            Console.ReadKey(true);
         }
 
         static Random r = new Random();
@@ -72,15 +74,19 @@ namespace SlashIt
         }
 
 
-        private static void HandleInput()
+        private static bool HandleInput()
         {
+            bool nonTurnAction = false;
+
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             var localKeyInfo = new LocalKeyInfo(keyInfo);
 
             Status.ClearInfo();
             Status.WriteToStatusLine("");
 
-            game.CommandActivated(localKeyInfo);
+            nonTurnAction = game.CommandActivated(localKeyInfo);
+
+            return nonTurnAction;
         }
 
         
@@ -102,8 +108,8 @@ namespace SlashIt
              
                 switch (binding.Value)
                 {
-                    case "o":
-                        key = ConsoleKey.O;
+                    case "a":
+                        key = ConsoleKey.A;
                         break;
                     case "UpArrow":
                         key = ConsoleKey.UpArrow;
@@ -117,11 +123,14 @@ namespace SlashIt
                     case "LeftArrow":
                         key = ConsoleKey.LeftArrow;
                         break;
+                    case "i":
+                        key = ConsoleKey.I;
+                        break;
                     case "l":
                         key = ConsoleKey.L;
                         break;
-                    case "a":
-                        key = ConsoleKey.A;
+                    case "o":
+                        key = ConsoleKey.O;
                         break;
                     case "p":
                         key = ConsoleKey.P;
@@ -133,8 +142,16 @@ namespace SlashIt
 
                 switch (binding.Key)
                 {
-                    case "OpenClose":
-                        command = new OpenCloseCommand(map);
+                    case "Attack":
+                        command = new AttackCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "Inventory":
+                        command = new InventoryCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "Look":
+                        command = new LookCommand(map);
                         localKey = new LocalKeyInfo(key, false, false, false);
                         break;
                     case "MoveUp":
@@ -153,12 +170,8 @@ namespace SlashIt
                         command = new MoveMapPlayerCommand(map);
                         localKey = new LocalKeyInfo(key, false, false, false);
                         break;
-                    case "Look":
-                        command = new LookCommand(map);
-                        localKey = new LocalKeyInfo(key, false, false, false);
-                        break;
-                    case "Attack":
-                        command = new AttackCommand(map);
+                    case "OpenClose":
+                        command = new OpenCloseCommand(map);
                         localKey = new LocalKeyInfo(key, false, false, false);
                         break;
                     case "PickUp":
