@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <KeyBindings>
   <Attack>a</Attack>
+  <DisplayEquipment>e</DisplayEquipment>
   <Inventory>i</Inventory>
   <Look>l</Look>
   <MoveUp>UpArrow</MoveUp>
@@ -9,4 +10,5 @@
   <MoveLeft>LeftArrow</MoveLeft>
   <OpenClose>o</OpenClose>
   <PickUp>p</PickUp>
+  <Wear>w</Wear>
 </KeyBindings>

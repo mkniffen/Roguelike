@@ -513,7 +513,7 @@ namespace SlashIt
                 item = null;
                 if (!string.IsNullOrEmpty(tile.Element("Item").Value))
                 {
-                    item = Item.GetItemById((Int32.Parse(tile.Element("Item").Element("TypeId").Value)));
+                    item = Item.GetItemById((Int32.Parse(tile.Element("Item").Element("ItemId").Value)));
                     item.Load(tile.Element("Item"));
                 }
 

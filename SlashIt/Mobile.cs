@@ -6,6 +6,17 @@ using System.Xml.Linq;
 
 namespace SlashIt
 {
+    public class EquipedItemSet
+    {
+        //public bool ActiveItemSet { get; set; }
+
+        public int HeadItemId { get; set; }
+        public int WeaponLeftItemId { get; set; }
+        public int WeaponRightItemId { get; set; }
+        public int ChestItemId { get; set; }
+        public int FeetItemId { get; set; }
+    }
+
     public class Mobile : INonPlayerCharacter
     {
 
@@ -29,6 +40,7 @@ namespace SlashIt
             this.TimeBucket = 5;
             this.Speed = 5;
             this.Items = new List<Item>();
+            this.EquipedItemSet = new EquipedItemSet();
         }
 
         public string Name { get; set; }
@@ -49,11 +61,21 @@ namespace SlashIt
         public int HitPoints { get; set; }
 
         public List<Item> Items { get; set; }
+        public EquipedItemSet EquipedItemSet { get; set; }   //TODO finish setting up equiped items
 
         public StateTransitionTable TransitionTable { get; set; }
         public int? CurrentTransition { get; set; }
 
         //public enum Transitions;
+
+        public bool HasItems
+        {
+            get
+            {
+                return Items.Count > 0;
+            }
+        }
+
 
         public object Event
         {

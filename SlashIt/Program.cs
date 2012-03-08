@@ -111,6 +111,9 @@ namespace SlashIt
                     case "a":
                         key = ConsoleKey.A;
                         break;
+                    case "e":
+                        key = ConsoleKey.E;
+                        break;
                     case "UpArrow":
                         key = ConsoleKey.UpArrow;
                         break;
@@ -135,6 +138,9 @@ namespace SlashIt
                     case "p":
                         key = ConsoleKey.P;
                         break;
+                    case "w":
+                        key = ConsoleKey.W;
+                        break;
                     default:
                         continue;
                 }
@@ -144,6 +150,10 @@ namespace SlashIt
                 {
                     case "Attack":
                         command = new AttackCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "DisplayEquipment":
+                        command = new DisplayEquipmentCommand(map);
                         localKey = new LocalKeyInfo(key, false, false, false);
                         break;
                     case "Inventory":
@@ -176,6 +186,10 @@ namespace SlashIt
                         break;
                     case "PickUp":
                         command = new PickUpCommand(map);
+                        localKey = new LocalKeyInfo(key, false, false, false);
+                        break;
+                    case "Wear":
+                        command = new WearCommand(map);
                         localKey = new LocalKeyInfo(key, false, false, false);
                         break;
                     default:
