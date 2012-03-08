@@ -36,6 +36,32 @@ namespace SlashIt
                 }
 
                 s.Append(Console.Out.NewLine).Append("Press letter of item to equip: ");
+                Status.Info = s.ToString();
+                Console.Clear();
+                Status.WriteToStatus();
+
+                var itemKey = Console.ReadKey(true);
+
+                var itemToWear = equipableItems.Where(e => e.ListTag.ToUpper() == itemKey.KeyChar.ToString().ToUpper()).First();
+
+                tile.Mobile.WearItem(itemToWear);   // <====  !!!!  Need to code this method
+
+
+                //TODO MWK -- Working HERE -- 1) need to link letters to items so that can know which item to equip
+                //                            2) prompt for which equipment slot
+                //                            3) validate item can go in that slot
+                //                            4) put in slot
+                //                            5) display new equipment list with modified slot highlighted (and maybe some text to say what was taken off)
+
+
+
+
+
+
+
+                s.Append(Console.Out.NewLine).Append(Console.Out.NewLine).Append("You are now wearing => ").Append(itemToWear.Name);
+
+
             }
             else
             {
@@ -43,25 +69,13 @@ namespace SlashIt
             }
 
             Status.Info = s.ToString();
-
             Console.Clear();
             Status.WriteToStatus();
 
-            var itemKey = Console.ReadKey(true);
-
-            //TODO MWK -- Working HERE -- 1) need to link letters to items so that can know which item to equip
-            //                            2) prompt for which equipment slot
-            //                            3) validate item can go in that slot
-            //                            4) put in slot
-            //                            5) display new equipment list with modified slot highlighted (and maybe some text to say what was taken off)
-
-
-
+            Console.ReadKey(true);
 
             Status.ClearInfo();
-
             Console.Clear();
-
             this.map.Outdated = true;
 
             return true;

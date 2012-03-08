@@ -8,13 +8,28 @@ namespace SlashIt
 {
     public class EquipedItemSet
     {
+        public EquipedItemSet()
+        {
+            this.Head = new EquipedItem { AcceptableTypes = ItemType.Head, ItemId = 0 };
+            this.WeaponLeft = new EquipedItem { AcceptableTypes = ItemType.Weapon, ItemId = 0 };
+            this.WeaponRight = new EquipedItem { AcceptableTypes = ItemType.Weapon, ItemId = 0 };
+            this.Chest = new EquipedItem { AcceptableTypes = ItemType.Chest, ItemId = 0 };
+            this.Feet = new EquipedItem { AcceptableTypes = ItemType.Feet, ItemId = 0 };
+        }
+
         //public bool ActiveItemSet { get; set; }
 
-        public int HeadItemId { get; set; }
-        public int WeaponLeftItemId { get; set; }
-        public int WeaponRightItemId { get; set; }
-        public int ChestItemId { get; set; }
-        public int FeetItemId { get; set; }
+        public EquipedItem Head { get; set; }
+        public EquipedItem WeaponLeft { get; set; }
+        public EquipedItem WeaponRight { get; set; }
+        public EquipedItem Chest { get; set; }
+        public EquipedItem Feet { get; set; }
+    }
+
+    public class EquipedItem
+    {
+        public ItemType AcceptableTypes { get; set; }
+        public int ItemId { get; set; }
     }
 
     public class Mobile : INonPlayerCharacter
@@ -210,6 +225,11 @@ namespace SlashIt
                     this.Items.Add(itemToLoad);
                 }
             }
+        }
+
+        public void WearItem(Item itemToWear)
+        {
+            //TODO !!!!!!  Code me  !!!!!
         }
     }
 }
