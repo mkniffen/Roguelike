@@ -20,22 +20,22 @@ namespace SlashIt
             Tile tile = this.map.GetPlayerTile();
             StringBuilder s = new StringBuilder();
 
-            if (tile.Mobile.HasItems)
+            if (tile.Mobile.HasEquipableItems)
             {
-                s.Append("Equipable Items:").Append(Console.Out.NewLine);
+                s.Append("Equipable Items:").Append(Environment.NewLine);
 
-                var equipableItems = tile.Mobile.Items.Where(it => it.ItemTypes.HasFlag(ItemType.Weapon));
+                var equipableItems = tile.Mobile.Items.Where(it => it.IsEquipable());
 
                 int i = 1;
                 foreach (var item in equipableItems)
                 {
                     item.ListTag = InventoryCommand.letters[i];
                     s.Append("   ").Append(InventoryCommand.letters[i]).Append(") ");
-                    s.Append(item.Name).Append(Console.Out.NewLine);
+                    s.Append(item.Name).Append(Environment.NewLine);
                     i++;
                 }
 
-                s.Append(Console.Out.NewLine).Append("Press letter of item to equip: ");
+                s.Append(Environment.NewLine).Append("Press letter of item to equip: ");
                 Status.Info = s.ToString();
                 Console.Clear();
                 Status.WriteToStatus();
@@ -44,29 +44,16 @@ namespace SlashIt
 
                 var itemToWear = equipableItems.Where(e => e.ListTag.ToUpper() == itemKey.KeyChar.ToString().ToUpper()).First();
 
-                tile.Mobile.WearItem(itemToWear);   // <====  !!!!  Need to code this method
+                tile.Mobile.WearItem(itemToWear);
 
-
-                //TODO MWK -- Working HERE -- 1) need to link letters to items so that can know which item to equip
-                //                            2) prompt for which equipment slot
-                //                            3) validate item can go in that slot
-                //                            4) put in slot
-                //                            5) display new equipment list with modified slot highlighted (and maybe some text to say what was taken off)
-
-
-
-
-
-
-
-                s.Append(Console.Out.NewLine).Append(Console.Out.NewLine).Append("You are now wearing => ").Append(itemToWear.Name);
-
-
+                s.Append(Environment.NewLine).Append(Environment.NewLine).Append("You are now wearing => ").Append(itemToWear.Name);
             }
             else
             {
-                s.Append("You have no equipable items.").Append(Console.Out.NewLine);
+                s.Append("You have no equipable items.").Append(Environment.NewLine);
             }
+
+            s.Append(Environment.NewLine).Append(Environment.NewLine).Append("Press any key to conintue");
 
             Status.Info = s.ToString();
             Console.Clear();

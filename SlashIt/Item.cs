@@ -8,12 +8,21 @@ namespace SlashIt
 {
     public enum ItemType : int
     {
-        None = 0,
-        Weapon = 1,
-        Head = 2,
-        Chest = 4,
-        Feet = 8,
-        Container = 16
+        None,
+        Weapon,
+        Armor,
+        Container,
+    }
+
+    public enum ItemLocation : int
+    {
+        None,
+        Head,
+        Chest,
+        Feet,
+        HandRight,
+        HandLeft,
+        Bag1,
     }
 
 
@@ -22,8 +31,8 @@ namespace SlashIt
 
         public static List<Item> availableItems = new List<Item>
         {
-            { new Item {Name = "Bob's wallet", DisplayCharacter="~", ItemTypes = ItemType.Container, ItemId = Constants.ItemIds.Wallet, Description = "You found Bob's wallet.  He's gonna be REAL mad if he finds out you have it"}},
-            { new Item { Name = "Dagger", DisplayCharacter="|", ItemTypes = ItemType.Weapon, ItemId = Constants.ItemIds.Dagger, Description = "It's a plain dagger"}},
+            { new Item {Name = "Bob's wallet", DisplayCharacter="~", ItemTypes = new List<ItemType> { ItemType.Armor, ItemType.Container}, ItemLocations = new List<ItemLocation> { ItemLocation.Bag1 }, ItemId = Constants.ItemIds.Wallet, Description = "You found Bob's wallet.  He's gonna be REAL mad if he finds out you have it"}},
+            { new Item { Name = "Dagger", DisplayCharacter="|", ItemTypes = new List<ItemType> { ItemType.Weapon }, ItemLocations = new List<ItemLocation> { ItemLocation.HandRight, ItemLocation.HandLeft }, ItemId = Constants.ItemIds.Dagger, Description = "It's a plain dagger"}},
         };
 
         public string Name { get; set; }
@@ -32,7 +41,9 @@ namespace SlashIt
         public int ItemId { get;set; }
         public string ListTag { get; set; }
 
-        public ItemType ItemTypes { get; set; }
+        public List<ItemLocation> ItemLocations { get; set; }
+        public List<ItemType> ItemTypes { get; set; }
+
 
 
         public static Item GetItemById(int itemId)
@@ -50,6 +61,11 @@ namespace SlashIt
  	        return new XElement("Item",
                 new XElement("ItemId", this.ItemId)
                 );
+        }
+
+        public bool IsEquipable()
+        {
+            return  this.ItemTypes.Any(it => it == ItemType.Armor || it == ItemType.Container || it == ItemType.Weapon);
         }
     }
 }

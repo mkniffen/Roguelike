@@ -26,7 +26,7 @@ namespace SlashIt
             Tile tile = this.map.GetPlayerTile();
             StringBuilder s = new StringBuilder();
 
-            if (tile.Mobile.HasItems)
+            if (tile.Mobile.HasEquipableItems)
             {
                 s.Append("Player Inventory:").Append(Console.Out.NewLine);
 

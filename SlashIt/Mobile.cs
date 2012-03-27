@@ -8,28 +8,37 @@ namespace SlashIt
 {
     public class EquipedItemSet
     {
+
         public EquipedItemSet()
         {
-            this.Head = new EquipedItem { AcceptableTypes = ItemType.Head, ItemId = 0 };
-            this.WeaponLeft = new EquipedItem { AcceptableTypes = ItemType.Weapon, ItemId = 0 };
-            this.WeaponRight = new EquipedItem { AcceptableTypes = ItemType.Weapon, ItemId = 0 };
-            this.Chest = new EquipedItem { AcceptableTypes = ItemType.Chest, ItemId = 0 };
-            this.Feet = new EquipedItem { AcceptableTypes = ItemType.Feet, ItemId = 0 };
+            this.EquipedItems = new List<EquipedItem>
+            {
+                {new EquipedItem { Location = ItemLocation.Head, AcceptableTypes = new List<ItemType> { ItemType.Armor }}},
+                {new EquipedItem { Location = ItemLocation.HandLeft, AcceptableTypes = new List<ItemType> {  ItemType.Weapon}}},
+                {new EquipedItem { Location = ItemLocation.HandRight, AcceptableTypes =  new List<ItemType> { ItemType.Weapon}}},
+                {new EquipedItem { Location = ItemLocation.Chest, AcceptableTypes =  new List<ItemType> { ItemType.Armor}}},
+                {new EquipedItem { Location = ItemLocation.Feet, AcceptableTypes =  new List<ItemType> { ItemType.Armor}}},
+                {new EquipedItem { Location = ItemLocation.Bag1, AcceptableTypes =  new List<ItemType> { ItemType.Container}}},
+            };
         }
+
+        public List<EquipedItem> EquipedItems { get; set; }
 
         //public bool ActiveItemSet { get; set; }
 
-        public EquipedItem Head { get; set; }
-        public EquipedItem WeaponLeft { get; set; }
-        public EquipedItem WeaponRight { get; set; }
-        public EquipedItem Chest { get; set; }
-        public EquipedItem Feet { get; set; }
+        //public EquipedItem Head { get; set; }
+        //public EquipedItem WeaponLeft { get; set; }
+        //public EquipedItem WeaponRight { get; set; }
+        //public EquipedItem Chest { get; set; }
+        //public EquipedItem Feet { get; set; }
     }
 
     public class EquipedItem
     {
-        public ItemType AcceptableTypes { get; set; }
-        public int ItemId { get; set; }
+        public List<ItemType> AcceptableTypes { get; set; }
+        public ItemLocation Location { get; set; }
+        public Item Item { get; set; }
+        public string ListTag { get; set; }
     }
 
     public class Mobile : INonPlayerCharacter
@@ -83,11 +92,11 @@ namespace SlashIt
 
         //public enum Transitions;
 
-        public bool HasItems
+        public bool HasEquipableItems
         {
             get
             {
-                return Items.Count > 0;
+                return Items.Any(i => i.IsEquipable());
             }
         }
 
@@ -229,7 +238,56 @@ namespace SlashIt
 
         public void WearItem(Item itemToWear)
         {
-            //TODO !!!!!!  Code me  !!!!!
+            List<EquipedItem> itemSlots = EquipedItemSet.EquipedItems.Where(ei => ei.AcceptableTypes.Any(at => itemToWear.ItemTypes.Contains(at)) && itemToWear.ItemLocations.Contains(ei.Location)).ToList();
+
+            if (itemSlots.Count < 1)
+            {
+                throw new Exception("These must be at least one slot for this item");
+
+                //TODO : maybe change this to, "You can't wear that item"
+
+                return;
+            }
+
+            if (itemSlots.Count > 1)
+            {
+                var s = new StringBuilder();
+
+                s.Append("Which location do you want to use? ").Append(Environment.NewLine);
+
+                int i = 1;
+                foreach (var itemSlot in itemSlots)
+                {
+                    itemSlot.ListTag = InventoryCommand.letters[i];
+                    s.Append("   ").Append(InventoryCommand.letters[i]).Append(") ");
+                    s.Append(itemSlot.Location).Append(Console.Out.NewLine);
+                    i++;
+                }
+
+                Status.Info = s.ToString();
+                Console.Clear();
+                Status.WriteToStatus();
+
+                var itemSlotKey = Console.ReadKey(true);
+
+                var selectedItemSlot = itemSlots.Where(isl => isl.ListTag.ToUpper() == itemSlotKey.KeyChar.ToString().ToUpper()).Single();
+
+                MoveItemFromInventoryToEquiped(itemToWear, selectedItemSlot);
+
+                return;
+            }
+
+            MoveItemFromInventoryToEquiped(itemToWear, itemSlots[0]);
+        }
+
+        private void MoveItemFromInventoryToEquiped(Item itemToWear, EquipedItem itemSlot)
+        {
+            if (itemSlot.Item != null)
+            {
+                this.Items.Add(itemSlot.Item);
+            }
+            itemSlot.Item = itemToWear;
+            this.Items.Remove(itemToWear);
         }
     }
 }
