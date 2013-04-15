@@ -1,9 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlashIt", "SlashIt\SlashIt.csproj", "{DC39579E-83BD-477B-B123-DD6299B84356}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SlashItSetup", "SlashItSetup\SlashItSetup.vdproj", "{A722D44D-7828-4B48-955C-726FA9792EEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +13,6 @@ Global
 		{DC39579E-83BD-477B-B123-DD6299B84356}.Debug|x86.Build.0 = Debug|x86
 		{DC39579E-83BD-477B-B123-DD6299B84356}.Release|x86.ActiveCfg = Release|x86
 		{DC39579E-83BD-477B-B123-DD6299B84356}.Release|x86.Build.0 = Release|x86
-		{A722D44D-7828-4B48-955C-726FA9792EEF}.Debug|x86.ActiveCfg = Debug
-		{A722D44D-7828-4B48-955C-726FA9792EEF}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

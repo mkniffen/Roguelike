@@ -1,7 +1,5 @@
 ﻿TODO
 
-Hello
-
 -- Display new equipment list with modified slot highlighted (and maybe some text to say what was taken off)
 -- Optimize map drawing
 -- Change commands to singletons...
