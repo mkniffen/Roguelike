@@ -28,7 +28,30 @@ namespace SlashIt
 
         private static void Load()
         {
-            XDocument doc = XDocument.Load(@".\game.sav");
+            Status.ClearInfo();
+            Status.Info = "Start a New game, or Load and existing (S/L)?";
+            Status.WriteToStatus();
+
+            ConsoleKeyInfo consoleKeyInfo = Console.ReadKey(true);
+            var localKeyInfo = new LocalKeyInfo(consoleKeyInfo);
+
+            XDocument doc;
+
+            switch (localKeyInfo.Key)
+            {
+                case ConsoleKey.S:
+                    doc = XDocument.Load(@".\new.sav");
+                    break;
+
+                case ConsoleKey.L:
+                    doc = XDocument.Load(@".\game.sav");
+                    break;
+
+                default:
+                    Program.Load();
+                    return;
+            }
+
             map.Load(doc.Descendants("Tiles"));
         }
 
@@ -76,7 +99,7 @@ namespace SlashIt
 
         private static bool HandleInput()
         {
-            bool nonTurnAction = false;
+            bool nonTurnAction = true;
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             var localKeyInfo = new LocalKeyInfo(keyInfo);

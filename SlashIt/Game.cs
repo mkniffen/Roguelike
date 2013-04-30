@@ -32,7 +32,7 @@ namespace SlashIt
 
         public bool CommandActivated(LocalKeyInfo keyInfo)
         {
-            bool nonTurnAction = false;
+            bool nonTurnAction = true;
 
             try
             {
@@ -43,6 +43,8 @@ namespace SlashIt
             {
                 Status.WriteToStatusLine(keyInfo.Key + " key is not bound to a command.  Press any key to continue");
                 Console.ReadKey(true);
+                Status.ClearInfo();
+                Status.WriteToStatusLine(string.Empty);
             }
 
             return nonTurnAction;

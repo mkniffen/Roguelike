@@ -10,3 +10,24 @@ Longer Term
 
 -- Could use encryption with differing keys on the uniqueId's stored in the map matrix and on the NPC's theirselves
    to make it hard to hack.  Give it a try!!
+
+
+Game
+	
+	-- 3 hours max
+	-- Heavy on story
+		-- Option to streamline story you've been through
+		-- Main plot elements are given to the player at "level/zone" transitions
+	-- Difficult to finish
+	-- Game Mechanics
+		-- Strategy games
+			-- Command a squad or group more like Dwarf Fortress or even Faster Than Light
+			-- You recruit various people along the way
+				-- Don't have to though, can try to solo
+		-- RPG 
+			-- Group gains various stats and abilities
+	-- Story (Simple for this first one)
+		-- You are searching for a lost family memeber
+			-- The family member was taken by slavers
+		-- Fist you can recruit your brother
+		-- Second a hero somewhere later in the story
