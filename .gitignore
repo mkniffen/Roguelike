@@ -1,5 +1,4 @@
-SlashIt/bin
-SlashIt/obj
+bin/
+obj/
 *.suo
-spike/hello_lib_solution/hello_lib/bin
-spike/hello_lib_solution/hello_lib/obj
+*.user

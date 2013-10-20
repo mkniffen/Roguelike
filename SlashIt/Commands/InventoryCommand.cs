@@ -9,7 +9,7 @@ namespace SlashIt
     {
         //TODO -- also in InventoryCommand, move to higher level or util
 
-        public static Dictionary<int, string> letters = new Dictionary<int, string>
+        public static Dictionary<int, string> Letters = new Dictionary<int, string>
         {
             {1, "a"}, {2,"b"}, {3,"c"}, {4,"d"}, {5,"e"}, {6,"f"}, {7,"g"}, {8,"h"}, {9,"i"}
         };
@@ -26,15 +26,16 @@ namespace SlashIt
             Tile tile = this.map.GetPlayerTile();
             StringBuilder s = new StringBuilder();
 
-            if (tile.Mobile.HasEquipableItems)
+            if (tile.Mobile.Items.Count > 0)
+            //if (tile.Mobile.HasEquipableItems)
             {
                 s.Append("Player Inventory:").Append(Console.Out.NewLine);
 
                 int i = 1;
                 foreach (var item in tile.Mobile.Items)
                 {
-                    item.ListTag = letters[i];
-                    s.Append("   ").Append(letters[i]).Append(") ");
+                    item.ListTag = Letters[i];
+                    s.Append("   ").Append(Letters[i]).Append(") ");
                     s.Append(item.Name).Append(Console.Out.NewLine);
                     i++;
                 }

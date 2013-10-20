@@ -24,39 +24,45 @@ namespace SlashIt
 
         public bool execute(LocalKeyInfo keyInfo)
         {
-            //Tile tile = this.map.GetPlayerTile();
-            //StringBuilder s = new StringBuilder();
 
-            //if (tile.Mobile.Items.Count > 0)
-            //{
-            //    s.Append("Player Inventory:").Append(Console.Out.NewLine);
 
-            //    int i = 1;
-            //    foreach (var item in tile.Mobile.Items)
-            //    {
-            //        s.Append("   ").Append(letters[i]).Append(") ");
-            //        s.Append(item.Name).Append(Console.Out.NewLine);
-            //        i++;
-            //    }
-            //}
-            //else
-            //{
-            //    s.Append("Your inventory is empty!!").Append(Console.Out.NewLine);
-            //}
+            //TODO MWK Copied fromInventoryCommand. Just coded and testing.
 
-            //s.Append(Console.Out.NewLine).Append("Press any key to continue.").Append(Console.Out.NewLine);
 
-            //Status.Info = s.ToString();
+            Tile tile = this.map.GetPlayerTile();
+            StringBuilder s = new StringBuilder();
 
-            //Console.Clear();
-            //Status.WriteToStatus();
+            var equipedItems = tile.Mobile.EquipedItemSet.EquipedItems.Where(ei => ei.Item != null).Select(ei => ei.Item);
+            if (equipedItems.Count() > 0)
+            {
+                s.Append("Equiped items:").Append(Console.Out.NewLine);
 
-            //Console.ReadKey(true);
-            //Status.ClearInfo();
+                int i = 1;
+                foreach (Item item in equipedItems)
+                {
+                    s.Append("   ").Append(InventoryCommand.Letters[i]).Append(") ");
+                    s.Append(item.Name).Append(Console.Out.NewLine);
+                    i++;
+                }
+            }
+            else
+            {
+                s.Append("You have no equiped items").Append(Console.Out.NewLine);
+            }
 
-            //Console.Clear();
+            s.Append(Console.Out.NewLine).Append("Press any key to continue.").Append(Console.Out.NewLine);
 
-            //this.map.Outdated = true;
+            Status.Info = s.ToString();
+
+            Console.Clear();
+            Status.WriteToStatus();
+
+            Console.ReadKey(true);
+            Status.ClearInfo();
+
+            Console.Clear();
+
+            this.map.Outdated = true;
 
             return true;
         }

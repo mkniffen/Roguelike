@@ -258,8 +258,8 @@ namespace SlashIt
                 int i = 1;
                 foreach (var itemSlot in itemSlots)
                 {
-                    itemSlot.ListTag = InventoryCommand.letters[i];
-                    s.Append("   ").Append(InventoryCommand.letters[i]).Append(") ");
+                    itemSlot.ListTag = InventoryCommand.Letters[i];
+                    s.Append("   ").Append(InventoryCommand.Letters[i]).Append(") ");
                     s.Append(itemSlot.Location).Append(Console.Out.NewLine);
                     i++;
                 }

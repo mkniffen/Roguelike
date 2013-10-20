@@ -29,8 +29,8 @@ namespace SlashIt
                 int i = 1;
                 foreach (var item in equipableItems)
                 {
-                    item.ListTag = InventoryCommand.letters[i];
-                    s.Append("   ").Append(InventoryCommand.letters[i]).Append(") ");
+                    item.ListTag = InventoryCommand.Letters[i];
+                    s.Append("   ").Append(InventoryCommand.Letters[i]).Append(") ");
                     s.Append(item.Name).Append(Environment.NewLine);
                     i++;
                 }

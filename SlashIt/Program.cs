@@ -29,7 +29,7 @@ namespace SlashIt
         private static void Load()
         {
             Status.ClearInfo();
-            Status.Info = "Start a New game, or Load and existing (S/L)?";
+            Status.Info = "Start a New game, or Load an existing (S/L)?";
             Status.WriteToStatus();
 
             ConsoleKeyInfo consoleKeyInfo = Console.ReadKey(true);
