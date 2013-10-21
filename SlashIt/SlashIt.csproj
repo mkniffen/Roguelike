@@ -78,6 +78,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Config\Items.xml" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

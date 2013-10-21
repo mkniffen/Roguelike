@@ -20,7 +20,7 @@ namespace SlashIt
 
             if (tile.HasItem())
             {
-                Status.Info = Item.availableItems[tile.TypeId].Description;
+                Status.Info = Item.AvailableItems[tile.TypeId].Description;
             }
             else 
             {

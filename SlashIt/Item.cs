@@ -29,11 +29,11 @@ namespace SlashIt
     public class Item
     {
 
-        public static List<Item> availableItems = new List<Item>
-        {
-            { new Item {Name = "Bob's wallet", DisplayCharacter="~", ItemTypes = new List<ItemType> { ItemType.Armor, ItemType.Container}, ItemLocations = new List<ItemLocation> { ItemLocation.Bag1 }, ItemId = Constants.ItemIds.Wallet, Description = "You found Bob's wallet.  He's gonna be REAL mad if he finds out you have it"}},
-            { new Item { Name = "Dagger", DisplayCharacter="|", ItemTypes = new List<ItemType> { ItemType.Weapon }, ItemLocations = new List<ItemLocation> { ItemLocation.HandRight, ItemLocation.HandLeft }, ItemId = Constants.ItemIds.Dagger, Description = "It's a plain dagger"}},
-        };
+        public static List<Item> AvailableItems = new List<Item>();
+        //{
+        //    { new Item {Name = "Bob's wallet", DisplayCharacter="~", ItemTypes = new List<ItemType> { ItemType.Armor, ItemType.Container}, ItemLocations = new List<ItemLocation> { ItemLocation.Bag1 }, ItemId = Constants.ItemIds.Wallet, Description = "You found Bob's wallet.  He's gonna be REAL mad if he finds out you have it"}},
+        //    { new Item { Name = "Dagger", DisplayCharacter="|", ItemTypes = new List<ItemType> { ItemType.Weapon }, ItemLocations = new List<ItemLocation> { ItemLocation.HandRight, ItemLocation.HandLeft }, ItemId = Constants.ItemIds.Dagger, Description = "It's a plain dagger"}},
+        //};
 
         public string Name { get; set; }
         public string Description { get; set; }
@@ -44,11 +44,14 @@ namespace SlashIt
         public List<ItemLocation> ItemLocations { get; set; }
         public List<ItemType> ItemTypes { get; set; }
 
-
+        public Item()
+        {
+            // TODO Load Items.xml here
+        }
 
         public static Item GetItemById(int itemId)
         {
- 	        return availableItems.Where(i => i.ItemId == itemId).Single<Item>();
+ 	        return AvailableItems.Where(i => i.ItemId == itemId).Single<Item>();
         }
 
         public void Load(XElement item)
