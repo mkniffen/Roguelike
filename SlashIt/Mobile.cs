@@ -225,11 +225,13 @@ namespace SlashIt
             int i;
             this.CurrentTransition = Int32.TryParse(mobile.Element("CurrentTransition").Value, out i) ? (int?)i : null;
 
+            var availableItems = AvailableItems.Instance;
+
             foreach (XElement item in mobile.Descendants("Inventory"))
             {
                 if (item.HasElements)
                 {
-                    var itemToLoad = Item.GetItemById((Int32.Parse(item.Element("Item").Element("TypeId").Value)));
+                    var itemToLoad = availableItems.GetItemById((Int32.Parse(item.Element("Item").Element("TypeId").Value)));
                     itemToLoad.Load(item.Element("Item"));
                     this.Items.Add(itemToLoad);
                 }

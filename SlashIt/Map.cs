@@ -494,6 +494,8 @@ namespace SlashIt
 
         public void Load(IEnumerable<XElement> tilesToLoad)
         {
+            var availableItems = AvailableItems.Instance;
+
             Mobile mobile = null;
             Item item = null;
 
@@ -513,7 +515,7 @@ namespace SlashIt
                 item = null;
                 if (!string.IsNullOrEmpty(tile.Element("Item").Value))
                 {
-                    item = Item.GetItemById((Int32.Parse(tile.Element("Item").Element("ItemId").Value)));
+                    item = availableItems.GetItemById((Int32.Parse(tile.Element("Item").Element("ItemId").Value)));
                     item.Load(tile.Element("Item"));
                 }
 

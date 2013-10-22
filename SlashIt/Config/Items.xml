@@ -4,16 +4,13 @@
     <Name>Bob's wallet</Name>
     <DisplayCharacter>~</DisplayCharacter>
     <ItemTypes>
-      <ItemType>ItemType.Armor</ItemType>
-      <ItemType>ItemType.Container</ItemType>
+      <ItemType>Armor</ItemType>
+      <ItemType>Container</ItemType>
     </ItemTypes>
     <ItemLocations>
       <ItemLocation>Bag1</ItemLocation>
     </ItemLocations>
     <ItemId>Wallet</ItemId>
     <Description>You found Bob's wallet.  He's gonna be REAL mad if he finds out you have it</Description>
-  </Item>
-  <Item>
-    
   </Item>
 </Items>

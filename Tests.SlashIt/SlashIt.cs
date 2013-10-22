@@ -15,7 +15,11 @@ namespace Tests.SlashIt
         [Fact]
         public void AvailableItemsIsNotEmpty()
         {
-            Assert.NotEmpty(Item.AvailableItems); 
+            var availableItems = AvailableItems.Instance;
+            Assert.NotEmpty(availableItems.AllItems); 
         }
+
+
+        //Test for AvailableItems to know it's a singleton?
     }
 }

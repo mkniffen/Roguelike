@@ -17,10 +17,11 @@ namespace SlashIt
         public bool execute(LocalKeyInfo keyInfo)
         {
             Tile tile = this.map.GetPlayerTile();
+            var availableItems = AvailableItems.Instance;
 
             if (tile.HasItem())
             {
-                Status.Info = Item.AvailableItems[tile.TypeId].Description;
+                Status.Info = availableItems.AllItems[tile.TypeId].Description;
             }
             else 
             {

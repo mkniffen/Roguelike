@@ -28,13 +28,6 @@ namespace SlashIt
 
     public class Item
     {
-
-        public static List<Item> AvailableItems = new List<Item>();
-        //{
-        //    { new Item {Name = "Bob's wallet", DisplayCharacter="~", ItemTypes = new List<ItemType> { ItemType.Armor, ItemType.Container}, ItemLocations = new List<ItemLocation> { ItemLocation.Bag1 }, ItemId = Constants.ItemIds.Wallet, Description = "You found Bob's wallet.  He's gonna be REAL mad if he finds out you have it"}},
-        //    { new Item { Name = "Dagger", DisplayCharacter="|", ItemTypes = new List<ItemType> { ItemType.Weapon }, ItemLocations = new List<ItemLocation> { ItemLocation.HandRight, ItemLocation.HandLeft }, ItemId = Constants.ItemIds.Dagger, Description = "It's a plain dagger"}},
-        //};
-
         public string Name { get; set; }
         public string Description { get; set; }
         public string DisplayCharacter { get; set; }
@@ -44,14 +37,31 @@ namespace SlashIt
         public List<ItemLocation> ItemLocations { get; set; }
         public List<ItemType> ItemTypes { get; set; }
 
+
+        public Dictionary<string, ItemType> ItemTypeDictionary;
+        public Dictionary<string, ItemLocation> ItemLocationDictionary;
+
         public Item()
         {
-            // TODO Load Items.xml here
-        }
+            //TODO MWK !!!!  This needs to move.  Don't need this Dictionary with
+            //  each instance of Item  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        public static Item GetItemById(int itemId)
-        {
- 	        return AvailableItems.Where(i => i.ItemId == itemId).Single<Item>();
+            ItemTypeDictionary = new Dictionary<string, ItemType>
+            {
+                {"Armor", ItemType.Armor},
+                {"Container", ItemType.Container},
+                {"Weapon", ItemType.Weapon}
+            };
+
+            ItemLocationDictionary = new Dictionary<string, ItemLocation>
+            {
+                {"Head", ItemLocation.Head},
+                {"Chest", ItemLocation.Chest},
+                {"Feet", ItemLocation.Feet},
+                {"HandRight", ItemLocation.HandRight},
+                {"HandLeft", ItemLocation.HandLeft},
+                {"Bag1", ItemLocation.Bag1}
+            };
         }
 
         public void Load(XElement item)
