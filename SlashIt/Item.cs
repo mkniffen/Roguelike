@@ -6,28 +6,27 @@ using System.Xml.Linq;
 
 namespace SlashIt
 {
-    public enum ItemType : int
-    {
-        None,
-        Weapon,
-        Armor,
-        Container,
-    }
-
-    public enum ItemLocation : int
-    {
-        None,
-        Head,
-        Chest,
-        Feet,
-        HandRight,
-        HandLeft,
-        Bag1,
-    }
-
-
     public class Item
     {
+        public enum ItemType : int
+        {
+            None,
+            Weapon,
+            Armor,
+            Container,
+        }
+
+        public enum ItemLocation : int
+        {
+            None,
+            Head,
+            Chest,
+            Feet,
+            HandRight,
+            HandLeft,
+            Bag1,
+        }
+
         public string Name { get; set; }
         public string Description { get; set; }
         public string DisplayCharacter { get; set; }
@@ -36,33 +35,6 @@ namespace SlashIt
 
         public List<ItemLocation> ItemLocations { get; set; }
         public List<ItemType> ItemTypes { get; set; }
-
-
-        public Dictionary<string, ItemType> ItemTypeDictionary;
-        public Dictionary<string, ItemLocation> ItemLocationDictionary;
-
-        public Item()
-        {
-            //TODO MWK !!!!  This needs to move.  Don't need this Dictionary with
-            //  each instance of Item  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            ItemTypeDictionary = new Dictionary<string, ItemType>
-            {
-                {"Armor", ItemType.Armor},
-                {"Container", ItemType.Container},
-                {"Weapon", ItemType.Weapon}
-            };
-
-            ItemLocationDictionary = new Dictionary<string, ItemLocation>
-            {
-                {"Head", ItemLocation.Head},
-                {"Chest", ItemLocation.Chest},
-                {"Feet", ItemLocation.Feet},
-                {"HandRight", ItemLocation.HandRight},
-                {"HandLeft", ItemLocation.HandLeft},
-                {"Bag1", ItemLocation.Bag1}
-            };
-        }
 
         public void Load(XElement item)
         {

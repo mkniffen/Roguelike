@@ -42,7 +42,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SlashIt.cs" />
+    <Compile Include="AvailableItemsTests.cs" />
+    <Compile Include="AvailableMobileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

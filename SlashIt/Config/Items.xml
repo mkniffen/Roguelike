@@ -10,7 +10,20 @@
     <ItemLocations>
       <ItemLocation>Bag1</ItemLocation>
     </ItemLocations>
-    <ItemId>Wallet</ItemId>
+    <ItemId>100000</ItemId>
     <Description>You found Bob's wallet.  He's gonna be REAL mad if he finds out you have it</Description>
+  </Item>
+  <Item>
+    <Name>Dagger</Name>
+    <DisplayCharacter>|</DisplayCharacter>
+    <ItemTypes>
+      <ItemType>Weapon</ItemType>
+    </ItemTypes>
+    <ItemLocations>
+      <ItemLocation>HandRight</ItemLocation>
+      <ItemLocation>HandLeft</ItemLocation>
+    </ItemLocations>
+    <ItemId>100001</ItemId>
+    <Description>It's a plain dagger</Description>
   </Item>
 </Items>

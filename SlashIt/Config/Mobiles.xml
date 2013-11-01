@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Mobiles>
+  <Mobile>
+    <Name>Player</Name>
+    <DisplayCharacter>@</DisplayCharacter>
+    <HitPoints>30</HitPoints>
+    <Description>This guy is a newb!!</Description>
+    <HitMessage>The player </HitMessage>
+    <TransitionTable></TransitionTable>
+    <CurrentTransition></CurrentTransition>
+    <CurrentState></CurrentState>
+    <MobileId>1000</MobileId>
+  </Mobile>
+  <Mobile>
+    <Name>Rat</Name>
+    <DisplayCharacter>r</DisplayCharacter>
+    <HitPoints>10</HitPoints>
+    <Description>A simple rat that wants to EAT you!</Description>
+    <HitMessage>The rat bites you!!!</HitMessage>
+    <TransitionTable>Rat</TransitionTable>
+    <CurrentTransition>Attack</CurrentTransition>
+    <CurrentState>AttackStateRat</CurrentState>
+    <MobileId>112</MobileId>
+  </Mobile>
+  <Mobile>
+    <Name>Bob</Name>
+    <DisplayCharacter>B</DisplayCharacter>
+    <HitPoints>15</HitPoints>
+    <Description>So plain it just bores you to death!</Description>
+    <HitMessage>Bob </HitMessage>
+    <TransitionTable>Bob</TransitionTable>
+    <CurrentTransition>Rest</CurrentTransition>
+    <CurrentState>RestStateBob</CurrentState>
+    <MobileId>111</MobileId>
+  </Mobile>
+</Mobiles>

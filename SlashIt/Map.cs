@@ -241,7 +241,7 @@ namespace SlashIt
         public Tile GetPlayerTile()
         {
             var mapTile = this.Tiles
-                .Where(m => m.Mobile != null && m.Mobile.TypeId == Constants.TypeIds.Player)
+                .Where(m => m.Mobile != null && m.Mobile.MobileId == Constants.MobileId.Player)
                 .Single();
 
             return mapTile;
@@ -329,13 +329,13 @@ namespace SlashIt
                     new Tile { Location = new Location(15,1), TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(1,2), TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(2,2), TypeId = Constants.TypeIds.Wall },
-                    new Tile { Location = new Location(3,2), Mobile = new Mobile {TypeId = Constants.TypeIds.Player, DisplayCharacter = "@", Description =  "This guy is a newb!!", HitMessage = "The player ", Name = "Player", HitPoints = 30, TransitionTable = null, CurrentTransition = null }, TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(3,2), Mobile = new Mobile {MobileId = Constants.MobileId.Player, DisplayCharacter = "@", Description =  "This guy is a newb!!", HitMessage = "The player ", Name = "Player", HitPoints = 30, TransitionTable = null, CurrentTransition = null }, TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(4,2), TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(5,2) , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(6,2), TypeId = Constants.TypeIds.Door },
                     new Tile { Location = new Location(7,2) , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(8,2) , TypeId = Constants.TypeIds.Floor },
-                    new Tile { Location = new Location(9,2), Mobile = new Mobile {TypeId = Constants.TypeIds.Bob, DisplayCharacter = "B", Description =  "So plain it just bores you to death!", HitMessage = "Bob ", Name = "Bob", HitPoints = 20, TransitionTable = new BobTransitionTable(), CurrentTransition = (int)Transition.Rest} , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(9,2), Mobile = new Mobile {MobileId = Constants.MobileId.Bob, DisplayCharacter = "B", Description =  "So plain it just bores you to death!", HitMessage = "Bob ", Name = "Bob", HitPoints = 20, TransitionTable = new BobTransitionTable(), CurrentTransition = (int)Transition.Rest} , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(10,2), TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(11,2), TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(12,2), TypeId = Constants.TypeIds.Wall },
@@ -440,7 +440,7 @@ namespace SlashIt
                     new Tile { Location = new Location(6,9) , TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(7,9) , TypeId = Constants.TypeIds.Wall },
                     new Tile { Location = new Location(8,9) , TypeId = Constants.TypeIds.Wall },
-                    new Tile { Location = new Location(9,9), Mobile = new Mobile {TypeId = Constants.TypeIds.Rat, DisplayCharacter = "r", Description = "A simple rat that wants to EAT you!", HitMessage = "the Rat ", Name = "Rat" , HitPoints = 10, TransitionTable = null, CurrentTransition = (int)Transition.Rest} , TypeId = Constants.TypeIds.Floor },
+                    new Tile { Location = new Location(9,9), Mobile = new Mobile {MobileId = Constants.MobileId.Rat, DisplayCharacter = "r", Description = "A simple rat that wants to EAT you!", HitMessage = "the Rat ", Name = "Rat" , HitPoints = 10, TransitionTable = null, CurrentTransition = (int)Transition.Rest} , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(10,9) , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(11,9) , TypeId = Constants.TypeIds.Floor },
                     new Tile { Location = new Location(12,9) , TypeId = Constants.TypeIds.Floor },
@@ -495,6 +495,7 @@ namespace SlashIt
         public void Load(IEnumerable<XElement> tilesToLoad)
         {
             var availableItems = AvailableItems.Instance;
+            var availableMobiles = AvailableMobiles.Instance;
 
             Mobile mobile = null;
             Item item = null;
@@ -508,7 +509,7 @@ namespace SlashIt
                 mobile = null;
                 if (!string.IsNullOrEmpty(tile.Element("Mobile").Value))
                 {
-                    mobile = Mobile.GetMobileById((Int32.Parse(tile.Element("Mobile").Element("TypeId").Value)));
+                    mobile = availableMobiles.GetMobileById((Int32.Parse(tile.Element("Mobile").Element("TypeId").Value)));
                     mobile.Load(tile.Element("Mobile"));
                 }
 

@@ -21,7 +21,7 @@ namespace SlashIt
 
             if (tile.HasItem())
             {
-                Status.Info = availableItems.AllItems[tile.TypeId].Description;
+                Status.Info = availableItems.All[tile.TypeId].Description;
             }
             else 
             {

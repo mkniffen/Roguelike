@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AI\Common.cs" />
     <Compile Include="AvailableItems.cs" />
+    <Compile Include="AvailableMobiles.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DisplayEquipmentCommand.cs" />
     <Compile Include="Commands\WearCommand.cs" />
@@ -78,6 +79,10 @@
     <Content Include="Config\Config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Config\Mobiles.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\Items.xml">
       <SubType>Designer</SubType>

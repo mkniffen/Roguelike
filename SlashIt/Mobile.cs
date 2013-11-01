@@ -13,12 +13,12 @@ namespace SlashIt
         {
             this.EquipedItems = new List<EquipedItem>
             {
-                {new EquipedItem { Location = ItemLocation.Head, AcceptableTypes = new List<ItemType> { ItemType.Armor }}},
-                {new EquipedItem { Location = ItemLocation.HandLeft, AcceptableTypes = new List<ItemType> {  ItemType.Weapon}}},
-                {new EquipedItem { Location = ItemLocation.HandRight, AcceptableTypes =  new List<ItemType> { ItemType.Weapon}}},
-                {new EquipedItem { Location = ItemLocation.Chest, AcceptableTypes =  new List<ItemType> { ItemType.Armor}}},
-                {new EquipedItem { Location = ItemLocation.Feet, AcceptableTypes =  new List<ItemType> { ItemType.Armor}}},
-                {new EquipedItem { Location = ItemLocation.Bag1, AcceptableTypes =  new List<ItemType> { ItemType.Container}}},
+                {new EquipedItem { Location = Item.ItemLocation.Head, AcceptableTypes = new List<Item.ItemType> { Item.ItemType.Armor }}},
+                {new EquipedItem { Location = Item.ItemLocation.HandLeft, AcceptableTypes = new List<Item.ItemType> {  Item.ItemType.Weapon}}},
+                {new EquipedItem { Location = Item.ItemLocation.HandRight, AcceptableTypes =  new List<Item.ItemType> { Item.ItemType.Weapon}}},
+                {new EquipedItem { Location = Item.ItemLocation.Chest, AcceptableTypes =  new List<Item.ItemType> { Item.ItemType.Armor}}},
+                {new EquipedItem { Location = Item.ItemLocation.Feet, AcceptableTypes =  new List<Item.ItemType> { Item.ItemType.Armor}}},
+                {new EquipedItem { Location = Item.ItemLocation.Bag1, AcceptableTypes =  new List<Item.ItemType> { Item.ItemType.Container}}},
             };
         }
 
@@ -35,28 +35,16 @@ namespace SlashIt
 
     public class EquipedItem
     {
-        public List<ItemType> AcceptableTypes { get; set; }
-        public ItemLocation Location { get; set; }
+        public List<Item.ItemType> AcceptableTypes { get; set; }
+        public Item.ItemLocation Location { get; set; }
         public Item Item { get; set; }
         public string ListTag { get; set; }
     }
 
     public class Mobile : INonPlayerCharacter
     {
-
-
-        //TODO move this to loading from config (maybe remove name) -- convert to Factory??????????
-
-
-        public static List<Mobile> availableMobiles = new List<Mobile>
-        {
-            { new Mobile {TypeId = Constants.TypeIds.Player, DisplayCharacter = "@", Description =  "This guy is a newb!!", HitMessage = "The player ", Name = "Player", HitPoints = 30, TransitionTable = null, CurrentTransition = null, currentState = null }},
-            { new Mobile {TypeId = Constants.TypeIds.Rat, DisplayCharacter = "r", Description = "A simple rat that wants to EAT you!", HitMessage = "The rat bites you!!!", Name = "Rat" , HitPoints = 10, TransitionTable = new RatTransitionTable(), CurrentTransition = (int)Transition.Attack, currentState = new AttackStateRat() }},
-            { new Mobile {TypeId = Constants.TypeIds.Bob, DisplayCharacter = "B", Description =  "So plain it just bores you to death!", HitMessage = "Bob ", Name = "Bob", HitPoints = 15, TransitionTable = new BobTransitionTable(), CurrentTransition = (int)Transition.Rest, currentState = new RestStateBob() }}
-        };
-
-
-        protected IState currentState = null;
+        
+        public IState CurrentState = null;
 
         public Mobile()
         {
@@ -70,7 +58,7 @@ namespace SlashIt
         public string Name { get; set; }
         public string Description { get; set; }
         public string DisplayCharacter { get; set; }
-        public int TypeId { get; set; }
+        public int MobileId { get; set; }
         public string HitMessage { get; set; }
 
         //This will fill up with "time" units
@@ -107,8 +95,8 @@ namespace SlashIt
             {
                 if (value == null)
                 {
-                    currentState.Exit(this);
-                    currentState = null;
+                    CurrentState.Exit(this);
+                    CurrentState = null;
                     CurrentTransition = null;
                     return;
                 }
@@ -117,12 +105,12 @@ namespace SlashIt
 
                 if (state != null)
                 {
-                    if (currentState != null)
-                        currentState.Exit(this);
+                    if (CurrentState != null)
+                        CurrentState.Exit(this);
 
-                    currentState = state;
+                    CurrentState = state;
                     CurrentTransition = (int)value;
-                    currentState.Enter(this);
+                    CurrentState.Enter(this);
                 }
             }
         }
@@ -160,7 +148,7 @@ namespace SlashIt
             };
 
             //See if this map object can make the requested move
-            return canMoveToTiles.Contains(tile.TypeId) && ((tile.Mobile == null) || (tile.Mobile.TypeId == Constants.TypeIds.Player));
+            return canMoveToTiles.Contains(tile.TypeId) && ((tile.Mobile == null) || (tile.Mobile.MobileId == Constants.MobileId.Player));
         }
 
         public bool CanAttack(Map map, Tile nonPlayerCharacterTile)
@@ -189,15 +177,10 @@ namespace SlashIt
             this.TimeBucket += this.Speed;
         }
 
-        public static Mobile GetMobileById(int id)
-        {
-            return availableMobiles.Where(m => m.TypeId == id).Single<Mobile>();
-        }
-
         public void UpdateState(Map map, Tile nonPlayerCharacterTile)
         {
-            if (currentState != null)
-                currentState.Execute(this, map, nonPlayerCharacterTile);
+            if (CurrentState != null)
+                CurrentState.Execute(this, map, nonPlayerCharacterTile);
             else
                 System.Diagnostics.Trace.WriteLine("zero state");
         }
@@ -205,7 +188,7 @@ namespace SlashIt
         public XElement Save()
         {
             return new XElement("Mobile",
-                new XElement("TypeId", this.TypeId),
+                new XElement("TypeId", this.MobileId),
                 new XElement("CanMoveLevel",this.CanMoveLevel),
                 new XElement("TimeBucket",this.TimeBucket),
                 new XElement("Speed",this.Speed),
@@ -217,7 +200,7 @@ namespace SlashIt
 
         public void Load(XElement mobile)
         {
-            this.TypeId = Int32.Parse(mobile.Element("TypeId").Value);
+            this.MobileId = Int32.Parse(mobile.Element("TypeId").Value);
             this.CanMoveLevel = Int32.Parse(mobile.Element("CanMoveLevel").Value);
             this.TimeBucket = Int32.Parse(mobile.Element("TimeBucket").Value);
             this.Speed = Int32.Parse(mobile.Element("Speed").Value);

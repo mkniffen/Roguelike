@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
@@ -10,12 +11,7 @@ namespace SlashIt
     {
         static readonly AvailableItems instance = new AvailableItems();
 
-        public List<Item> AllItems = new List<Item>();
-        //{
-        //    { new Item {Name = "Bob's wallet", DisplayCharacter="~", ItemTypes = new List<ItemType> { ItemType.Armor, ItemType.Container}, ItemLocations = new List<ItemLocation> { ItemLocation.Bag1 }, ItemId = Constants.ItemIds.Wallet, Description = "You found Bob's wallet.  He's gonna be REAL mad if he finds out you have it"}},
-        //    { new Item { Name = "Dagger", DisplayCharacter="|", ItemTypes = new List<ItemType> { ItemType.Weapon }, 
-        //ItemLocations = new List<ItemLocation> { ItemLocation.HandRight, ItemLocation.HandLeft }, ItemId = Constants.ItemIds.Dagger, Description = "It's a plain dagger"}},
-        //};
+        public List<Item> All = new List<Item>();
         
         AvailableItems()
         {
@@ -26,12 +22,18 @@ namespace SlashIt
                 var itemToAdd = new Item();
                 itemToAdd.Name = item.Element("Name").Value;
                 itemToAdd.DisplayCharacter = item.Element("DisplayCharacter").Value;
-                itemToAdd.ItemTypes = item.Descendants("ItemTypes").Descendants("ItemType").Select(it => itemToAdd.ItemTypeDictionary[it.Value]).ToList();
-                itemToAdd.ItemLocations = item.Descendants("ItemLocations").Descendants("ItemLocation").Select(il => itemToAdd.ItemLocationDictionary[il.Value]).ToList();
+                itemToAdd.ItemTypes = item.Descendants("ItemTypes").Descendants("ItemType").Select(it => Constants.ItemTypeDictionary[it.Value]).ToList();
+                itemToAdd.ItemLocations = item.Descendants("ItemLocations").Descendants("ItemLocation").Select(il => Constants.ItemLocationDictionary[il.Value]).ToList();
+                itemToAdd.ItemId = Int32.Parse(item.Element("ItemId").Value);
 
-                //TODO !!!  Add this    itemToAdd.ItemId....
+                this.All.Add(itemToAdd);
+            }
 
-                this.AllItems.Add(itemToAdd);
+            var ids = this.All.GroupBy(ai => ai.ItemId).Where(g => g.Count() > 1);
+
+            if (ids.Count() > 0)
+            {
+                throw new Exception("Found non-unique item ids: " + string.Join(",", ids.SelectMany(g => g).Select(g => g.ItemId)));
             }
         }
 
@@ -42,7 +44,7 @@ namespace SlashIt
 
         public Item GetItemById(int itemId)
         {
-            return this.AllItems.Where(i => i.ItemId == itemId).Single<Item>();
+            return this.All.Where(i => i.ItemId == itemId).Single<Item>();
         }
     }
 }
